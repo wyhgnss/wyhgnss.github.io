@@ -32,8 +32,9 @@ I have published more than 10 papers at the journals with total <a href='https:/
 - *2023.11*: &nbsp;🎉🎉 Very pleased to be awarded the National Scholarship at Shandong University!
 
 # 📝 Publications 
+> (†: equal contribution, #: corresponding author)
 ## Research Paper
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">JAG</div><img src='images/500x300.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">JAG</div><img src='images/landsat.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [Improving the capability of water vapor retrieval from Landsat 8 using ensemble machine learning](https://doi.org/10.1016/j.jag.2023.103407)
