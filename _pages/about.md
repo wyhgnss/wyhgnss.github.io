@@ -103,7 +103,8 @@ I have published more than 10 papers at the journals with total <a href='https:/
 
 # 📖 Educations
 - *2019.06 - 2022.04 (now)*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2015.09 - 2019.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+
+- *2017.09-2021.06*, Nanjing Tech University, Bachelor of Engineering in geodesy and geomatics. 
 
 # 💬 Invited Talks
 
