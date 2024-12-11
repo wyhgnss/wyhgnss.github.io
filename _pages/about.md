@@ -149,4 +149,4 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 # 💻 <font color="#4A708B">Internships</font>
 - From July 2018 to September 2018, I worked as a first grade homeroom teacher (volunteer teaching) at Hanwang Town Second Primary School in Mianzhu City, Sichuan Province, China.
 
-# <font color="#4A708B">Hobbies</font>
+# 📷️ <font color="#4A708B">Hobbies</font>
