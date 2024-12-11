@@ -108,8 +108,8 @@ I have published more than 10 papers at the journals with total <a href='https:/
 
 # 💬 Invited Talks
 
-- **Oral:** Analysis of a heavy rainstorm process in Henan, China based on multi-source data<br>*The XVIII International Congress for Mine Surveying, Xuzhou, China, October 27, 2022*<br>
-- **Poster:** 基于SWCVR算法和集成机器学习的Landsat 8 TIRS水汽反演研究<br>*第五届中国大地测量和地球物理学学术大会. 中国武汉, 2023.4.22*<br>
+- **Oral:** Analysis of a heavy rainstorm process in Henan, China based on multi-source data. *The XVIII International Congress for Mine Surveying, Xuzhou, China, October 27, 2022*<br>
+- **Poster:** 基于SWCVR算法和集成机器学习的Landsat 8 TIRS水汽反演研究. *第五届中国大地测量和地球物理学学术大会. 中国武汉, 2023.4.22*<br>
 
 # 💻 Internships
 - From July 2018 to September 2018, I worked as a first grade homeroom teacher (volunteer teaching) at Hanwang Town Second Primary School in Mianzhu City, Sichuan Province, China.
