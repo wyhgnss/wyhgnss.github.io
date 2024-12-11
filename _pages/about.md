@@ -57,6 +57,21 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
+## Patent
+- Method and System for Monitoring Extraordinary Rainstorm on Basis of Multi-source Data<br>Nan Jiang, **Yuhao Wu**, Yan Xu, Tianhe Xu. 2023. Patent No.: US 11,852,779B1.<br>
+
+## Software Copyright
+- [Batch retrieval software for water vapor based on Beidou/GNSS](https://b23.tv/1DP5ixu)<br>Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
+
+- [GNSS-SNR water level retrieval software](https://b23.tv/8GL6OGN)<br>**Yuhao Wu**, Dongliang Guan. 2021. 2021SR1211116.<br>
+
+## Degree Thesis
+
+- **Master's thesis:** Research and Application of Water Vapor Retrieval by Integrating Ground-based GNSS and Spaceborne Thermal Infrared Remote Sensing Data<br>**Yuhao Wu** (Advisor: Dr. [Yan Xu](https://apd.wh.sdu.edu.cn/info/1510/1912.htm)). <br>
+
+- **Bachelor's thesis:** Research on Water Level Change Monitoring Based on BeiDou Navigation Satellite System<br>**Yuhao Wu** (Advisor: Dr. [Dongliang Guan](https://cge.njtech.edu.cn/info/1045/2861.htm)). Excellent Graduation Thesis Award of Nanjing Tech University. First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province.<br>
+
+
 # 🎖 Honors and Awards
 
 ## Scholarships
@@ -86,15 +101,14 @@ I have published more than 10 papers at the journals with total <a href='https:/
 - *From 2017 to 2021*: Exemplary individual, Excellent Student Cadre, Excellent League Member, Three Good Students, Excellent Volunteers, Excellent Graduates, and Excellent Graduation Design at NJtech (**School Level**) 
 - *From 2021 to 2024*: Outstanding Communist Youth League Member, Outstanding Graduate, and Annual Outstanding Graduate Student at Shandong University (**School Level**)<br>
 
-
-
 # 📖 Educations
 - *2019.06 - 2022.04 (now)*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
 - *2015.09 - 2019.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
 
 # 💬 Invited Talks
-- *2021.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2021.03*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet.  \| [\[video\]](https://github.com/)
+
+- **Oral:** Analysis of a heavy rainstorm process in Henan, China based on multi-source data<br>*The XVIII International Congress for Mine Surveying, Xuzhou, China, October 27, 2022*<br>
+- **Poster:** 基于SWCVR算法和集成机器学习的Landsat 8 TIRS水汽反演研究<br>*第五届中国大地测量和地球物理学学术大会. 中国武汉, 2023.4.22*<br>
 
 # 💻 Internships
 - *2019.05 - 2020.02*, [Lorem](https://github.com/), China.
