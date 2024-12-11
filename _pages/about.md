@@ -57,6 +57,17 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/GRL.png' alt="sym" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+[First PWV Retrieval using MERSI-LL onboard FY-3E and Cross Validation with Co-platform Occultation and Ground GNSS](https://doi.org/10.1029/2024GL108681)
+
+Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Research Letters*. 51, e2024GL108681. (JCR Q1, IF=5.3).<br>
+- Here, we carry out the PWV retrieval using the MERSI-LL sensor onboard the FY-3E satellite for the first time.
+- For the results against ground-based GNSS, the total accuracy shows an RMSE of 2.69-3.36 mm as the clouds increase, and correlation coefficients higher than 0.95.
+</div>
+</div>
+
+
 ## Patent
 - Method and System for Monitoring Extraordinary Rainstorm on Basis of Multi-source Data. Nan Jiang, **Yuhao Wu**, Yan Xu, Tianhe Xu. 2023. Patent No.: US 11,852,779B1.<br>
 
