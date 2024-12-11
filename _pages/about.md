@@ -23,8 +23,8 @@ I have published more than 10 papers at the journals with total <a href='https:/
 
 
 # 🔥 News
-- *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+- *2024.11*: &nbsp;🎉🎉 Our team won the second prize in the [China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080159353177f0193536864dc0048) (Top 4%). 
+- *2024.09*: &nbsp;🎉🎉 Very happy to continue my doctoral studies in engineering at Wuhan University! 
 
 # 📝 Publications 
 
