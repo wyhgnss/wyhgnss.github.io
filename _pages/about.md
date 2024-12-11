@@ -41,7 +41,6 @@ I have published more than 10 papers at the journals with total <a href='https:/
 **Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (JCR Q1, IF=7.5).<br>
 
 - The new method uses Gradient Boosting Decision Tree (GBDT) to establish the model between brightness temperature, GNSS-derived PWV, and related surface parameters. 
-- The results show that the improved SWCVR model has an RMSE, Bias, and availability of 0.4947 cm, 0.0276 cm, and 29.6%, respectively. By contrast, the GBDT model's corresponding values are 0.2870 cm, 0.0094 cm, and 67.9%, respectively. 
 - Compared with SWCVR, the GBDT improves the RMSE and availability by 41.99% and 38.3%, respectively.
 
 </div>
