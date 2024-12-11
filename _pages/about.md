@@ -23,7 +23,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 
 **<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
-# 🔥 News
+# 🔥 <font color="#4A708B">News</font>
 - *2024.11*: &nbsp;🎉🎉 Our team won the second prize in the [China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080159353177f0193536864dc0048) (Top 4%). 
 - *2024.09*: &nbsp;🎉🎉 Very happy to continue my doctoral studies in engineering at Wuhan University! 
 - *2024.06*: &nbsp;🎉🎉 Very excited to get a Master's degree in Science at Shandong University!
