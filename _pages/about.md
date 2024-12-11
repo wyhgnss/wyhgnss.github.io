@@ -58,8 +58,35 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 
 # 🎖 Honors and Awards
-- *2021.10* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2021.09* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+
+## Scholarships
+
+- *2023.11*: **National Scholarship for Master's Students** (¥20000)<br>
+- *2024.09*: Doctoral Basic Scholarship at Wuhan University (¥10000)<br>
+- *2022.10*: Second Class Scholarship at Shandong University (¥3200)<br>
+- *2021.11*: Third Prize of Outstanding Graduate Student Source Award Fund at Shandong University (¥4000)<br>
+- *2021.10*: Freshman Scholarship at Shandong University (¥3200)<br>
+- *2019.10*: Guoheng Scholarship (¥2000) Established by Guoheng Group
+- *From 2017 to 2021*: First prize scholarship at NJtech (¥3200, **Four times**)
+- *From 2017 to 2021*: Special scholarship at NJtech (¥1600)
+
+## Competitions
+
+- *2024.11*: Second prize in the China post-graduate mathematical contest in modeling (Top 4%) (**National Level**) 
+- *2019.11*: Second Prize in the Remote Sensing Processing Group of the 11th National College GIS Skills Competition (**National Level**) 
+- *2021.05*: First Prize of Jiangsu Province in the 12th Beidou Cup National Youth Science and Technology Innovation Competition (**Provincial Level**) 
+- *2020.04*: Excellent Award in the 7th "Sharing Cup" College Student Science and Technology Sharing Service Innovation Competition (**National Level**) 
+- *2022.04*: Second Prize in Track B and Third Prize in Track O of the Shandong University Astronomy Association Photography Competition
+- *2023.04*: Third Prize in the 5th Graduate Photography Competition of Shandong University
+- *2022.12*: Third Prize in Weihai Network Culture Works Competition
+
+## Honors
+- *2016.05*: Three Good Students in Yunnan Province (**Provincial Level**)
+- *2021.10*: First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province (**Provincial Level**)
+- *From 2017 to 2021*: Exemplary individual, Excellent Student Cadre, Excellent League Member, Three Good Students, Excellent Volunteers, Excellent Graduates, and Excellent Graduation Design at NJtech (**School Level**) 
+- *From 2021 to 2024*: Outstanding Communist Youth League Member, Outstanding Graduate, and Annual Outstanding Graduate Student at Shandong University (**School Level**)<br>
+
+
 
 # 📖 Educations
 - *2019.06 - 2022.04 (now)*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
