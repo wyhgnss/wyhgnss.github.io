@@ -57,7 +57,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/GRL.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GRL</div><img src='images/GRL.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [First PWV Retrieval using MERSI-LL onboard FY-3E and Cross Validation with Co-platform Occultation and Ground GNSS](https://doi.org/10.1029/2024GL108681)
 
@@ -67,6 +67,14 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 </div>
 </div>
 
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ESS</div><img src='images/ESS.png' alt="sym" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+ [PWV retrieval performance evaluation for the fresh BDS-3 with multi-source data](https://doi.org/10.1029/2023EA002923)
+ 
+ Nan Jiang, Zhaorui Gao, **Yuhao Wu**, et al., 2023. *Earth and Space Science*. 10, e2023EA002923. (JCR Q2, IF=3.1). <br>
+- From the tests applied with different satellite systems, we found that BDS-3 has a comparable PWV retrieval performance as global positioning system (GPS), and a better outcome was achieved using the combined data from GPS and BDS-3.
+</div>
+</div>
 
 ## Patent
 - Method and System for Monitoring Extraordinary Rainstorm on Basis of Multi-source Data. Nan Jiang, **Yuhao Wu**, Yan Xu, Tianhe Xu. 2023. Patent No.: US 11,852,779B1.<br>
