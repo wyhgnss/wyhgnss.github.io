@@ -33,10 +33,10 @@ I have published more than 10 papers at the journals with total <a href='https:/
 
 # 📝 Publications 
 > (†: equal contribution, #: corresponding author)
+
 ## Research Paper
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">JAG</div><img src='images/landsat.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
-
 [Improving the capability of water vapor retrieval from Landsat 8 using ensemble machine learning](https://doi.org/10.1016/j.jag.2023.103407)
 
 **Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (JCR Q1, IF=7.5).<br>
@@ -47,6 +47,15 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/landsat.png' alt="sym" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+[Revealing the water vapor transport during the Henan "7.20" heavy rainstorm based on ERA5 and real-time GNSS](https://doi.org/10.1016/j.ejrs.2024.02.004)
+
+**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2024. *Egyptian Journal of Remote Sensing and Space Sciences*. 27, 165-177. (JCR Q2, IF=4.4).<br>
+- Different from the normal rainfall, we found that the PWV variation during the Henan rainstorm experienced a unique "accumulation" period.
+- In addition, the PWV in the severely damaged area was 20 mm higher than the average value of the past decade. Ten days after the rainstorm, the surface of this area had subsided by 1.5-3 mm.
+</div>
+</div>
 
 # 🎖 Honors and Awards
 - *2021.10* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
