@@ -102,9 +102,9 @@ I have published more than 10 papers at the journals with total <a href='https:/
 - *From 2021 to 2024*: Outstanding Communist Youth League Member, Outstanding Graduate, and Annual Outstanding Graduate Student at Shandong University (**School Level**)<br>
 
 # 📖 Educations
-- *2019.06 - 2022.04 (now)*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-
-- *2017.09-2021.06*, Nanjing Tech University, Bachelor of Engineering in geodesy and geomatics. 
+- *2024.09 - 2028.06 (now)*, Wuhan University, Geodesy and Geomatics Engineering, PhD in Engineering. 
+- *2021.09 - 2024.06*, Shandong University, Master of Science in Geophysics.
+- *2017.09 - 2021.06*, Nanjing Tech University, Bachelor of Engineering in Geodesy and Geomatics. 
 
 # 💬 Invited Talks
 
@@ -112,6 +112,6 @@ I have published more than 10 papers at the journals with total <a href='https:/
 - **Poster:** 基于SWCVR算法和集成机器学习的Landsat 8 TIRS水汽反演研究<br>*第五届中国大地测量和地球物理学学术大会. 中国武汉, 2023.4.22*<br>
 
 # 💻 Internships
-- *2019.05 - 2020.02*, [Lorem](https://github.com/), China.
+- From July 2018 to September 2018, I worked as a first grade homeroom teacher (volunteer teaching) at Hanwang Town Second Primary School in Mianzhu City, Sichuan Province, China.
 
 # Hobbies
