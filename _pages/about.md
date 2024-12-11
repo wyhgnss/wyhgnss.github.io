@@ -17,14 +17,19 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-I am a PhD student in the School of [Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS meteorology, water vapor retrieval, and weather forecasting.<br>
+Here is **Yuhao Wu**. I am a PhD student in the School of [Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS meteorology, tropospheric modeling, and weather forecasting. My current research focus is on water vapor retrieval based on GNSS and remote sensing. In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.
 
-I have published more than 10 papers at the journals with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>50+</span></strong></a> (You can also use google scholar badge <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>).
+I have published more than 10 papers at the journals with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>50+</span></strong></a> (You can also use google scholar badge <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>). If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - wyhnbnb@126.com
 
+**<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
 # 🔥 News
 - *2024.11*: &nbsp;🎉🎉 Our team won the second prize in the [China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080159353177f0193536864dc0048) (Top 4%). 
 - *2024.09*: &nbsp;🎉🎉 Very happy to continue my doctoral studies in engineering at Wuhan University! 
+- *2024.06*: &nbsp;🎉🎉 Very excited to get a Master's degree in Science at Shandong University!
+- *2024.02*: &nbsp;🎉🎉 My research paper on rainstorm in Henan has been accepted by EJRS!
+- *2023.12*: &nbsp;🎉🎉 Very excited to be selected as Outstanding Graduate of Shandong University!
+- *2023.11*: &nbsp;🎉🎉 Very pleased to be awarded the National Scholarship at Shandong University!
 
 # 📝 Publications 
 
