@@ -47,7 +47,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/landsat.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/EJRS.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [Revealing the water vapor transport during the Henan "7.20" heavy rainstorm based on ERA5 and real-time GNSS](https://doi.org/10.1016/j.ejrs.2024.02.004)
 
