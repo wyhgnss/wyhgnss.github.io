@@ -174,4 +174,4 @@ Before going to college, I was studying sketching and almost became an art stude
 
 <span class='anchor' id='-visitor-map'></span>
 # 🌏️ <font color="#4A708B">Visitor Map</font>
-<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=380&t=tt&d=6gCLp8H0jUJXTDAgwenOxbDgCEaAvQc8Hgj55t1cF1k'></script>
+<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=n&d=6gCLp8H0jUJXTDAgwenOxbDgCEaAvQc8Hgj55t1cF1k'></script>
