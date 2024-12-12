@@ -172,4 +172,4 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 Before going to college, I was studying sketching and almost became an art student.
 
 <span class='anchor' id='-visitor-map'></span>
-# 🌏️ <font color="#4A708B">Visitor map</font>
+# 🌏️ <font color="#4A708B">Visitor Map</font>
