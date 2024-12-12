@@ -47,7 +47,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/EJRS.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EJRS</div><img src='images/EJRS.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [Revealing the water vapor transport during the Henan "7.20" heavy rainstorm based on ERA5 and real-time GNSS](https://doi.org/10.1016/j.ejrs.2024.02.004)
 
@@ -57,7 +57,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GRL</div><img src='images/GRL.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GRL</div><img src='images/GRL.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [First PWV Retrieval using MERSI-LL onboard FY-3E and Cross Validation with Co-platform Occultation and Ground GNSS](https://doi.org/10.1029/2024GL108681)
 
@@ -67,7 +67,7 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ESS</div><img src='images/ESS.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ESS</div><img src='images/ESS.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
  [PWV retrieval performance evaluation for the fresh BDS-3 with multi-source data](https://doi.org/10.1029/2023EA002923)
  
@@ -77,7 +77,7 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 </div>
 
 ## Software Copyright
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GPRA</div><img src='images/software1.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GPRA</div><img src='images/software1.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [Batch retrieval software for water vapor based on Beidou/GNSS](https://b23.tv/1DP5ixu)
 
@@ -87,7 +87,7 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GWR</div><img src='images/software2.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">GWR</div><img src='images/software2.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [GNSS-SNR water level retrieval software](https://b23.tv/8GL6OGN)
 
