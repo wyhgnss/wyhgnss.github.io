@@ -23,3 +23,6 @@ main:
     
   - title: "Hobbies"
     url: "/#-hobbies"
+
+  - title: "Visitor map"
+    url: "/#-visitor-map"
