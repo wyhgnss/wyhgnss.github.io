@@ -174,8 +174,5 @@ Before going to college, I was studying sketching and almost became an art stude
 
 <span class='anchor' id='-visitor-map'></span>
 # 🌏️ <font color="#4A708B">Visitor Map</font>
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-<span id="busuanzi_value_page_pv"><i class="fa fa-spinner"></i></span> Hits
 
-<script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=6gCLp8H0jUJXTDAgwenOxbDgCEaAvQc8Hgj55t1cF1k"></script>
+<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=4d749d&w=380&t=tt&d=6gCLp8H0jUJXTDAgwenOxbDgCEaAvQc8Hgj55t1cF1k&ct=000000&co=b3dfff&cmo=f8f7b8&cmn=ffc2e2'></script>
