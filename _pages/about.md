@@ -39,7 +39,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 <div class='paper-box-text' markdown="1">
 [Improving the capability of water vapor retrieval from Landsat 8 using ensemble machine learning](https://doi.org/10.1016/j.jag.2023.103407)
 
-**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (JCR Q1, IF=7.5).<br>
+**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (==JCR Q1, IF=7.5==).<br>
 
 - The new method uses Gradient Boosting Decision Tree (GBDT) to establish the model between brightness temperature, GNSS-derived PWV, and related surface parameters. 
 - Compared with SWCVR, the GBDT improves the RMSE and availability by 41.99% and 38.3%, respectively.
@@ -51,7 +51,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 <div class='paper-box-text' markdown="1">
 [Revealing the water vapor transport during the Henan "7.20" heavy rainstorm based on ERA5 and real-time GNSS](https://doi.org/10.1016/j.ejrs.2024.02.004)
 
-**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2024. *Egyptian Journal of Remote Sensing and Space Sciences*. 27, 165-177. (JCR Q2, IF=4.4).<br>
+**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2024. *Egyptian Journal of Remote Sensing and Space Sciences*. 27, 165-177. (==JCR Q2, IF=4.4==).<br>
 - Different from the normal rainfall, we found that the PWV variation during the Henan rainstorm experienced a unique "accumulation" period.
 - In addition, the PWV in the severely damaged area was 20 mm higher than the average value of the past decade. Ten days after the rainstorm, the surface of this area had subsided by 1.5-3 mm.
 </div>
@@ -149,6 +149,8 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 # 💻 <font color="#4A708B">Internships</font>
 - From July 2018 to September 2018, I worked as a first grade homeroom teacher (volunteer teaching) at Hanwang Town Second Primary School in Mianzhu City, Sichuan Province, China.
 
+<br>
+<br>
 ---
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-> <span id="busuanzi_container_site_pv">The total number of visits to this site is <span id="busuanzi_value_site_pv"></span> times</span>
+<center><span id="busuanzi_container_site_pv">The total number of visits to this site is <span id="busuanzi_value_site_pv"></span> times</span></center>
