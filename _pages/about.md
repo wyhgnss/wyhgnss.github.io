@@ -34,7 +34,7 @@ I have published more than 10 papers at the journals with total <a href='https:/
 # 📝 <font color="#4A708B">Publications</font>
 > (†: equal contribution, #: corresponding author)
 
-## 📰 Research Paper
+## Research Paper
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">JAG</div><img src='images/landsat.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [Improving the capability of water vapor retrieval from Landsat 8 using ensemble machine learning](https://doi.org/10.1016/j.jag.2023.103407)
@@ -76,7 +76,7 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 </div>
 </div>
 
-## 📲Software Copyright
+## Software Copyright
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">GPRA</div><img src='images/software1.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 [Batch retrieval software for water vapor based on Beidou/GNSS](https://b23.tv/1DP5ixu)
@@ -97,19 +97,19 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 </div>
 </div>
 
-## 📑 Patent
+## Patent
 - Method and System for Monitoring Extraordinary Rainstorm on Basis of Multi-source Data. Nan Jiang, **Yuhao Wu**, Yan Xu, Tianhe Xu. 2023. Patent No.: US 11,852,779B1.<br>
 
-## 🎓️ Degree Thesis
+## Degree Thesis
 
 - **Master's thesis:** Research and Application of Water Vapor Retrieval by Integrating Ground-based GNSS and Spaceborne Thermal Infrared Remote Sensing Data. (Advisor: Dr. [Yan Xu](https://apd.wh.sdu.edu.cn/info/1510/1912.htm)). <br>
 
 - **Bachelor's thesis:** Research on Water Level Change Monitoring Based on BeiDou Navigation Satellite System. (Advisor: Dr. [Dongliang Guan](https://cge.njtech.edu.cn/info/1045/2861.htm)). Excellent Graduation Thesis Award of Nanjing Tech University. First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province.<br>
 
 
-# 🎖 <font color="#4A708B">Honors and Awards</font>
+# 🏆️ <font color="#4A708B">Honors and Awards</font>
 
-## 💰️ Scholarships
+## Scholarships
 
 - *2023.11*: **National Scholarship for Master's Students** (¥20000)<br>
 - *2024.09*: Doctoral Basic Scholarship at Wuhan University (¥10000)<br>
@@ -120,7 +120,7 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 - *From 2017 to 2021*: First prize scholarship at NJtech (¥3200, **Four times**)
 - *From 2017 to 2021*: Special scholarship at NJtech (¥1600)
 
-## 🎖️ Competitions
+## Competitions
 
 - *2024.11*: Second prize in the China post-graduate mathematical contest in modeling (Top 4%) (**National Level**) 
 - *2019.11*: Second Prize in the Remote Sensing Processing Group of the 11th National College GIS Skills Competition (**National Level**) 
@@ -130,7 +130,7 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 - *2023.04*: Third Prize in the 5th Graduate Photography Competition of Shandong University
 - *2022.12*: Third Prize in Weihai Network Culture Works Competition
 
-## 🏆️ Honors
+## Honors
 - *2016.05*: Three Good Students in Yunnan Province (**Provincial Level**)
 - *2021.10*: First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province (**Provincial Level**)
 - *From 2017 to 2021*: Exemplary individual, Excellent Student Cadre, Excellent League Member, Three Good Students, Excellent Volunteers, Excellent Graduates, and Excellent Graduation Design at NJtech (**School Level**) 
