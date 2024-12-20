@@ -26,3 +26,6 @@ main:
 
   - title: "Visitor map"
     url: "/#-visitor-map"
+
+  - title: "Blogs"
+    url: /blogs/
