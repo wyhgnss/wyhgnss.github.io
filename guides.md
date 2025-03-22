@@ -1,19 +1,19 @@
 ## PWV Data
-- [Radiosonde (IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/)
+- [Radiosonde (IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/) (实时发布，常用于检核GNSS/遥感PWV，需要做质量控制才能用)
 
 - [Radiosonde (University of Wyoming)](https://weather.uwyo.edu/upperair/seasia.html)
 
-- [ERA5 (ECFWM)](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview)
+- [ERA5 (ECFWM)](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview) (一周的更新延迟，常用于检核遥感PWV，下载就能用)
 
 - [CRA40 (CMA)](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html)
 
-- [Ground-based GNSS (Nevada Geodetic Laboratory)](http://geodesy.unr.edu/)
+- [Ground-based GNSS (Nevada Geodetic Laboratory)](http://geodesy.unr.edu/) (非实时/更新慢，全球几万个GNSS站的ZTD/PWV，由于参与反演的气象数据的不稳定，导致出现很多异常值和负值，需要做质量控制才能用)
 
-- [Ground-based GNSS (SuomiNet)](https://www.unidata.ucar.edu/data/suominet/)
+- [Ground-based GNSS (SuomiNet)](https://www.unidata.ucar.edu/data/suominet/) (主要是美国的GNSS PWV，已停更)
 
-- [Ground-based GNSS (Taipei University)](https://www.gpsmet.ntpu.edu.tw/)
+- [Ground-based GNSS (Taipei University)](https://www.gpsmet.ntpu.edu.tw/) (台湾200多个GNSS站的ZTD/PWV)
 
-- [Sun Photometer (AERONET)](https://aeronet.gsfc.nasa.gov/)
+- [Sun Photometer (AERONET)](https://aeronet.gsfc.nasa.gov/) (实时发布，精度一般，仅晴空可用)
 
 ## Precipitation Data
 - [CMORPH (NCEI)](https://www.ncei.noaa.gov/products/climate-data-records/precipitation-cmorph)
