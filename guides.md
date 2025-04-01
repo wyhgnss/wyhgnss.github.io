@@ -3,6 +3,7 @@
 | 数据集 | 机构 |
 |--|--|--|--|
 | [Radiosonde(IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/) | NOAA |
+| [Radiosonde](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming |
 
 - [Radiosonde (IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/) (实时发布，常用于检核GNSS/遥感PWV，需要做质量控制才能用)
 
