@@ -1,6 +1,6 @@
 ## PWV数据集
 
-| 数据集 | 机构 | 备注 |
+| 数据集 | 机构/发布者 | 备注 |
 |--|--|--|
 | [探空站](https://www.ncei.noaa.gov/pub/data/igra/) | IGRA2/NOAA | 实时发布，需要做质量控制 |
 | [探空站](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming | |
