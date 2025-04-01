@@ -10,14 +10,10 @@
 | [Ground-based GNSS](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |已停更 |
 | [Ground-based GNSS](https://www.gpsmet.ntpu.edu.tw/) | Taipei University | 台湾200站 |
 | [Sun Photometer](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
-| [AMSR2](https://data.tpdc.ac.cn/home) | TPDC | 空天院研发的多套遥感衍生PWV产品 |
-| [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI |美国静止气象卫星 |
-| [Fengyun](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
+| [AMSR2](https://data.tpdc.ac.cn/home) | CAS/AIR | 多套遥感衍生PWV产品 |
+| [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI | 美国静止气象卫星 |
+| [FY-3D/E/F、2H/2G/4A](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
 
-## Precipitation Data
-- [CMORPH (NCEI)](https://www.ncei.noaa.gov/products/climate-data-records/precipitation-cmorph)
-
-- [weather station (NCEI)](https://www.ncei.noaa.gov/maps/hourly/) （格式比较乱）
 
 ## Tool
 - [GNU Wget](https://eternallybored.org/misc/wget/) （根据URL下载数据必备）
