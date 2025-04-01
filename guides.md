@@ -6,8 +6,8 @@
 | [Radiosonde](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming | |
 | [ERA5](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview) | ECFWM | 一周的更新延迟 |
 | [CRA40](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html) | CMA | |
-| [Ground-based GNSS](http://geodesy.unr.edu/) | Nevada Geodetic Laboratory | (非实时/更新慢，全球万站，需要做质量控制) |
-| [Ground-based GNSS](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |(已停更) |
+| [Ground-based GNSS](http://geodesy.unr.edu/) | Nevada Geodetic Laboratory | 非实时/更新慢，全球万站，需要做质量控制 |
+| [Ground-based GNSS](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |已停更 |
 | [Ground-based GNSS](https://www.gpsmet.ntpu.edu.tw/) | Taipei University | 台湾200站 |
 | [Sun Photometer](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
 | [AMSR2](https://data.tpdc.ac.cn/home) | TPDC | 空天院研发的多套遥感衍生PWV产品 |
