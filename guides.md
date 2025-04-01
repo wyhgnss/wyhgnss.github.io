@@ -1,21 +1,27 @@
-## PWV Data
+## PWV数据集
 
 | 数据集 | 机构 | 备注 |
 |--|--|--|
-| [Radiosonde](https://www.ncei.noaa.gov/pub/data/igra/) | IGRA2/NOAA | 实时发布，需要做质量控制 |
-| [Radiosonde](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming | |
+| [探空站](https://www.ncei.noaa.gov/pub/data/igra/) | IGRA2/NOAA | 实时发布，需要做质量控制 |
+| [探空站](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming | |
 | [ERA5](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview) | ECFWM | 一周的更新延迟 |
-| [CRA40](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html) | CMA | 中国再分析资料 |
-| [Ground-based GNSS](http://geodesy.unr.edu/) | Nevada Geodetic Laboratory | 非实时/更新慢，全球万站，需要做质量控制 |
-| [Ground-based GNSS](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |已停更 |
-| [Ground-based GNSS](https://www.gpsmet.ntpu.edu.tw/) | Taipei University | 台湾200站 |
-| [Sun Photometer](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
-| [AMSR2](https://data.tpdc.ac.cn/home) | CAS/AIR | 多套遥感衍生PWV产品 |
+| [CRA40](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html) | 中国气象局 | 中国再分析资料 |
+| [地基GNSS站](http://geodesy.unr.edu/) | Nevada Geodetic Laboratory | 非实时/更新慢，全球万站，需要做质量控制 |
+| [地基GNSS站](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |已停更 |
+| [地基GNSS站](https://www.gpsmet.ntpu.edu.tw/) | 台北大学 | 2000-2023台湾200站 |
+| [地基GNSS站](https://doi.org/10.11888/Atmos.tpdc.300577) | Yang, 2023 | 2015-2019喜马拉雅山脉5个站 |
+| [增强的地基GNSS站](https://zenodo.org/records/6973528) | Yuan et al, 2023 | 2020全球5万站 |
+| [太阳光度计](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
+| [Himawari-8融合微波](https://doi.org/10.11888/Atmos.tpdc.301518) | Ji et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
+| [AMSR-E/AMSR2反演](https://doi.org/10.11888/Atmos.tpdc.272832) | Ji et al, 2022 | 2002-2017全球0.25°逐日 |
+| [FY-2G融合ERA5](https://doi.org/10.11888/Atmos.tpdc.300119) | Ji et al, 2022 | 2016-2017东亚0.05°逐小时 |
+| [极轨微波卫星融合](https://doi.org/10.11888/Atmos.tpdc.300556) | Ji et al, 2023 | 2010-2020全球0.25°逐3时 |
+| [Himawari-8反演](https://doi.org/10.11888/Atmos.tpdc.301522) | Wang et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
 | [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI | 美国静止气象卫星 |
 | [FY-3D/E/F, 2H/2G/4A](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
 
 
-## Tool
+## 工具
 
 | 数据集 | 备注 |
 |--|--|
