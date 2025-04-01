@@ -15,7 +15,7 @@
 | [Himawari-8融合微波](https://doi.org/10.11888/Atmos.tpdc.301518) | Ji et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
 | [AMSR-E/AMSR2反演](https://doi.org/10.11888/Atmos.tpdc.272832) | Ji et al, 2022 | 2002-2017全球0.25°逐日 |
 | [FY-2G融合ERA5](https://doi.org/10.11888/Atmos.tpdc.300119) | Ji et al, 2022 | 2016-2017东亚0.05°逐小时 |
-| [极轨微波卫星融合](https://doi.org/10.11888/Atmos.tpdc.300556) | Ji et al, 2023 | 2010-2020全球0.25°逐3时 |
+| [极轨微波卫星融合](https://doi.org/10.11888/Atmos.tpdc.300556) | Ji et al, 2023 | 2010-2020全球0.25°逐3小时 |
 | [Himawari-8反演](https://doi.org/10.11888/Atmos.tpdc.301522) | Wang et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
 | [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI | 美国静止气象卫星 |
 | [FY-3D/E/F, 2H/2G/4A](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
