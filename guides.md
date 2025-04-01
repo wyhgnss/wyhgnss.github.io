@@ -1,31 +1,18 @@
 ## PWV Data
 
-| 数据集 | 机构 |
-|--|--|--|--|
-| [Radiosonde(IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/) | NOAA |
-| [Radiosonde](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming |
-
-- [Radiosonde (IGRA2)](https://www.ncei.noaa.gov/pub/data/igra/) (实时发布，常用于检核GNSS/遥感PWV，需要做质量控制才能用)
-
-- [Radiosonde (University of Wyoming)](https://weather.uwyo.edu/upperair/seasia.html)
-
-- [ERA5 (ECFWM)](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview) (一周的更新延迟，常用于检核遥感PWV，下载就能用)
-
-- [CRA40 (CMA)](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html)
-
-- [Ground-based GNSS (Nevada Geodetic Laboratory)](http://geodesy.unr.edu/) (非实时/更新慢，全球几万个GNSS站的ZTD/PWV，很多异常值和负值，需要做质量控制才能用)
-
-- [Ground-based GNSS (SuomiNet)](https://www.unidata.ucar.edu/data/suominet/) (主要是美国的GNSS PWV，已停更)
-
-- [Ground-based GNSS (Taipei University)](https://www.gpsmet.ntpu.edu.tw/) (台湾200多个GNSS站的ZTD/PWV)
-
-- [Sun Photometer (AERONET)](https://aeronet.gsfc.nasa.gov/) (实时发布，全球1600多站的晴空PWV，精度一般)
-
-- [TPDC](https://data.tpdc.ac.cn/home)（空天院研发的多套遥感衍生PWV产品）
-
-- [GOES-R (NOAA/NECI)](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) (美国静止气象卫星)
-
-- [FY PWV (NSMC)](http://sac347.nsmc.org.cn/nsmc/cn/home/)（中国气象卫星）
+| 数据集 | 机构 | 备注 |
+|--|--|--|
+| [Radiosonde](https://www.ncei.noaa.gov/pub/data/igra/) | IGRA2/NOAA | 实时发布，需要做质量控制 |
+| [Radiosonde](https://weather.uwyo.edu/upperair/seasia.html) | University of Wyoming | |
+| [ERA5](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview) | ECFWM | 一周的更新延迟 |
+| [CRA40](https://data.cma.cn/data/cdcindex/cid/713f77e85a7f95e8.html) | CMA | |
+| [Ground-based GNSS](http://geodesy.unr.edu/) | Nevada Geodetic Laboratory | (非实时/更新慢，全球万站，需要做质量控制) |
+| [Ground-based GNSS](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |(已停更) |
+| [Ground-based GNSS](https://www.gpsmet.ntpu.edu.tw/) | Taipei University | 台湾200站 |
+| [Sun Photometer](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
+| [AMSR2](https://data.tpdc.ac.cn/home) | TPDC | 空天院研发的多套遥感衍生PWV产品 |
+| [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI |美国静止气象卫星 |
+| [Fengyun](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
 
 ## Precipitation Data
 - [CMORPH (NCEI)](https://www.ncei.noaa.gov/products/climate-data-records/precipitation-cmorph)
