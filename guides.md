@@ -10,7 +10,7 @@
 | [地基GNSS站](https://www.unidata.ucar.edu/data/suominet/) | SuomiNet/Unidata |已停更 |
 | [地基GNSS站](https://www.gpsmet.ntpu.edu.tw/) | 台北大学 | 2000-2023台湾200站 |
 | [地基GNSS站](https://doi.org/10.11888/Atmos.tpdc.300577) | Yang, 2023 | 2015-2019喜马拉雅山脉5个站 |
-| [增强的地基GNSS站](https://zenodo.org/records/6973528) | Yuan et al, 2023 | 2020全球5万站 |
+| [增强的地基GNSS站](https://zenodo.org/records/6973528) | Yuan et al, 2023 | 2020全球万站 |
 | [太阳光度计](https://aeronet.gsfc.nasa.gov/) | AERONET/NASA | 实时发布，全球1600站，仅晴空 |
 | [Himawari-8融合微波](https://doi.org/10.11888/Atmos.tpdc.301518) | Ji et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
 | [AMSR-E/AMSR2反演](https://doi.org/10.11888/Atmos.tpdc.272832) | Ji et al, 2022 | 2002-2017全球0.25°逐日 |
@@ -19,7 +19,7 @@
 | [Himawari-8反演](https://doi.org/10.11888/Atmos.tpdc.301522) | Wang et al, 2024 | 2016-2022青藏高原0.02°逐小时 |
 | [GOES-R](https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm) | NOAA/NECI | 美国静止气象卫星 |
 | [FY-3D/E/F, 2H/2G/4A](http://sac347.nsmc.org.cn/nsmc/cn/home/) | NSMC | 中国气象卫星 |
-
+| [MODIS](https://ladsweb.modaps.eosdis.nasa.gov/search/) | NASA | 仅晴空，需要校准 |
 
 ## 工具
 
