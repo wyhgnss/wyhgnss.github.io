@@ -17,10 +17,7 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 # 🙋‍♂️ <font color="#4A708B">About Me</font>
-
-<div>
-<img src="/images/GNSS.jpg">
-</div>
+<div><img src="/images/GNSS.jpg"></div>
 <font color="#ABABAB">([Wan et al, 2025, The Innovation](https://doi.org/10.1016/j.xinn.2025.100990))</font>
 Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS-Transmission hydrology (meteorology, tropospheric modeling, and weather forecasting). My current research focus is on water vapor retrieval based on GNSS and remote sensing. In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.
 
