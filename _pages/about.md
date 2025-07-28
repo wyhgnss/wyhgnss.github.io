@@ -21,9 +21,9 @@ redirect_from:
 Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS-Transmission hydrology (meteorology, tropospheric modeling, and weather forecasting). My current research focus is on water vapor retrieval based on GNSS and remote sensing. In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.
 
 <div><img src="/images/GNSS.jpg"></div>
-<font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font>
+<font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
-I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>70+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
+I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>80+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
 
 **<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
@@ -103,6 +103,8 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 
 ## Patent
 - Method and System for Monitoring Extraordinary Rainstorm on Basis of Multi-source Data. Nan Jiang, **Yuhao Wu**, Yan Xu, Tianhe Xu. 2023. Patent No.: US 11,852,779B1.<br>
+- A method for completing missing meteorological monitoring data. Yifan Wang, Hui Zhang, Guofang Wang, **Yuhao Wu**, Yi Ma, Bao Zhang, et al. 2025. Patent No.: ZL 2025 1 0725640.7.<br>
+
 
 ## Degree Thesis
 
@@ -148,10 +150,13 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 # 💬 <font color="#4A708B">Invited Talks</font>
 
 - **Oral:** Analysis of a heavy rainstorm process in Henan, China based on multi-source data. *The XVIII International Congress for Mine Surveying, Xuzhou, China, October 27, 2022*<br>
+- **Oral:** 基于GNSS和变形集成微波影像的高精度水汽产品研制. *大地测量与导航2025综合学术年会, 中国青岛, 2025.5.17*<br>
 - **Poster:** 基于SWCVR算法和集成机器学习的Landsat 8 TIRS水汽反演研究. *第五届中国大地测量和地球物理学学术大会. 中国武汉, 2023.4.22*<br>
+
 
 # 💻 <font color="#4A708B">Internships</font>
 - From July 2018 to September 2018, I worked as a first grade homeroom teacher (volunteer teaching) at Hanwang Town Second Primary School in Mianzhu City, Sichuan Province, China.
+- Since December 2024, I have been serving as a part-time student editor for the journal 《Satellite Navigation》.<br>
 
 <span class='anchor' id='-hobbies'></span>
 # 📷 <font color="#4A708B">Hobbies</font>
