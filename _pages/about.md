@@ -83,7 +83,7 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 ## Software Copyright
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">GPRA</div><img src='images/software1.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
-[Batch retrieval software for water vapor based on Beidou/GNSS](https://b23.tv/1DP5ixu)
+Batch retrieval software for water vapor based on Beidou/GNSS
 
 Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 - Support reading of various raw ZTDs such as RTKLIB, Bernese, IGS, RPNT, etc.
@@ -93,7 +93,7 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">GWR</div><img src='images/software2.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
-[GNSS-SNR water level retrieval software](https://b23.tv/8GL6OGN)
+GNSS-SNR water level retrieval software
 
 **Yuhao Wu**, Dongliang Guan. 2021. 2021SR1211116.<br>
 - Suitable for multiple systems such as BDS and GPS.
@@ -108,9 +108,9 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 
 ## Degree Thesis
 
-- **Master's thesis:** Research and Application of Water Vapor Retrieval by Integrating Ground-based GNSS and Spaceborne Thermal Infrared Remote Sensing Data. (Advisor: Dr. [Yan Xu](https://apd.wh.sdu.edu.cn/info/1510/1912.htm)). <br>
+- **Master's thesis:** Research and Application of Water Vapor Retrieval by Integrating Ground-based GNSS and Spaceborne Thermal Infrared Remote Sensing Data. <br>
 
-- **Bachelor's thesis:** Research on Water Level Change Monitoring Based on BeiDou Navigation Satellite System. (Advisor: Dr. [Dongliang Guan](https://cge.njtech.edu.cn/info/1045/2861.htm)). Excellent Graduation Thesis Award of Nanjing Tech University. First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province.<br>
+- **Bachelor's thesis:** Research on Water Level Change Monitoring Based on BeiDou Navigation Satellite System. Excellent Graduation Thesis Award of Nanjing Tech University. First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province.<br>
 
 <span class='anchor' id='-honors-and-awards'></span>
 # 🏆️ <font color="#4A708B">Honors and Awards</font>
@@ -170,7 +170,7 @@ Yan Xu, **Yuhao Wu**, Nan Jiang, Tianhe Xu. 2022. 2023SR0222849.<br>
 <div>
 <img src="/images/photo2.jpg">
 </div>
-<br>During my three years in Weihai, I took many meaningful photos and made some friends who took photos together. My camera is *Nikon Z50*, with lenses of *50-250 mm* and *16-50 mm*. In addition, I also have an *Olympus IS-5000* film camera. But in the past year, I have hardly touched them because I have devoted all my time to scientific research.<br>If you like the style of my photos, then we might be kindred spirits. More photos can be viewed on my [Little Red Book](https://www.xiaohongshu.com/user/profile/5b59dc27f7e8b977d3628016).
+<br>During my three years in Weihai, I took many meaningful photos and made some friends who took photos together. My camera is *Nikon Z50*, with lenses of *50-250 mm* and *16-50 mm*. In addition, I also have an *Olympus IS-5000* film camera. But in the past year, I have hardly touched them because I have devoted all my time to scientific research.<br>If you like the style of my photos, then we might be kindred spirits.
 
 ## Past Hobbies
 
