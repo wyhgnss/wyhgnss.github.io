@@ -23,15 +23,16 @@ Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics
 <div><img src="/images/GNSS.jpg"></div>
 <font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
-I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>100+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
+I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>110+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
 
 **<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
 # 🔥 <font color="#4A708B">News</font>
-- *2024.11*: &nbsp;🎉🎉 Our team won the second prize in the [China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080159353177f0193536864dc0048) (Top 4%). 
+- *2025.11*: &nbsp;🎉🎉 Our team won the second prize in the [2025 China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080179ab48607019ab53c045a01a9) (Top 4%). 
+- *2025.10*: &nbsp;🎉🎉 Very pleased to receive the Top Ten Student Editor Award from 《Satellite Navigation》! 
+- *2024.11*: &nbsp;🎉🎉 Our team won the second prize in the [2024 China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080159353177f0193536864dc0048) (Top 4%). 
 - *2024.09*: &nbsp;🎉🎉 Very happy to continue my doctoral studies in engineering at Wuhan University! 
 - *2024.06*: &nbsp;🎉🎉 Very excited to get a Master's degree in Science at Shandong University!
-- *2024.02*: &nbsp;🎉🎉 My research paper on rainstorm in Henan has been accepted by EJRS!
 - *2023.12*: &nbsp;🎉🎉 Very excited to be selected as Outstanding Graduate of Shandong University!
 - *2023.11*: &nbsp;🎉🎉 Very pleased to be awarded the National Scholarship at Shandong University!
 
@@ -127,7 +128,7 @@ GNSS-SNR water level retrieval software
 - *From 2017 to 2021*: Special scholarship at NJtech (¥1600)
 
 ## Competitions
-
+- *2025.11*: Second prize in the China post-graduate mathematical contest in modeling (Top 4%) (**National Level**) 
 - *2024.11*: Second prize in the China post-graduate mathematical contest in modeling (Top 4%) (**National Level**) 
 - *2019.11*: Second Prize in the Remote Sensing Processing Group of the 11th National College GIS Skills Competition (**National Level**) 
 - *2021.05*: First Prize of Jiangsu Province in the 12th Beidou Cup National Youth Science and Technology Innovation Competition (**Provincial Level**) 
