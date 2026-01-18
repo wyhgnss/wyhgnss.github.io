@@ -81,21 +81,21 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 </div>
 </div>
 
-- Yubo Wang, Nan Jiang, **Yuhao Wu**, Yan Xu#, et al., 2024. An Improved Model for the Retrieval of Precipitable Water Vapor in All Weather Conditions (RCMNT) Based on NIR and TIR Recordings of MODIS. *IEEE Transactions on Geoscience and Remote Sensing*. 62, 1-12 (JCR Q1, IF=8.2). [Link](https://doi.org/10.1109/TGRS.2024.3381750) <br>
+- Yubo Wang, Nan Jiang, **Yuhao Wu**, Yan Xu#, et al., 2024. An Improved Model for the Retrieval of Precipitable Water Vapor in All Weather Conditions (RCMNT) Based on NIR and TIR Recordings of MODIS. *IEEE Transactions on Geoscience and Remote Sensing*. 62, 1-12 (JCR Q1, IF=8.2). [PDF](https://doi.org/10.1109/TGRS.2024.3381750) <br>
 
-- Ao Guo, Yan Xu, Nan Jiang#, **Yuhao Wu**, et al., 2023. Analyzing correlations between GNSS retrieved precipitable water vapor and land surface temperature after earthquakes occurrence. *Science of The Total Environment*. 872, 162225-162225 (IF=9.8). [Link](https://doi.org/10.1016/j.scitotenv.2023.162225) <br>
+- Ao Guo, Yan Xu, Nan Jiang#, **Yuhao Wu**, et al., 2023. Analyzing correlations between GNSS retrieved precipitable water vapor and land surface temperature after earthquakes occurrence. *Science of The Total Environment*. 872, 162225-162225 (IF=9.8). [PDF](https://doi.org/10.1016/j.scitotenv.2023.162225) <br>
 
--	Ranran Jia, Nan Jiang#, Yan Xu, **Yuhao Wu**, Zeqi Li, Tianhe Xu, 2025. Shipborne GNSS water vapor anomaly diagnosis and its response to typhoons saola and haikui. *Advances in Space Research*, S0273117725000778. (JCR Q1, IF=2.8). [Link](https://doi.org/10.1016/j.asr.2025.01.047) <br>
+-	Ranran Jia, Nan Jiang#, Yan Xu, **Yuhao Wu**, Zeqi Li, Tianhe Xu, 2025. Shipborne GNSS water vapor anomaly diagnosis and its response to typhoons saola and haikui. *Advances in Space Research*, S0273117725000778. (JCR Q1, IF=2.8). [PDF](https://doi.org/10.1016/j.asr.2025.01.047) <br>
 
--	Ao Guo, Nan Jiang, Yan Xu#, Tianhe Xu, **Yuhao Wu**, et al., 2023. Co-seismic characterization analysis in PWV and land-atmospheric observations associated with Luding Ms 6.8 earthquake occurrence in China on September 5, 2022, Geomatics, *Natural Hazards and Risk*. 14:1 (JCR Q1, IF=4.2). [Link](https://doi.org/10.1080/19475705.2023.2279494) <br>
+-	Ao Guo, Nan Jiang, Yan Xu#, Tianhe Xu, **Yuhao Wu**, et al., 2023. Co-seismic characterization analysis in PWV and land-atmospheric observations associated with Luding Ms 6.8 earthquake occurrence in China on September 5, 2022, Geomatics, *Natural Hazards and Risk*. 14:1 (JCR Q1, IF=4.2). [PDF](https://doi.org/10.1080/19475705.2023.2279494) <br>
 
--	Nan Jiang, Zhaorui Gao, Yan Xu, Tianhe Xu#, Ao Guo, **Yuhao Wu**, et al., 2023. Response analysis on multi-parameters in the 2022 Tonga volcanic eruption using satellite-ground combined data. *Journal of Geophysical Research: Atmospheres*. 128.e2023JD038839 (JCR Q2, IF=4.4). [Link](https://doi.org/10.1029/2023JD038839) <br>
+-	Nan Jiang, Zhaorui Gao, Yan Xu, Tianhe Xu#, Ao Guo, **Yuhao Wu**, et al., 2023. Response analysis on multi-parameters in the 2022 Tonga volcanic eruption using satellite-ground combined data. *Journal of Geophysical Research: Atmospheres*. 128.e2023JD038839 (JCR Q2, IF=4.4). [PDF](https://doi.org/10.1029/2023JD038839) <br>
 
--	Zhaorui Gao, Nan Jiang, Yan Xu#, Tianhe Xu, Ao Guo, **Yuhao Wu**, 2023. A Spatial PWV Retrieval Model Over Land for GCOM-W/AMSR2 Using Neural Network Method: A Case in the Western United States. *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*. 16, 2954-2962 (JCR Q1, IF=5.5). [Link](https://doi.org/10.1109/JSTARS.2023.3255259) <br>
+-	Zhaorui Gao, Nan Jiang, Yan Xu#, Tianhe Xu, Ao Guo, **Yuhao Wu**, 2023. A Spatial PWV Retrieval Model Over Land for GCOM-W/AMSR2 Using Neural Network Method: A Case in the Western United States. *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*. 16, 2954-2962 (JCR Q1, IF=5.5). [PDF](https://doi.org/10.1109/JSTARS.2023.3255259) <br>
 
--	Song Li, Nan Jiang, Tianhe Xu#, Yan Xu, Honglei Yang, Zhen Zhang, Ao Guo, **Yuhao Wu**, 2023. A precipitation forecast model with a neural network and improved GPT3 model for Japan. *GPS Solutions*. 27, 186 (JCR Q2, IF=4.9). [Link](https://doi.org/10.1007/s10291-023-01526-1) <br>
+-	Song Li, Nan Jiang, Tianhe Xu#, Yan Xu, Honglei Yang, Zhen Zhang, Ao Guo, **Yuhao Wu**, 2023. A precipitation forecast model with a neural network and improved GPT3 model for Japan. *GPS Solutions*. 27, 186 (JCR Q2, IF=4.9). [PDF](https://doi.org/10.1007/s10291-023-01526-1) <br>
 
--	Song Li, Nan Jiang, Tianhe Xu#, Honglei Yang, Ao Guo, **Yuhao Wu**, Yan Xu, 2024. Tightly Coupled Tomography Model for Atmospheric Water Vapor Based on Multisource Remote-Sensing and GNSS Data. *IEEE Transactions on Geoscience and Remote Sensing*. 62, 1-16 (JCR Q1, IF=8.2). [Link](https://doi.org/10.1109/TGRS.2024.3393561) <br>
+-	Song Li, Nan Jiang, Tianhe Xu#, Honglei Yang, Ao Guo, **Yuhao Wu**, Yan Xu, 2024. Tightly Coupled Tomography Model for Atmospheric Water Vapor Based on Multisource Remote-Sensing and GNSS Data. *IEEE Transactions on Geoscience and Remote Sensing*. 62, 1-16 (JCR Q1, IF=8.2). [PDF](https://doi.org/10.1109/TGRS.2024.3393561) <br>
 
 
 ## Software Copyright
