@@ -1,0 +1,62 @@
+name: Download Image Hourly
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+
+# 添加权限设置
+permissions:
+  contents: write  # 赋予写入仓库的权限
+
+jobs:
+  download-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        # 不再需要指定 token，使用默认的 GITHUB_TOKEN
+        fetch-depth: 0  # 获取所有历史记录
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Download image
+      run: |
+        mkdir -p images
+        timestamp=$(date -u +"%Y%m%d_%H%M")
+        
+        # 下载图片
+        curl -s -f -L -o "images/image_${timestamp}.png" \
+          "https://bin.ssec.wisc.edu/pub/mtpw2/images/tpw_nrl_colors/global2_latest/latest_image.png"
+        
+        # 检查是否下载成功
+        if [ $? -ne 0 ] || [ ! -s "images/image_${timestamp}.png" ]; then
+          echo "图片下载失败"
+          exit 1
+        fi
+        
+        # 同时下载最新图片（可选）
+        curl -s -f -L -o "images/latest.png" \
+          "https://bin.ssec.wisc.edu/pub/mtpw2/images/tpw_nrl_colors/global2_latest/latest_image.png"
+
+    - name: Commit and push changes
+      run: |
+        # 拉取最新更改避免冲突
+        git pull origin main --rebase || true
+        
+        # 添加所有图片文件
+        git add images/
+        
+        # 检查是否有变更
+        if git diff --staged --quiet; then
+          echo "没有变化，跳过提交"
+        else
+          git commit -m "自动更新图片: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
+          echo "✅ 已成功推送更改"
+        fi
