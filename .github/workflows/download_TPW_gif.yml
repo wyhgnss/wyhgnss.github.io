@@ -85,10 +85,10 @@ jobs:
           # 创建GIF，每帧延迟100毫秒（0.1秒），循环播放
           # 使用-resize调整大小，避免GIF过大
           echo "正在创建GIF动画..."
-          convert -delay 10 -loop 0 -resize 1000x470 $files ../gif/animation.gif
+          convert -delay 5 -loop 0 -resize 1000x470 $files ../gif/animation.gif
           
           # 同时创建一个更快的版本
-          convert -delay 5 -loop 0 -resize 1000x470 $files ../gif/animation_fast.gif
+          convert -delay 1 -loop 0 -resize 1000x470 $files ../gif/animation_fast.gif
           
           echo "✅ GIF动画创建成功"
           echo "已保存文件: animation.gif (100ms/帧), animation_fast.gif (50ms/帧)"
