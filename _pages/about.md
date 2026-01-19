@@ -25,8 +25,6 @@ Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics
 
 I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>110+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
 
-https://bin.ssec.wisc.edu/pub/mtpw2/images/tpw_nrl_colors/global2_latest/latest_image.png
-
 **<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
 # 🔥 <font color="#4A708B">News</font>
