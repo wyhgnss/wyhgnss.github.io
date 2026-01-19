@@ -23,10 +23,8 @@ Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics
 <div><img src="/images/GNSS.jpg"></div>
 <font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
-
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CIMSS</div><img src='images/latest.png' alt="sym" width="120%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">Real-time water vapor (Wimmers and Velden, 2011)</div><img src='images/latest.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
-Real-time water vapor from the CIMSS (Wimmers & Velden, 2011)
 
 - My current research focus is on water vapor retrieval based on GNSS and remote sensing. 
 - In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.
