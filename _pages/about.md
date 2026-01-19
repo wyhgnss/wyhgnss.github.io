@@ -24,7 +24,7 @@ Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics
 <font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CIMSS</div><img src='images/latest.png' alt="sym" width="90%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CIMSS</div><img src='images/latest.png' alt="sym" width="120%"></div></div>
 <div class='paper-box-text' markdown="1">
 Real-time water vapor from the CIMSS (Wimmers & Velden, 2011)
 
