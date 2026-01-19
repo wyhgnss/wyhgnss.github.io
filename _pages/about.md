@@ -23,7 +23,7 @@ Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics
 <div><img src="/images/GNSS.jpg"></div>
 <font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
-<div><img src="/images/gif/animation.gif"></div>
+<div><img src="/images/gif/animation_fast.gif"></div>
 <font color="#ABABAB">Real-time Precipitable Water Vapor (PWV) from the CIMSS (Wimmers and Velden, 2011).</font><br>
 
 
