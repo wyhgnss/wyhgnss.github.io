@@ -91,7 +91,7 @@ Nan Jiang†, **Yuhao Wu†**, Song Li, Yan Xu#, et al., 2024. *Geophysical Rese
 
 -	Ranran Jia, Nan Jiang#, Yan Xu, **Yuhao Wu**, Zeqi Li, Tianhe Xu, 2025. Shipborne GNSS water vapor anomaly diagnosis and its response to typhoons saola and haikui. *Advances in Space Research*, S0273117725000778. (JCR Q1, IF=2.8). [PDF](https://doi.org/10.1016/j.asr.2025.01.047) <br>
 
--	Ao Guo, Nan Jiang, Yan Xu#, Tianhe Xu, **Yuhao Wu**, et al., 2023. Co-seismic characterization analysis in PWV and land-atmospheric observations associated with Luding Ms 6.8 earthquake occurrence in China on September 5, 2022, Geomatics, *Natural Hazards and Risk*. 14:1 (JCR Q1, IF=4.2). [PDF](https://doi.org/10.1080/19475705.2023.2279494) <br>
+-	Ao Guo, Nan Jiang, Yan Xu#, Tianhe Xu, **Yuhao Wu**, et al., 2023. Co-seismic characterization analysis in PWV and land-atmospheric observations associated with Luding Ms 6.8 earthquake occurrence in China on September 5, 2022, *Geomatics, Natural Hazards and Risk*. 14:1 (JCR Q1, IF=4.2). [PDF](https://doi.org/10.1080/19475705.2023.2279494) <br>
 
 -	Nan Jiang, Zhaorui Gao, Yan Xu, Tianhe Xu#, Ao Guo, **Yuhao Wu**, et al., 2023. Response analysis on multi-parameters in the 2022 Tonga volcanic eruption using satellite-ground combined data. *Journal of Geophysical Research: Atmospheres*. 128.e2023JD038839 (JCR Q2, IF=4.4). [PDF](https://doi.org/10.1029/2023JD038839) <br>
 
@@ -140,6 +140,8 @@ GNSS-SNR water level retrieval software
 ## Scholarships
 
 - *2023.11*: **National Scholarship for Master's Students** (¥20000)<br>
+- *2025.09*: Second Class Scholarship at Wuhan University (¥3000)<br>
+- *2025.09*: Doctoral Basic Scholarship at Wuhan University (¥10000)<br>
 - *2024.09*: Doctoral Basic Scholarship at Wuhan University (¥10000)<br>
 - *2022.10*: Second Class Scholarship at Shandong University (¥3200)<br>
 - *2021.11*: Third Prize of Outstanding Graduate Student Source Award Fund at Shandong University (¥4000)<br>
@@ -161,6 +163,9 @@ GNSS-SNR water level retrieval software
 ## Honors
 - *2016.05*: Three Good Students in Yunnan Province (**Provincial Level**)
 - *2021.10*: First Prize for Outstanding Graduation Thesis of Undergraduate Geomatics Students in Jiangsu Province (**Provincial Level**)
+- *2025.10*: Top Ten Student Editor Award from 《Satellite Navigation》
+- *2025.03*: Advanced individual in the 2024 China Graduate Innovation Practice Series competition at Wuhan University (**School Level**)
+- *2025.09*: Annual Outstanding Graduate Student at Wuhan University (**School Level**)
 - *From 2017 to 2021*: Exemplary individual, Excellent Student Cadre, Excellent League Member, Three Good Students, Excellent Volunteers, Excellent Graduates, and Excellent Graduation Design at NJtech (**School Level**) 
 - *From 2021 to 2024*: Outstanding Communist Youth League Member, Outstanding Graduate, and Annual Outstanding Graduate Student at Shandong University (**School Level**)<br>
 
