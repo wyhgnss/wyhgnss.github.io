@@ -1,0 +1,131 @@
+name: Download and Create GIF
+
+on:
+  schedule:
+    - cron: '5 * * * *'  # 每小时的第5分钟运行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-images:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Install ImageMagick for GIF creation
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y imagemagick
+
+    - name: Create necessary directories
+      run: |
+        # 创建图片目录
+        mkdir -p images/history
+        mkdir -p images/gif
+
+    - name: Download latest image
+      run: |
+        timestamp=$(date -u +"%Y%m%d_%H00")  # 精确到小时
+        hour=$(date -u +"%H")
+        
+        # 下载最新图片
+        curl -s -f -L -o "images/history/image_${timestamp}.png" \
+          "https://bin.ssec.wisc.edu/pub/mtpw2/images/tpw_nrl_colors/global2_latest/latest_image.png"
+        
+        # 同时保存为最新图片
+        cp "images/history/image_${timestamp}.png" "images/latest.png"
+        
+        if [ $? -ne 0 ] || [ ! -s "images/history/image_${timestamp}.png" ]; then
+          echo "❌ 图片下载失败"
+          exit 1
+        fi
+        
+        echo "✅ 图片下载成功: image_${timestamp}.png"
+
+    - name: Clean old images (keep only last 24)
+      run: |
+        cd images/history
+        
+        # 获取所有图片文件，按文件名排序（时间顺序）
+        # 保留最近的24个文件
+        file_count=$(ls image_*.png 2>/dev/null | wc -l)
+        
+        if [ $file_count -gt 24 ]; then
+          # 按文件名排序，删除最旧的
+          files_to_delete=$(ls image_*.png | sort | head -n $((file_count - 24)))
+          echo "删除旧文件:"
+          echo "$files_to_delete"
+          rm -f $files_to_delete
+        elif [ $file_count -eq 0 ]; then
+          echo "没有历史图片文件"
+        else
+          echo "当前有 $file_count 个历史图片文件"
+        fi
+
+    - name: Create GIF from last 24 images
+      run: |
+        cd images/history
+        
+        # 检查是否有足够的图片创建GIF
+        file_count=$(ls image_*.png 2>/dev/null | wc -l)
+        
+        if [ $file_count -ge 2 ]; then  # 至少有2张图片才能创建GIF
+          # 按时间顺序排列图片
+          files=$(ls image_*.png | sort)
+          
+          # 创建GIF，每帧延迟100毫秒（0.1秒），循环播放
+          # 使用-resize调整大小，避免GIF过大
+          echo "正在创建GIF动画..."
+          
+          convert -delay 1 -loop 0 -resize 1000x470 $files ../gif/animation_fast.gif
+          
+          echo "✅ GIF动画创建成功"
+          echo "已保存文件: animation.gif (100ms/帧), animation_fast.gif (50ms/帧)"
+        else
+          echo "⚠️ 图片数量不足（当前$file_count张），无法创建GIF"
+          # 创建空GIF或占位文件
+          echo "GIF creation pending..." > ../gif/placeholder.txt
+        fi
+
+    - name: Create timestamp file
+      run: |
+        # 创建时间戳文件，记录更新时间
+        echo "最后更新时间: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" > images/update_info.txt
+        echo "历史图片数量: $(ls images/history/image_*.png 2>/dev/null | wc -l)" >> images/update_info.txt
+        echo "GIF帧数: $(ls images/history/image_*.png 2>/dev/null | wc -l)" >> images/update_info.txt
+        echo "下次更新: 每小时的第5分钟" >> images/update_info.txt
+
+    - name: Commit and push changes
+      run: |
+        # 拉取最新更改避免冲突
+        git pull origin main --rebase || true
+        
+        # 添加所有文件
+        git add images/
+        
+        # 检查是否有变更
+        if git diff --staged --quiet; then
+          echo "没有变化，跳过提交"
+        else
+          # 获取历史图片数量
+          img_count=$(ls images/history/image_*.png 2>/dev/null | wc -l)
+          
+          # 提交信息
+          commit_msg="🔄 更新图片 ($(date -u +'%H:%M UTC'))"
+          if [ $img_count -ge 2 ]; then
+            commit_msg="$commit_msg | GIF动画已更新 ($img_count帧)"
+          fi
+          
+          git commit -m "$commit_msg"
+          git push
+          echo "✅ 已成功推送更改"
+        fi
