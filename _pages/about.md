@@ -20,16 +20,15 @@ redirect_from:
 
 Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS-Transmission hydrology (meteorology, tropospheric modeling, and weather forecasting). My current research focus is on water vapor retrieval based on GNSS and remote sensing. In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.<br>
 
+I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>110+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at: <u>wyhnbnb@126.com</u>
+
+**<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
+
 <div><img src="/images/GNSS.jpg"></div>
 <font color="#ABABAB">Conceptual framework of GNSS hydrology (Wan et al., 2025).</font><br>
 
 <div><img src="/images/gif/animation_fast.gif"></div>
 <font color="#ABABAB">Real-time Precipitable Water Vapor (PWV) from the CIMSS (Wimmers and Velden, 2011).</font><br>
-
-
-I have published more than 10 papers with total <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ&hl=zh-CN'>google scholar citations <strong><span id='total_cit'>110+</span></strong></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at - <u>wyhnbnb@126.com</u>
-
-**<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
 # 🔥 <font color="#4A708B">News</font>
 - *2025.11*: &nbsp;🎉🎉 Our team won the second prize in the [2025 China post-graduate mathematical contest in modeling](https://cpipc.acge.org.cn//cw/detail/4/2c9080179ab48607019ab53c045a01a9) (Top 4%). 
