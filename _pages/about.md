@@ -19,7 +19,7 @@ redirect_from:
 # 🙋‍♂️ <font color="#4A708B">About Me</font>
 
 Here is **Yuhao Wu**. I am a PhD student in the [School of Geodesy and Geomatics](https://www.sgg.whu.edu.cn/) at the [Wuhan University](https://en.whu.edu.cn/). My research interests includes GNSS-Transmission hydrology (meteorology, tropospheric modeling, and weather forecasting). My current research focus is on water vapor retrieval based on GNSS and remote sensing. In a word, advanced technologies like GNSS influence the life of everybody.  I wish to devote my talent to this meaningful cause and bring well-being to society.<br>
-I have published 20+ papers with <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at: <u>wyhnbnb@126.com</u>
+I have published 10+ papers with <a href='https://scholar.google.com/citations?user=RlAdMyYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>. If you are interested in any aspect of me, I am always open to discussions and collaborations. Feel free to reach out to me at: <u>wyhnbnb@126.com</u>
 
 **<font color="#990000">I am actively seeking a position as a university lecturer in 2028. If you have any information, please contact me!</font>**
 
