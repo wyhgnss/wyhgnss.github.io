@@ -46,7 +46,7 @@ I have published 10+ papers with <a href='https://scholar.google.com/citations?u
 <div class='paper-box-text' markdown="1">
 [Improving the capability of water vapor retrieval from Landsat 8 using ensemble machine learning](https://doi.org/10.1016/j.jag.2023.103407)
 
-`Yuhao Wu`, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (JCR Q1, IF=7.5).<br>
+**Yuhao Wu**, Nan Jiang, Yan Xu#, et al., 2023. *International Journal of Applied Earth Observation and Geoinformation*. 122, 103407. (JCR Q1, IF=7.5).<br>
 
 - The new method uses Gradient Boosting Decision Tree (GBDT) to establish the model between brightness temperature, GNSS-derived PWV, and related surface parameters. 
 - Compared with SWCVR, the GBDT improves the RMSE and availability by 41.99% and 38.3%, respectively.
