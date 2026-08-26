@@ -49,7 +49,6 @@ I have published 10+ papers with ![Google Scholar citations](https://img.shields
 **Yuhao Wu**, Bao Zhang#, Yibin Yao, Zheng Du, et al., 2026. *International Journal of Applied Earth Observation and Geoinformation*. 152, 105485. (JCR Q1, IF=8.2).<br>
 
 - A hybrid model was proposed based on spherical cap harmonic analysis and XGBoost. 
-- The model calibrated the MIMIC PWV over North America spanning 2016–2024.
 - The model improved PWV accuracy by 61–66% over the original MIMIC PWV data.
 - The striping, noise and boundary errors in the original PWV map were mitigated.
 
@@ -63,7 +62,6 @@ I have published 10+ papers with ![Google Scholar citations](https://img.shields
 **Yuhao Wu**, Bao Zhang#, Yibin Yao, et al., 2026. *Geophysical Research Letters*. 53, e2026GL122585. (JCR Q1, IF=5).<br>
 
 - FY‐4B LPW was overall underestimated against radiosonde LPW with large anomalies over the Tibetan Plateau. 
-- A novel hybrid framework was proposed to calibrate FY‐4B LPW using a proportional allocation model considering spatiotemporal variability.
 - The method improved FY‐4B LPW accuracy by 27%–43% and mitigated negative biases, which had not been achieved before.
 
 

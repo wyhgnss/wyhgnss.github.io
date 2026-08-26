@@ -51,17 +51,17 @@ jobs:
         
         echo "✅ 图片下载成功: image_${timestamp}.png"
 
-    - name: Clean old images (keep only last 24)
+    - name: Clean old images (keep only last 12)
       run: |
         cd images/history
         
         # 获取所有图片文件，按文件名排序（时间顺序）
-        # 保留最近的24个文件
+        # 保留最近的12个文件
         file_count=$(ls image_*.png 2>/dev/null | wc -l)
         
-        if [ $file_count -gt 24 ]; then
+        if [ $file_count -gt 12 ]; then
           # 按文件名排序，删除最旧的
-          files_to_delete=$(ls image_*.png | sort | head -n $((file_count - 24)))
+          files_to_delete=$(ls image_*.png | sort | head -n $((file_count - 12)))
           echo "删除旧文件:"
           echo "$files_to_delete"
           rm -f $files_to_delete
@@ -71,7 +71,7 @@ jobs:
           echo "当前有 $file_count 个历史图片文件"
         fi
 
-    - name: Create GIF from last 24 images
+    - name: Create GIF from last 12 images
       run: |
         cd images/history
         
