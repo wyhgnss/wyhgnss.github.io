@@ -202,6 +202,9 @@ GNSS-SNR water level retrieval software
 
 - **Oral:** Analysis of a heavy rainstorm process in Henan, China based on multi-source data. *The XVIII International Congress for Mine Surveying. Xuzhou, China, October 27, 2022*<br>
 - **Oral:** Generation of High-Precision Water Vapor Products Based on GNSS and Morphed Integrated Microwave Imagery. *2025 Annual Meeting on Geodesy and Navigation. Qingdao, China, 2025.5.17*<br>
+- **Oral:** Reconstruction of Multidimensional Water Vapor Field from Remote Sensing Using GNSS. *2026 CPGNSS Forum. Nanjing, China, 2026.4.13*<br>
+- **Oral:** Reconstruction of Multidimensional Water Vapor Field from Remote Sensing Using GNSS. *2026 Annual Meeting on Geodesy and Navigation. Changsha, China, 2026.4.19*<br>
+- **Poster:** GNSS-assisted Microwave Remote Sensing Water Vapor Product Reconstruction. *2026 Annual Meeting on Geodesy and Navigation. Changsha, China, 2026.4.19*<br>
 - **Poster:** Landsat 8 TIRS Water Vapor Retrieval Based on SWCVR Algorithm and Ensemble Machine Learning. *5th Congress of China Geodesy and Geophysics, 5th CCGG. Wuhan, China, 2023.4.22*<br>
 
 
