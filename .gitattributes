@@ -1,0 +1,3 @@
+lpw/pipeline/model/*.npz binary
+lpw/pipeline/model/*.ubj binary
+lpw/data/frames/*.bin.gz binary

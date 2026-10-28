@@ -1,5 +1,8 @@
 # main links links
 main:
+  - title: "Real-time LPW"
+    url: "/lpw/"
+
   - title: "About Me"
     url: "/#about-me"
 

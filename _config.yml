@@ -67,6 +67,7 @@ include:
 exclude:
   - docs
   - google_scholar_crawler
+  - lpw/pipeline
   - "*.sublime-project"
   - "*.sublime-workspace"
   - .asset-cache
