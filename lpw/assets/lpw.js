@@ -36,30 +36,89 @@
     return palette[i].map((channel, j) => Math.round(channel + (palette[i + 1][j] - channel) * f));
   }
 
-  function rasterUrl(data, layer) {
-    const { rows, columns } = state.manifest.grid;
-    const canvas = document.createElement("canvas");
-    canvas.width = columns; canvas.height = rows;
-    const context = canvas.getContext("2d");
-    const image = context.createImageData(columns, rows);
-    for (let y = 0; y < rows; y += 1) {
-      const sourceRow = rows - 1 - y;
-      for (let x = 0; x < columns; x += 1) {
-        const value = valueAt(data, layer, sourceRow, x);
-        const offset = (y * columns + x) * 4;
-        if (value === null) { image.data[offset + 3] = 0; continue; }
-        const rgb = color(value);
-        image.data[offset] = rgb[0]; image.data[offset + 1] = rgb[1]; image.data[offset + 2] = rgb[2]; image.data[offset + 3] = 222;
+  function interpolatedValue(data, layer, latitude, longitude) {
+    const grid = state.manifest.grid;
+    const latitudeIndex = Math.max(0, Math.min(grid.rows - 1, (latitude - grid.latitude_start) / grid.latitude_step));
+    const wrappedLongitude = ((longitude - grid.longitude_start) % 360 + 360) % 360;
+    const longitudeIndex = wrappedLongitude / grid.longitude_step;
+    const row0 = Math.floor(latitudeIndex);
+    const row1 = Math.min(grid.rows - 1, row0 + 1);
+    const column0 = Math.floor(longitudeIndex) % grid.columns;
+    const column1 = (column0 + 1) % grid.columns;
+    const latitudeWeight = latitudeIndex - row0;
+    const longitudeWeight = longitudeIndex - Math.floor(longitudeIndex);
+    const samples = [
+      [valueAt(data, layer, row0, column0), (1 - latitudeWeight) * (1 - longitudeWeight)],
+      [valueAt(data, layer, row0, column1), (1 - latitudeWeight) * longitudeWeight],
+      [valueAt(data, layer, row1, column0), latitudeWeight * (1 - longitudeWeight)],
+      [valueAt(data, layer, row1, column1), latitudeWeight * longitudeWeight]
+    ];
+    let weightedValue = 0;
+    let validWeight = 0;
+    samples.forEach(([sample, weight]) => {
+      if (sample !== null) { weightedValue += sample * weight; validWeight += weight; }
+    });
+    return validWeight > 0 ? weightedValue / validWeight : null;
+  }
+
+  function createLPWLayer(map, layerIndex, mapIndex) {
+    const paneName = `lpw-raster-${mapIndex}`;
+    map.createPane(paneName);
+    map.getPane(paneName).style.zIndex = 450;
+    map.getPane(paneName).style.pointerEvents = "none";
+
+    const overlay = L.gridLayer({
+      pane: paneName,
+      tileSize: 256,
+      opacity: .86,
+      updateWhenIdle: false,
+      updateWhenZooming: false,
+      keepBuffer: 2
+    });
+    overlay.lpwData = null;
+    overlay.createTile = function createTile(coords) {
+      const size = this.getTileSize();
+      const canvas = document.createElement("canvas");
+      canvas.width = size.x;
+      canvas.height = size.y;
+      canvas.className = "lpw-raster-tile";
+      if (!this.lpwData) return canvas;
+
+      const context = canvas.getContext("2d");
+      const image = context.createImageData(size.x, size.y);
+      const worldSize = size.x * (2 ** coords.z);
+      for (let y = 0; y < size.y; y += 1) {
+        const globalY = coords.y * size.y + y + .5;
+        const mercatorY = Math.PI * (1 - 2 * globalY / worldSize);
+        const latitude = Math.atan(Math.sinh(mercatorY)) * 180 / Math.PI;
+        for (let x = 0; x < size.x; x += 1) {
+          const globalX = coords.x * size.x + x + .5;
+          const longitude = 360 * globalX / worldSize - 180;
+          const value = interpolatedValue(this.lpwData, layerIndex, latitude, longitude);
+          const offset = (y * size.x + x) * 4;
+          if (value === null) continue;
+          const rgb = color(value);
+          image.data[offset] = rgb[0];
+          image.data[offset + 1] = rgb[1];
+          image.data[offset + 2] = rgb[2];
+          image.data[offset + 3] = 222;
+        }
       }
-    }
-    context.putImageData(image, 0, 0);
-    return canvas.toDataURL("image/png");
+      context.putImageData(image, 0, 0);
+      return canvas;
+    };
+    overlay.setLPWData = function setLPWData(data) {
+      this.lpwData = data;
+      this.redraw();
+    };
+    return overlay.addTo(map);
   }
 
   function initialiseMaps() {
     ["map-low", "map-mid", "map-high"].forEach((id, index) => {
       const map = L.map(id, { worldCopyJump: true, minZoom: 1, maxZoom: 7, zoomControl: index === 0, attributionControl: index === 2 }).setView([16, 8], 1);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, className: "base-tiles", attribution: "© OpenStreetMap contributors" }).addTo(map);
+      state.overlays.push(createLPWLayer(map, index, index));
       map.on("click", (event) => selectPoint(event.latlng.lat, event.latlng.lng));
       state.maps.push(map);
     });
@@ -79,8 +138,7 @@
     $("#timeline").value = state.frameIndex;
     $("#frame-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ");
     $("#analysis-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ") + " UTC";
-    state.overlays.forEach((overlay) => overlay.remove()); state.overlays = [];
-    state.maps.forEach((map, layer) => state.overlays.push(L.imageOverlay(rasterUrl(data, layer), [[-90, -180], [90, 180]], { opacity: .86, interactive: false }).addTo(map)));
+    state.overlays.forEach((overlay) => overlay.setLPWData(data));
     if (state.view === "stack") renderStack(data);
   }
 

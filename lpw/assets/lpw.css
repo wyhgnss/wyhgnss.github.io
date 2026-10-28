@@ -71,7 +71,7 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
 .layer-number { color: var(--cyan); font-family: ui-monospace, monospace; font-size: .63rem; }
 .map-panel h2 { font-size: .92rem; font-weight: 600; letter-spacing: .02em; margin: 0; }
 .map-panel header p { color: var(--muted); font-size: .64rem; margin: 0; }
-.map { height: clamp(340px, 38vw, 610px); background: #071018; }
+.map { height: clamp(340px, 38vw, 610px); background: #071018; overflow: hidden !important; contain: layout paint; isolation: isolate; }
 .leaflet-container { font-family: var(--font); background: #071018; }
 .leaflet-tile-pane .base-tiles { filter: grayscale(1) invert(1) brightness(.43) contrast(1.22); opacity: .68; }
 .leaflet-control-attribution { background: rgba(7,16,24,.72) !important; color: #71848f; }
