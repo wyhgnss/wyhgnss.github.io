@@ -1,11 +1,18 @@
 (() => {
   "use strict";
 
-  const state = { manifest: null, frameIndex: 0, cache: new Map(), canvases: [], currentData: null, timer: null, selected: null, last3DPoint: null, view: "maps", historyRequestId: 0 };
+  const state = { manifest: null, coastline: null, frameIndex: 0, cache: new Map(), canvases: [], currentData: null, timer: null, selected: null, last3DPoint: null, view: "maps", historyRequestId: 0 };
   const palette = [[48,18,59],[65,69,171],[42,159,214],[27,207,212],[97,208,79],[249,231,33],[244,138,44],[198,32,40]];
   const layerNames = ["Low", "Middle", "High"];
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
+  const assetPath = new URL(".", document.currentScript.src).href;
+
+  async function loadCoastline() {
+    const response = await fetch(new URL("coastlines.json", assetPath), { cache: "force-cache" });
+    if (!response.ok) throw new Error(`Coastline request failed (${response.status})`);
+    state.coastline = await response.json();
+  }
 
   async function inflate(response) {
     if (!response.ok) throw new Error(`Data request failed (${response.status})`);
@@ -40,14 +47,58 @@
     context.save();
     context.strokeStyle = "rgba(226, 240, 246, .22)";
     context.lineWidth = .6;
+    context.fillStyle = "rgba(245, 250, 252, .9)";
+    context.font = "6px Inter, Arial, sans-serif";
+    context.shadowColor = "rgba(0, 0, 0, .9)";
+    context.shadowBlur = 2;
     for (let longitude = -120; longitude <= 120; longitude += 60) {
       const x = (longitude + 180) / 360 * canvas.width;
       context.beginPath(); context.moveTo(x, 0); context.lineTo(x, canvas.height); context.stroke();
+      const longitudeLabel = longitude === 0 ? "0°" : `${Math.abs(longitude)}°${longitude < 0 ? "W" : "E"}`;
+      context.textAlign = longitude === 120 ? "right" : "left";
+      context.textBaseline = "bottom";
+      context.fillText(longitudeLabel, x + (longitude === 120 ? -2 : 2), canvas.height - 2);
     }
     for (let latitude = -60; latitude <= 60; latitude += 30) {
       const y = (90 - latitude) / 180 * canvas.height;
       context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y); context.stroke();
+      const latitudeLabel = latitude === 0 ? "0°" : `${Math.abs(latitude)}°${latitude < 0 ? "S" : "N"}`;
+      context.textAlign = "left";
+      context.textBaseline = y < 10 ? "top" : "bottom";
+      context.fillText(latitudeLabel, 3, y + (y < 10 ? 2 : -2));
     }
+    context.restore();
+  }
+
+  function drawCoastline(context, canvas) {
+    if (!state.coastline) return;
+    const { latitude, longitude } = state.coastline;
+    context.save();
+    context.beginPath();
+    context.strokeStyle = "rgba(248, 252, 253, .82)";
+    context.lineWidth = .75;
+    context.lineJoin = "round";
+    let drawing = false;
+    let previousLongitude = null;
+    for (let i = 0; i < latitude.length; i += 1) {
+      const lat = latitude[i];
+      const lon = longitude[i];
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        drawing = false;
+        previousLongitude = null;
+        continue;
+      }
+      const x = (lon + 180) / 360 * canvas.width;
+      const y = (90 - lat) / 180 * canvas.height;
+      if (!drawing || (previousLongitude !== null && Math.abs(lon - previousLongitude) > 180)) {
+        context.moveTo(x, y);
+        drawing = true;
+      } else {
+        context.lineTo(x, y);
+      }
+      previousLongitude = lon;
+    }
+    context.stroke();
     context.restore();
   }
 
@@ -83,6 +134,7 @@
     }
     context.putImageData(image, 0, 0);
     drawGraticule(context, canvas);
+    drawCoastline(context, canvas);
     drawSelection(context, canvas);
   }
 
@@ -109,8 +161,12 @@
     const data = await loadFrame(state.frameIndex);
     const frame = state.manifest.frames[state.frameIndex];
     $("#timeline").value = state.frameIndex;
-    $("#frame-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ");
-    $("#analysis-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ") + " UTC";
+    const utcTime = new Date(frame.timestamp);
+    const utcLabel = utcTime.toISOString().slice(0, 16).replace("T", " ");
+    const beijingLabel = new Date(utcTime.getTime() + 8 * 60 * 60 * 1000).toISOString().slice(0, 16).replace("T", " ");
+    $("#frame-time").textContent = utcLabel;
+    $("#analysis-time").textContent = utcLabel + " UTC";
+    $("#analysis-time-beijing").textContent = beijingLabel + " Beijing (UTC+8)";
     renderFlatMaps(data);
     if (state.view === "stack") await renderStack(data);
   }
@@ -203,6 +259,7 @@
     try {
       state.manifest = await (await fetch(new URL("manifest.json", basePath), { cache: "no-store" })).json();
       if (!state.manifest.frames.length) throw new Error("No LPW frames have been published yet. Run the data workflow to initialise the archive.");
+      await loadCoastline();
       $("#archive-size").textContent = `${state.manifest.frames.length} hourly frames`;
       $("#timeline").max = state.manifest.frames.length - 1;
       state.frameIndex = state.manifest.frames.length - 1;

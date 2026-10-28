@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#071018">
   <meta name="description" content="Hourly global low-, middle-, and high-layer precipitable water derived from MIMIC-TPW.">
   <title>Real-time LPW | Yuhao Wu</title>
-  <link rel="stylesheet" href="assets/lpw.css?v=20261028-7">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261028-8">
 </head>
 <body>
   <header class="topbar">
@@ -33,7 +33,7 @@
           <div><span>Research group</span><strong>INSiGHT Team</strong><small>Innovative Satellite Geodesy</small></div>
         </div>
         <div class="status-grid" aria-label="Product status">
-          <article><span>Analysis time</span><strong id="analysis-time">—</strong></article>
+          <article class="analysis-time-card"><span>Analysis time</span><strong id="analysis-time">—</strong><small id="analysis-time-beijing" class="analysis-local-time">—</small></article>
           <article><span>Archive</span><strong id="archive-size">—</strong></article>
           <article><span>Display grid</span><strong>1° global</strong></article>
           <article><span>Selected point</span><strong id="selected-point">Click a map</strong></article>
@@ -114,6 +114,6 @@
   </main>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="assets/lpw.js?v=20261028-7"></script>
+  <script src="assets/lpw.js?v=20261028-8"></script>
 </body>
 </html>
