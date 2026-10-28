@@ -7,6 +7,23 @@
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
   const assetPath = new URL(".", document.currentScript.src).href;
+  const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  async function fetchWithRetry(url, options = {}, attempts = 3) {
+    let lastError;
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      try {
+        const response = await fetch(url, { ...options, cache: attempt === 0 ? options.cache : "reload" });
+        if (response.ok) return response;
+        lastError = new Error(`Data request failed (${response.status})`);
+        if (response.status < 500 && response.status !== 429) break;
+      } catch (error) {
+        lastError = error;
+      }
+      if (attempt + 1 < attempts) await wait(350 * (attempt + 1));
+    }
+    throw lastError || new Error("Data request failed");
+  }
 
   async function loadCoastline() {
     const response = await fetch(new URL("coastlines.json", assetPath), { cache: "force-cache" });
@@ -25,9 +42,35 @@
     const frame = state.manifest.frames[index];
     if (!frame) throw new Error("The requested analysis frame is unavailable.");
     if (!state.cache.has(frame.timestamp)) {
-      state.cache.set(frame.timestamp, inflate(await fetch(new URL(frame.url, basePath), { cache: "force-cache" })));
+      const request = fetchWithRetry(new URL(frame.url, basePath), { cache: "force-cache" }).then(inflate);
+      state.cache.set(frame.timestamp, request);
     }
-    return state.cache.get(frame.timestamp);
+    try {
+      return await state.cache.get(frame.timestamp);
+    } catch (error) {
+      state.cache.delete(frame.timestamp);
+      throw error;
+    }
+  }
+
+  async function loadHistoryFrames(requestId, concurrency = 4) {
+    const results = new Array(state.manifest.frames.length).fill(null);
+    let nextIndex = 0;
+    let loaded = 0;
+    async function worker() {
+      while (nextIndex < results.length) {
+        const index = nextIndex;
+        nextIndex += 1;
+        try { results[index] = await loadFrame(index); }
+        catch (error) { console.warn(`LPW frame ${index} is temporarily unavailable`, error); }
+        loaded += 1;
+        if (requestId === state.historyRequestId) {
+          $("#history-loading").textContent = `Loading point history… ${loaded}/${results.length}`;
+        }
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, results.length) }, worker));
+    return results;
   }
 
   function valueAt(data, layer, row, column) {
@@ -191,17 +234,26 @@
     state.selected = coordinates(lat, lon);
     $("#selected-point").textContent = `${state.selected.lat.toFixed(2)}°, ${state.selected.lon.toFixed(2)}°`;
     if (state.currentData) renderFlatMaps(state.currentData);
-    $("#history-empty").hidden = true; $("#history-loading").hidden = false;
+    $("#history-empty").hidden = true;
+    $("#history-status").hidden = true;
+    $("#history-loading").textContent = "Loading point history… 0/" + state.manifest.frames.length;
+    $("#history-loading").hidden = false;
     const requestId = ++state.historyRequestId;
     try {
-      const frames = await Promise.all(state.manifest.frames.map((_, index) => loadFrame(index)));
+      const frames = await loadHistoryFrames(requestId);
       if (requestId !== state.historyRequestId) return;
-      const series = [0, 1, 2].map((layer) => frames.map((data) => valueAt(data, layer, state.selected.row, state.selected.column)));
+      const available = frames.filter(Boolean).length;
+      if (!available) throw new Error("The history archive is temporarily unavailable. Please try again in a moment.");
+      const series = [0, 1, 2].map((layer) => frames.map((data) => data ? valueAt(data, layer, state.selected.row, state.selected.column) : null));
       Plotly.react("history-plot", series.map((values, layer) => ({ x: state.manifest.frames.map((frame) => frame.timestamp), y: values, name: layerNames[layer], mode: "lines", line: { color: ["#48d5c8", "#f2cc60", "#f05d5e"][layer], width: 2 }, hovertemplate: "%{x|%b %d, %H:%M}<br>%{y:.2f} mm<extra>" + layerNames[layer] + "</extra>" })), {
         paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 54, r: 24, t: 30, b: 50 },
         font: { color: "#91a4ae", family: "Inter, sans-serif", size: 11 }, legend: { orientation: "h", x: 0, y: 1.12 }, hovermode: "x unified",
         xaxis: { gridcolor: "#18303d", zeroline: false }, yaxis: { title: "LPW (mm)", rangemode: "tozero", gridcolor: "#18303d", zerolinecolor: "#29404b" }
       }, { responsive: true, displaylogo: false });
+      $("#history-status").textContent = available === frames.length
+        ? `${available} hourly frames loaded`
+        : `${available}/${frames.length} hourly frames loaded · gaps indicate temporary server errors`;
+      $("#history-status").hidden = false;
     } catch (error) { showError(error); }
     finally { $("#history-loading").hidden = true; }
   }
@@ -229,7 +281,7 @@
 
   async function start() {
     try {
-      state.manifest = await (await fetch(new URL("manifest.json", basePath), { cache: "no-store" })).json();
+      state.manifest = await (await fetchWithRetry(new URL("manifest.json", basePath), { cache: "no-store" })).json();
       if (!state.manifest.frames.length) throw new Error("No LPW frames have been published yet. Run the data workflow to initialise the archive.");
       await loadCoastline();
       $("#archive-size").textContent = `${state.manifest.frames.length} hourly frames`;

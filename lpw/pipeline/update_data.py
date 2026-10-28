@@ -14,6 +14,8 @@ from urllib.parse import urljoin
 import h5py
 import numpy as np
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from lpw_model import LPWModel
 
@@ -25,6 +27,20 @@ SCALE = 0.01
 MISSING = -32768
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "wyhgnss-lpw-monitor/1.0 (+https://wuyuhao.top/lpw/)"
+SESSION.mount(
+    "https://",
+    HTTPAdapter(
+        max_retries=Retry(
+            total=4,
+            connect=4,
+            read=4,
+            status=4,
+            backoff_factor=1,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=("GET",),
+        )
+    ),
+)
 
 
 def available_frames(hours: int) -> list[tuple[datetime, str]]:
