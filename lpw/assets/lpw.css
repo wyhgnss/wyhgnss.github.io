@@ -42,12 +42,17 @@ h1 { font-size: clamp(2.65rem, 5.25vw, 6rem); line-height: .96; letter-spacing: 
 h1 em { color: #8295a0; font-family: Georgia, serif; font-weight: 400; }
 .intro { max-width: 740px; color: #9aabb5; font-size: clamp(.98rem, 1.25vw, 1.22rem); line-height: 1.65; }
 .hero-side { display: grid; gap: 14px; }
-.team-badge { display: flex; align-items: center; gap: 16px; padding: 12px 18px 12px 12px; border: 1px solid var(--line); background: rgba(11, 27, 37, .74); }
-.team-logo-frame { width: 92px; height: 92px; flex: 0 0 92px; padding: 5px; background: #fff; border-radius: 4px; overflow: hidden; }
-.team-logo-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.team-badge span, .team-badge small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: .61rem; }
-.team-badge strong { display: block; margin: 7px 0 5px; font-size: 1.08rem; font-weight: 600; }
-.team-badge small { font-size: .57rem; letter-spacing: .08em; text-transform: none; }
+.team-badge { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: rgba(11, 27, 37, .74); }
+.affiliation-block { min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px; }
+.affiliation-block + .affiliation-block { border-left: 1px solid var(--line); }
+.team-logo-frame, .university-logo-frame { width: 70px; height: 70px; flex: 0 0 70px; overflow: hidden; }
+.team-logo-frame { padding: 4px; background: #fff; border-radius: 4px; }
+.team-logo-frame img, .university-logo-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.university-logo-frame img { filter: drop-shadow(0 0 12px rgba(255,255,255,.18)); }
+.affiliation-copy { min-width: 0; }
+.team-badge span, .team-badge small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; font-size: .55rem; }
+.team-badge strong { display: block; margin: 6px 0 4px; font-size: .95rem; line-height: 1.15; font-weight: 600; }
+.team-badge small { font-size: .52rem; letter-spacing: .06em; text-transform: none; }
 .status-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
 .status-grid article { min-height: 102px; padding: 23px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .status-grid article:nth-child(even) { border-right: 0; }
@@ -126,4 +131,6 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
   .stack-copy { padding-bottom: 0; } #stack-plot { height: 500px; }
   .legend-row { grid-template-columns: 1fr; }.ticks { margin: 0; }.quality-note { margin: 0; }
   .site-footer { flex-direction: column; }
+  .team-badge { grid-template-columns: 1fr; }
+  .affiliation-block + .affiliation-block { border-left: 0; border-top: 1px solid var(--line); }
 }

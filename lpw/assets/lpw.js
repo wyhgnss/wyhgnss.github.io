@@ -43,33 +43,6 @@
     return palette[i].map((channel, j) => Math.round(channel + (palette[i + 1][j] - channel) * f));
   }
 
-  function drawGraticule(context, canvas) {
-    context.save();
-    context.strokeStyle = "rgba(226, 240, 246, .22)";
-    context.lineWidth = .6;
-    context.fillStyle = "rgba(245, 250, 252, .9)";
-    context.font = "6px Inter, Arial, sans-serif";
-    context.shadowColor = "rgba(0, 0, 0, .9)";
-    context.shadowBlur = 2;
-    for (let longitude = -120; longitude <= 120; longitude += 60) {
-      const x = (longitude + 180) / 360 * canvas.width;
-      context.beginPath(); context.moveTo(x, 0); context.lineTo(x, canvas.height); context.stroke();
-      const longitudeLabel = longitude === 0 ? "0°" : `${Math.abs(longitude)}°${longitude < 0 ? "W" : "E"}`;
-      context.textAlign = longitude === 120 ? "right" : "left";
-      context.textBaseline = "bottom";
-      context.fillText(longitudeLabel, x + (longitude === 120 ? -2 : 2), canvas.height - 2);
-    }
-    for (let latitude = -60; latitude <= 60; latitude += 30) {
-      const y = (90 - latitude) / 180 * canvas.height;
-      context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y); context.stroke();
-      const latitudeLabel = latitude === 0 ? "0°" : `${Math.abs(latitude)}°${latitude < 0 ? "S" : "N"}`;
-      context.textAlign = "left";
-      context.textBaseline = y < 10 ? "top" : "bottom";
-      context.fillText(latitudeLabel, 3, y + (y < 10 ? 2 : -2));
-    }
-    context.restore();
-  }
-
   function drawCoastline(context, canvas) {
     if (!state.coastline) return;
     const { latitude, longitude } = state.coastline;
@@ -133,7 +106,6 @@
       }
     }
     context.putImageData(image, 0, 0);
-    drawGraticule(context, canvas);
     drawCoastline(context, canvas);
     drawSelection(context, canvas);
   }
