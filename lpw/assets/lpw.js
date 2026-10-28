@@ -2,8 +2,10 @@
   "use strict";
 
   const state = { manifest: null, frameIndex: 0, cache: new Map(), overlays: [], maps: [], markers: [], timer: null, selected: null, view: "maps" };
-  const palette = [[7,17,28],[22,59,99],[20,184,166],[242,204,96],[240,93,94]];
+  const palette = [[48,18,59],[65,69,171],[42,159,214],[27,207,212],[97,208,79],[249,231,33],[244,138,44],[198,32,40]];
   const layerNames = ["Low", "Middle", "High"];
+  const mercatorLimit = 85.05112878;
+  const rasterSize = 720;
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
 
@@ -61,64 +63,35 @@
     return validWeight > 0 ? weightedValue / validWeight : null;
   }
 
-  function createLPWLayer(map, layerIndex, mapIndex) {
-    const paneName = `lpw-raster-${mapIndex}`;
-    map.createPane(paneName);
-    map.getPane(paneName).style.zIndex = 450;
-    map.getPane(paneName).style.pointerEvents = "none";
-
-    const overlay = L.gridLayer({
-      pane: paneName,
-      tileSize: 256,
-      opacity: .86,
-      updateWhenIdle: false,
-      updateWhenZooming: false,
-      keepBuffer: 2
-    });
-    overlay.lpwData = null;
-    overlay.createTile = function createTile(coords) {
-      const size = this.getTileSize();
-      const canvas = document.createElement("canvas");
-      canvas.width = size.x;
-      canvas.height = size.y;
-      canvas.className = "lpw-raster-tile";
-      if (!this.lpwData) return canvas;
-
-      const context = canvas.getContext("2d");
-      const image = context.createImageData(size.x, size.y);
-      const worldSize = size.x * (2 ** coords.z);
-      for (let y = 0; y < size.y; y += 1) {
-        const globalY = coords.y * size.y + y + .5;
-        const mercatorY = Math.PI * (1 - 2 * globalY / worldSize);
-        const latitude = Math.atan(Math.sinh(mercatorY)) * 180 / Math.PI;
-        for (let x = 0; x < size.x; x += 1) {
-          const globalX = coords.x * size.x + x + .5;
-          const longitude = 360 * globalX / worldSize - 180;
-          const value = interpolatedValue(this.lpwData, layerIndex, latitude, longitude);
-          const offset = (y * size.x + x) * 4;
-          if (value === null) continue;
-          const rgb = color(value);
-          image.data[offset] = rgb[0];
-          image.data[offset + 1] = rgb[1];
-          image.data[offset + 2] = rgb[2];
-          image.data[offset + 3] = 222;
-        }
+  function mercatorRasterUrl(data, layerIndex) {
+    const canvas = document.createElement("canvas");
+    canvas.width = rasterSize;
+    canvas.height = rasterSize;
+    const context = canvas.getContext("2d");
+    const image = context.createImageData(rasterSize, rasterSize);
+    for (let y = 0; y < rasterSize; y += 1) {
+      const mercatorY = Math.PI * (1 - 2 * ((y + .5) / rasterSize));
+      const latitude = Math.atan(Math.sinh(mercatorY)) * 180 / Math.PI;
+      for (let x = 0; x < rasterSize; x += 1) {
+        const longitude = -180 + 360 * ((x + .5) / rasterSize);
+        const value = interpolatedValue(data, layerIndex, latitude, longitude);
+        const offset = (y * rasterSize + x) * 4;
+        if (value === null) continue;
+        const rgb = color(value);
+        image.data[offset] = rgb[0];
+        image.data[offset + 1] = rgb[1];
+        image.data[offset + 2] = rgb[2];
+        image.data[offset + 3] = 228;
       }
-      context.putImageData(image, 0, 0);
-      return canvas;
-    };
-    overlay.setLPWData = function setLPWData(data) {
-      this.lpwData = data;
-      this.redraw();
-    };
-    return overlay.addTo(map);
+    }
+    context.putImageData(image, 0, 0);
+    return canvas.toDataURL("image/png");
   }
 
   function initialiseMaps() {
     ["map-low", "map-mid", "map-high"].forEach((id, index) => {
       const map = L.map(id, { worldCopyJump: true, minZoom: 1, maxZoom: 7, zoomControl: index === 0, attributionControl: index === 2 }).setView([16, 8], 1);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, className: "base-tiles", attribution: "© OpenStreetMap contributors" }).addTo(map);
-      state.overlays.push(createLPWLayer(map, index, index));
       map.on("click", (event) => selectPoint(event.latlng.lat, event.latlng.lng));
       state.maps.push(map);
     });
@@ -138,7 +111,20 @@
     $("#timeline").value = state.frameIndex;
     $("#frame-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ");
     $("#analysis-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ") + " UTC";
-    state.overlays.forEach((overlay) => overlay.setLPWData(data));
+    state.overlays.forEach((overlay) => overlay.remove());
+    state.overlays = [];
+    state.maps.forEach((map, layerIndex) => {
+      const imageUrl = mercatorRasterUrl(data, layerIndex);
+      [-360, 0, 360].forEach((longitudeShift) => {
+        const overlay = L.imageOverlay(
+          imageUrl,
+          [[-mercatorLimit, -180 + longitudeShift], [mercatorLimit, 180 + longitudeShift]],
+          { opacity: .92, interactive: false, className: "lpw-image-layer" }
+        );
+        overlay.once("error", () => showError(new Error("The LPW raster could not be rendered.")));
+        state.overlays.push(overlay.addTo(map));
+      });
+    });
     if (state.view === "stack") renderStack(data);
   }
 
@@ -150,8 +136,9 @@
       type: "surface", x, y,
       z: y.map(() => x.map(() => layer * 1.45)),
       surfacecolor: y.map((_, row) => x.map((__, column) => valueAt(data, layer, row * stride, column * stride))),
-      colorscale: [[0,"#07111c"],[.25,"#163b63"],[.5,"#14b8a6"],[.75,"#f2cc60"],[1,"#f05d5e"]],
-      cmin: 0, cmax: 40, opacity: .83, showscale: false, name: layerNames[layer], hovertemplate: `${layerNames[layer]}<br>%{y:.1f}°, %{x:.1f}°<br>%{surfacecolor:.2f} mm<extra></extra>`
+      customdata: y.map((_, row) => x.map((__, column) => valueAt(data, layer, row * stride, column * stride))),
+      colorscale: [[0,"#30123b"],[.14,"#4145ab"],[.29,"#2a9fd6"],[.43,"#1bcfd4"],[.57,"#61d04f"],[.72,"#f9e721"],[.86,"#f48a2c"],[1,"#c62028"]],
+      cmin: 0, cmax: 40, opacity: .83, showscale: false, name: layerNames[layer], hovertemplate: `${layerNames[layer]}<br>%{y:.1f}°, %{x:.1f}°<br>%{customdata:.2f} mm<extra></extra>`
     }));
     Plotly.react("stack-plot", traces, {
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 10, b: 10 }, showlegend: false,

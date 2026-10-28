@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ynh6kFZmHAHIhMZJp5G2u0jMZkM0=" crossorigin="anonymous">
-  <link rel="stylesheet" href="assets/lpw.css?v=20261028-4">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261028-6">
 </head>
 <body>
   <header class="topbar">
@@ -30,11 +30,17 @@
         <h1>Layered precipitable water,<br><em>from surface to sky.</em></h1>
         <p class="intro">Explore low-, middle-, and high-tropospheric moisture derived from the latest MIMIC total precipitable water product.</p>
       </div>
-      <div class="status-grid" aria-label="Product status">
-        <article><span>Analysis time</span><strong id="analysis-time">—</strong></article>
-        <article><span>Archive</span><strong id="archive-size">—</strong></article>
-        <article><span>Display grid</span><strong>1° global</strong></article>
-        <article><span>Selected point</span><strong id="selected-point">Click a map</strong></article>
+      <div class="hero-side">
+        <div class="team-badge">
+          <div class="team-logo-frame"><img src="assets/team-logo.png" alt="INSiGHT Innovative Satellite Geodesy Research Team logo"></div>
+          <div><span>Research group</span><strong>INSiGHT Team</strong><small>Innovative Satellite Geodesy</small></div>
+        </div>
+        <div class="status-grid" aria-label="Product status">
+          <article><span>Analysis time</span><strong id="analysis-time">—</strong></article>
+          <article><span>Archive</span><strong id="archive-size">—</strong></article>
+          <article><span>Display grid</span><strong>1° global</strong></article>
+          <article><span>Selected point</span><strong id="selected-point">Click a map</strong></article>
+        </div>
       </div>
     </section>
 
@@ -58,15 +64,15 @@
 
       <div id="maps-view" class="maps-grid">
         <article class="map-panel">
-          <header><div><span class="layer-number">01</span><h2>Low layer</h2></div><p>Surface – 700 hPa</p></header>
+          <header><div><span class="layer-number">01</span><h2>Low layer</h2></div><p>Surface – 900 hPa</p></header>
           <div id="map-low" class="map" aria-label="Low-layer precipitable water map"></div>
         </article>
         <article class="map-panel">
-          <header><div><span class="layer-number">02</span><h2>Middle layer</h2></div><p>700 – 500 hPa</p></header>
+          <header><div><span class="layer-number">02</span><h2>Middle layer</h2></div><p>900 – 700 hPa</p></header>
           <div id="map-mid" class="map" aria-label="Middle-layer precipitable water map"></div>
         </article>
         <article class="map-panel">
-          <header><div><span class="layer-number">03</span><h2>High layer</h2></div><p>500 – 300 hPa</p></header>
+          <header><div><span class="layer-number">03</span><h2>High layer</h2></div><p>700 – 300 hPa</p></header>
           <div id="map-high" class="map" aria-label="High-layer precipitable water map"></div>
         </article>
       </div>
@@ -76,15 +82,17 @@
           <p class="eyebrow">VERTICAL CONTEXT</p>
           <h2>Three moisture layers,<br>one atmosphere.</h2>
           <p>Drag to rotate, scroll to zoom, and compare the horizontal structure of moisture at three pressure layers.</p>
-          <div class="layer-key"><i class="low"></i><span>Low · surface–700 hPa</span><i class="mid"></i><span>Middle · 700–500 hPa</span><i class="high"></i><span>High · 500–300 hPa</span></div>
+          <div class="layer-key"><i class="low"></i><span>Low · surface–900 hPa</span><i class="mid"></i><span>Middle · 900–700 hPa</span><i class="high"></i><span>High · 700–300 hPa</span></div>
         </div>
         <div id="stack-plot" aria-label="Three-dimensional stacked moisture layers"></div>
       </div>
 
       <footer class="legend-row">
         <span>Layer precipitable water</span>
-        <div class="colorbar" aria-hidden="true"></div>
-        <div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40+ mm</span></div>
+        <div class="legend-scale">
+          <div class="colorbar" aria-hidden="true"></div>
+          <div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40+ mm</span></div>
+        </div>
         <span class="quality-note">0.25° source · 1° interactive display</span>
       </footer>
     </section>
@@ -110,6 +118,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="assets/lpw.js?v=20261028-4"></script>
+  <script src="assets/lpw.js?v=20261028-6"></script>
 </body>
 </html>
