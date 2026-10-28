@@ -1,6 +1,6 @@
 {
   "product": "MIMIC Layered Precipitable Water",
-  "updated_at": "2026-10-28T15:12:41.366772Z",
+  "updated_at": "2026-10-28T19:34:41.463698Z",
   "source": "https://bin.ssec.wisc.edu/pub/mtpw2/data/",
   "grid": {
     "rows": 181,
@@ -15,31 +15,6 @@
     "display_resolution_degrees": 1.0
   },
   "frames": [
-    {
-      "timestamp": "2026-10-25T15:00:00Z",
-      "url": "frames/20261025T150000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261025.150000.nc"
-    },
-    {
-      "timestamp": "2026-10-25T16:00:00Z",
-      "url": "frames/20261025T160000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261025.160000.nc"
-    },
-    {
-      "timestamp": "2026-10-25T17:00:00Z",
-      "url": "frames/20261025T170000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261025.170000.nc"
-    },
-    {
-      "timestamp": "2026-10-25T18:00:00Z",
-      "url": "frames/20261025T180000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261025.180000.nc"
-    },
-    {
-      "timestamp": "2026-10-25T19:00:00Z",
-      "url": "frames/20261025T190000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261025.190000.nc"
-    },
     {
       "timestamp": "2026-10-25T20:00:00Z",
       "url": "frames/20261025T200000Z.bin.gz",
@@ -374,6 +349,31 @@
       "timestamp": "2026-10-28T14:00:00Z",
       "url": "frames/20261028T140000Z.bin.gz",
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.140000.nc"
+    },
+    {
+      "timestamp": "2026-10-28T15:00:00Z",
+      "url": "frames/20261028T150000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.150000.nc"
+    },
+    {
+      "timestamp": "2026-10-28T16:00:00Z",
+      "url": "frames/20261028T160000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.160000.nc"
+    },
+    {
+      "timestamp": "2026-10-28T17:00:00Z",
+      "url": "frames/20261028T170000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.170000.nc"
+    },
+    {
+      "timestamp": "2026-10-28T18:00:00Z",
+      "url": "frames/20261028T180000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.180000.nc"
+    },
+    {
+      "timestamp": "2026-10-28T19:00:00Z",
+      "url": "frames/20261028T190000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202610/comp20261028.190000.nc"
     }
   ]
 }
