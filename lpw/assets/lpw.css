@@ -33,7 +33,10 @@ button { color: inherit; }
 .topbar nav a:hover { color: var(--cyan); }
 
 main { max-width: 1800px; margin: auto; }
-.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(420px, .75fr); gap: clamp(40px, 7vw, 120px); align-items: end; padding: clamp(54px, 7vw, 108px) clamp(20px, 5vw, 76px) 56px; }
+.hero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(420px, .75fr); gap: clamp(40px, 7vw, 120px); align-items: end; padding: clamp(54px, 7vw, 108px) clamp(20px, 5vw, 76px) 56px; }
+.hero::before { content: ""; position: absolute; z-index: 0; inset: -35px -20px -25px 24%; pointer-events: none; background: url("hero-orbit.svg") right center / contain no-repeat; opacity: .47; mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.22) 18%, #000 48%, #000 100%); }
+.hero::after { content: ""; position: absolute; z-index: 0; width: 46rem; height: 46rem; right: -14rem; top: -20rem; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(72,213,200,.09), rgba(27,94,117,.035) 42%, transparent 70%); }
+.hero > * { position: relative; z-index: 1; }
 .eyebrow { margin: 0 0 18px; color: var(--cyan); font-size: .68rem; font-weight: 700; letter-spacing: .19em; }
 .live-dot { display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .38; } }
@@ -46,8 +49,9 @@ h1 em { color: #8295a0; font-family: Georgia, serif; font-weight: 400; }
 .affiliation-block { min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px; }
 .affiliation-block + .affiliation-block { border-left: 1px solid var(--line); }
 .team-logo-frame, .university-logo-frame { width: 70px; height: 70px; flex: 0 0 70px; overflow: hidden; }
-.team-logo-frame { padding: 4px; background: #fff; border-radius: 4px; }
+.team-logo-frame { padding: 2px; background: transparent; }
 .team-logo-frame img, .university-logo-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.team-logo-frame img { filter: drop-shadow(0 0 13px rgba(126,224,242,.14)); }
 .university-logo-frame img { filter: drop-shadow(0 0 12px rgba(255,255,255,.18)); }
 .affiliation-copy { min-width: 0; }
 .team-badge span, .team-badge small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; font-size: .55rem; }
@@ -114,6 +118,7 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
 
 @media (max-width: 1080px) {
   .hero { grid-template-columns: 1fr; }
+  .hero::before { inset: -15px -16% 24% 18%; opacity: .34; }
   .hero-side { grid-template-columns: minmax(250px, .55fr) 1fr; align-items: stretch; }
   .maps-grid { grid-template-columns: 1fr; }
   .map-panel { border-right: 0; border-bottom: 1px solid var(--line); }
@@ -125,6 +130,7 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
 @media (max-width: 760px) {
   .topbar { height: 66px; }.topbar nav a:first-child { display: none; }
   .hero { padding-top: 48px; }.hero-side { grid-template-columns: 1fr; }.status-grid { grid-template-columns: 1fr 1fr; }
+  .hero::before { inset: -30px -55% 46% 2%; opacity: .27; mask-image: linear-gradient(180deg, #000, transparent 94%); }
   .control-bar { align-items: stretch; flex-direction: column; }
   .timeline-controls { grid-template-columns: 34px 78px 34px 1fr; }
   .stack-panel:not([hidden]), .history-section { grid-template-columns: 1fr; }
