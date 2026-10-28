@@ -6,10 +6,7 @@
   <meta name="theme-color" content="#071018">
   <meta name="description" content="Hourly global low-, middle-, and high-layer precipitable water derived from MIMIC-TPW.">
   <title>Real-time LPW | Yuhao Wu</title>
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preconnect" href="https://tile.openstreetmap.org">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ynh6kFZmHAHIhMZJp5G2u0jMZkM0=" crossorigin="anonymous">
-  <link rel="stylesheet" href="assets/lpw.css?v=20261028-6">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261028-7">
 </head>
 <body>
   <header class="topbar">
@@ -65,15 +62,15 @@
       <div id="maps-view" class="maps-grid">
         <article class="map-panel">
           <header><div><span class="layer-number">01</span><h2>Low layer</h2></div><p>Surface – 900 hPa</p></header>
-          <div id="map-low" class="map" aria-label="Low-layer precipitable water map"></div>
+          <canvas id="map-low" class="map" width="360" height="181" aria-label="Low-layer precipitable water map. Click to inspect a location."></canvas>
         </article>
         <article class="map-panel">
           <header><div><span class="layer-number">02</span><h2>Middle layer</h2></div><p>900 – 700 hPa</p></header>
-          <div id="map-mid" class="map" aria-label="Middle-layer precipitable water map"></div>
+          <canvas id="map-mid" class="map" width="360" height="181" aria-label="Middle-layer precipitable water map. Click to inspect a location."></canvas>
         </article>
         <article class="map-panel">
           <header><div><span class="layer-number">03</span><h2>High layer</h2></div><p>700 – 300 hPa</p></header>
-          <div id="map-high" class="map" aria-label="High-layer precipitable water map"></div>
+          <canvas id="map-high" class="map" width="360" height="181" aria-label="High-layer precipitable water map. Click to inspect a location."></canvas>
         </article>
       </div>
 
@@ -81,7 +78,7 @@
         <div class="stack-copy">
           <p class="eyebrow">VERTICAL CONTEXT</p>
           <h2>Three moisture layers,<br>one atmosphere.</h2>
-          <p>Drag to rotate, scroll to zoom, and compare the horizontal structure of moisture at three pressure layers.</p>
+          <p>Drag to rotate, scroll to zoom, and click any layer to inspect its three-day moisture history.</p>
           <div class="layer-key"><i class="low"></i><span>Low · surface–900 hPa</span><i class="mid"></i><span>Middle · 900–700 hPa</span><i class="high"></i><span>High · 700–300 hPa</span></div>
         </div>
         <div id="stack-plot" aria-label="Three-dimensional stacked moisture layers"></div>
@@ -101,7 +98,7 @@
       <div>
         <p class="eyebrow">POINT HISTORY</p>
         <h2>Three days at a glance.</h2>
-        <p>Click any location in a flat map to retrieve its hourly low-, middle-, and high-layer moisture history.</p>
+        <p>Click any location in a flat map or on a 3D layer to retrieve its hourly low-, middle-, and high-layer moisture history.</p>
       </div>
       <div class="chart-card">
         <div id="history-empty">Select a point on any map to begin.</div>
@@ -116,8 +113,7 @@
     </footer>
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="assets/lpw.js?v=20261028-6"></script>
+  <script src="assets/lpw.js?v=20261028-7"></script>
 </body>
 </html>

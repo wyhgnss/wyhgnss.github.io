@@ -1,11 +1,9 @@
 (() => {
   "use strict";
 
-  const state = { manifest: null, frameIndex: 0, cache: new Map(), overlays: [], maps: [], markers: [], timer: null, selected: null, view: "maps" };
+  const state = { manifest: null, frameIndex: 0, cache: new Map(), canvases: [], currentData: null, timer: null, selected: null, last3DPoint: null, view: "maps", historyRequestId: 0 };
   const palette = [[48,18,59],[65,69,171],[42,159,214],[27,207,212],[97,208,79],[249,231,33],[244,138,44],[198,32,40]];
   const layerNames = ["Low", "Middle", "High"];
-  const mercatorLimit = 85.05112878;
-  const rasterSize = 720;
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
 
@@ -38,70 +36,72 @@
     return palette[i].map((channel, j) => Math.round(channel + (palette[i + 1][j] - channel) * f));
   }
 
-  function interpolatedValue(data, layer, latitude, longitude) {
-    const grid = state.manifest.grid;
-    const latitudeIndex = Math.max(0, Math.min(grid.rows - 1, (latitude - grid.latitude_start) / grid.latitude_step));
-    const wrappedLongitude = ((longitude - grid.longitude_start) % 360 + 360) % 360;
-    const longitudeIndex = wrappedLongitude / grid.longitude_step;
-    const row0 = Math.floor(latitudeIndex);
-    const row1 = Math.min(grid.rows - 1, row0 + 1);
-    const column0 = Math.floor(longitudeIndex) % grid.columns;
-    const column1 = (column0 + 1) % grid.columns;
-    const latitudeWeight = latitudeIndex - row0;
-    const longitudeWeight = longitudeIndex - Math.floor(longitudeIndex);
-    const samples = [
-      [valueAt(data, layer, row0, column0), (1 - latitudeWeight) * (1 - longitudeWeight)],
-      [valueAt(data, layer, row0, column1), (1 - latitudeWeight) * longitudeWeight],
-      [valueAt(data, layer, row1, column0), latitudeWeight * (1 - longitudeWeight)],
-      [valueAt(data, layer, row1, column1), latitudeWeight * longitudeWeight]
-    ];
-    let weightedValue = 0;
-    let validWeight = 0;
-    samples.forEach(([sample, weight]) => {
-      if (sample !== null) { weightedValue += sample * weight; validWeight += weight; }
-    });
-    return validWeight > 0 ? weightedValue / validWeight : null;
+  function drawGraticule(context, canvas) {
+    context.save();
+    context.strokeStyle = "rgba(226, 240, 246, .22)";
+    context.lineWidth = .6;
+    for (let longitude = -120; longitude <= 120; longitude += 60) {
+      const x = (longitude + 180) / 360 * canvas.width;
+      context.beginPath(); context.moveTo(x, 0); context.lineTo(x, canvas.height); context.stroke();
+    }
+    for (let latitude = -60; latitude <= 60; latitude += 30) {
+      const y = (90 - latitude) / 180 * canvas.height;
+      context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y); context.stroke();
+    }
+    context.restore();
   }
 
-  function mercatorRasterUrl(data, layerIndex) {
-    const canvas = document.createElement("canvas");
-    canvas.width = rasterSize;
-    canvas.height = rasterSize;
+  function drawSelection(context, canvas) {
+    if (!state.selected) return;
+    const x = (state.selected.lon + 180) / 360 * canvas.width;
+    const y = (90 - state.selected.lat) / 180 * canvas.height;
+    context.save();
+    context.beginPath(); context.arc(x, y, 3.6, 0, Math.PI * 2);
+    context.fillStyle = "#48d5c8"; context.fill();
+    context.lineWidth = 1.5; context.strokeStyle = "#ffffff"; context.stroke();
+    context.restore();
+  }
+
+  function renderFlatLayer(data, layerIndex, canvas) {
+    const { rows, columns } = state.manifest.grid;
+    canvas.width = columns;
+    canvas.height = rows;
     const context = canvas.getContext("2d");
-    const image = context.createImageData(rasterSize, rasterSize);
-    for (let y = 0; y < rasterSize; y += 1) {
-      const mercatorY = Math.PI * (1 - 2 * ((y + .5) / rasterSize));
-      const latitude = Math.atan(Math.sinh(mercatorY)) * 180 / Math.PI;
-      for (let x = 0; x < rasterSize; x += 1) {
-        const longitude = -180 + 360 * ((x + .5) / rasterSize);
-        const value = interpolatedValue(data, layerIndex, latitude, longitude);
-        const offset = (y * rasterSize + x) * 4;
+    const image = context.createImageData(columns, rows);
+    for (let y = 0; y < rows; y += 1) {
+      const sourceRow = rows - 1 - y;
+      for (let x = 0; x < columns; x += 1) {
+        const value = valueAt(data, layerIndex, sourceRow, x);
+        const offset = (y * columns + x) * 4;
         if (value === null) continue;
         const rgb = color(value);
         image.data[offset] = rgb[0];
         image.data[offset + 1] = rgb[1];
         image.data[offset + 2] = rgb[2];
-        image.data[offset + 3] = 228;
+        image.data[offset + 3] = 255;
       }
     }
     context.putImageData(image, 0, 0);
-    return canvas.toDataURL("image/png");
+    drawGraticule(context, canvas);
+    drawSelection(context, canvas);
   }
 
-  function initialiseMaps() {
-    ["map-low", "map-mid", "map-high"].forEach((id, index) => {
-      const map = L.map(id, { worldCopyJump: true, minZoom: 1, maxZoom: 7, zoomControl: index === 0, attributionControl: index === 2 }).setView([16, 8], 1);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, className: "base-tiles", attribution: "© OpenStreetMap contributors" }).addTo(map);
-      map.on("click", (event) => selectPoint(event.latlng.lat, event.latlng.lng));
-      state.maps.push(map);
+  function renderFlatMaps(data) {
+    state.currentData = data;
+    state.canvases.forEach((canvas, layerIndex) => renderFlatLayer(data, layerIndex, canvas));
+  }
+
+  function initialiseCanvases() {
+    state.canvases = ["map-low", "map-mid", "map-high"].map((id) => {
+      const canvas = document.getElementById(id);
+      canvas.addEventListener("click", (event) => {
+        const bounds = canvas.getBoundingClientRect();
+        const longitude = -180 + 360 * ((event.clientX - bounds.left) / bounds.width);
+        const latitude = 90 - 180 * ((event.clientY - bounds.top) / bounds.height);
+        selectPoint(latitude, longitude);
+      });
+      return canvas;
     });
-    let syncing = false;
-    state.maps.forEach((source) => source.on("move", () => {
-      if (syncing) return;
-      syncing = true;
-      state.maps.filter((map) => map !== source).forEach((map) => map.setView(source.getCenter(), source.getZoom(), { animate: false }));
-      syncing = false;
-    }));
   }
 
   async function renderFrame(index) {
@@ -111,42 +111,46 @@
     $("#timeline").value = state.frameIndex;
     $("#frame-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ");
     $("#analysis-time").textContent = new Date(frame.timestamp).toISOString().slice(0, 16).replace("T", " ") + " UTC";
-    state.overlays.forEach((overlay) => overlay.remove());
-    state.overlays = [];
-    state.maps.forEach((map, layerIndex) => {
-      const imageUrl = mercatorRasterUrl(data, layerIndex);
-      [-360, 0, 360].forEach((longitudeShift) => {
-        const overlay = L.imageOverlay(
-          imageUrl,
-          [[-mercatorLimit, -180 + longitudeShift], [mercatorLimit, 180 + longitudeShift]],
-          { opacity: .92, interactive: false, className: "lpw-image-layer" }
-        );
-        overlay.once("error", () => showError(new Error("The LPW raster could not be rendered.")));
-        state.overlays.push(overlay.addTo(map));
-      });
-    });
-    if (state.view === "stack") renderStack(data);
+    renderFlatMaps(data);
+    if (state.view === "stack") await renderStack(data);
   }
 
-  function renderStack(data) {
+  async function renderStack(data) {
     const grid = state.manifest.grid, stride = 3;
+    const layerGap = 4;
     const x = Array.from({ length: Math.ceil(grid.columns / stride) }, (_, i) => grid.longitude_start + i * stride * grid.longitude_step);
     const y = Array.from({ length: Math.ceil(grid.rows / stride) }, (_, i) => grid.latitude_start + i * stride * grid.latitude_step);
     const traces = [0, 1, 2].map((layer) => ({
       type: "surface", x, y,
-      z: y.map(() => x.map(() => layer * 1.45)),
+      z: y.map(() => x.map(() => layer * layerGap)),
       surfacecolor: y.map((_, row) => x.map((__, column) => valueAt(data, layer, row * stride, column * stride))),
-      customdata: y.map((_, row) => x.map((__, column) => valueAt(data, layer, row * stride, column * stride))),
       colorscale: [[0,"#30123b"],[.14,"#4145ab"],[.29,"#2a9fd6"],[.43,"#1bcfd4"],[.57,"#61d04f"],[.72,"#f9e721"],[.86,"#f48a2c"],[1,"#c62028"]],
-      cmin: 0, cmax: 40, opacity: .83, showscale: false, name: layerNames[layer], hovertemplate: `${layerNames[layer]}<br>%{y:.1f}°, %{x:.1f}°<br>%{customdata:.2f} mm<extra></extra>`
+      cmin: 0, cmax: 40, opacity: .83, showscale: false, name: layerNames[layer], hovertemplate: `${layerNames[layer]}<br>%{y:.1f}°, %{x:.1f}°<extra></extra>`
     }));
-    Plotly.react("stack-plot", traces, {
+    const plot = document.getElementById("stack-plot");
+    await Plotly.react(plot, traces, {
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 10, b: 10 }, showlegend: false,
-      scene: { bgcolor: "rgba(0,0,0,0)", camera: { eye: { x: 1.45, y: -1.55, z: 1.05 } }, aspectratio: { x: 2.2, y: 1.15, z: .42 },
+      scene: { bgcolor: "rgba(0,0,0,0)", camera: { eye: { x: 1.45, y: -1.55, z: 1.15 } }, aspectratio: { x: 2.2, y: 1.15, z: .82 },
         xaxis: { title: "Longitude", color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
         yaxis: { title: "Latitude", color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
-        zaxis: { title: "Layer", tickvals: [0,1.45,2.9], ticktext: ["Low","Middle","High"], color: "#9fb0ba", gridcolor: "#18303d", zerolinecolor: "#18303d" } }
+        zaxis: { title: "Layer", tickvals: [0, layerGap, layerGap * 2], ticktext: ["Low","Middle","High"], color: "#9fb0ba", gridcolor: "#18303d", zerolinecolor: "#18303d" } }
     }, { responsive: true, displaylogo: false });
+    plot.dataset.pointClickReadyAt = String(performance.now() + 1500);
+    if (!plot.dataset.pointClickBound) {
+      plot.on("plotly_hover", (event) => {
+        const point = event.points && event.points[0];
+        if (point && Number.isFinite(Number(point.x)) && Number.isFinite(Number(point.y))) {
+          state.last3DPoint = { lat: Number(point.y), lon: Number(point.x) };
+        }
+      });
+      plot.on("plotly_unhover", () => { state.last3DPoint = null; });
+      plot.addEventListener("click", (event) => {
+        if (performance.now() < Number(plot.dataset.pointClickReadyAt || 0)) return;
+        if (event.target.closest && event.target.closest(".modebar")) return;
+        if (state.last3DPoint) selectPoint(state.last3DPoint.lat, state.last3DPoint.lon);
+      });
+      plot.dataset.pointClickBound = "true";
+    }
   }
 
   function coordinates(lat, lon) {
@@ -158,11 +162,12 @@
   async function selectPoint(lat, lon) {
     state.selected = coordinates(lat, lon);
     $("#selected-point").textContent = `${state.selected.lat.toFixed(2)}°, ${state.selected.lon.toFixed(2)}°`;
-    state.markers.forEach((marker) => marker.remove());
-    state.markers = state.maps.map((map) => L.circleMarker([lat, lon], { radius: 5, color: "#fff", weight: 2, fillColor: "#48d5c8", fillOpacity: 1 }).addTo(map));
+    if (state.currentData) renderFlatMaps(state.currentData);
     $("#history-empty").hidden = true; $("#history-loading").hidden = false;
+    const requestId = ++state.historyRequestId;
     try {
       const frames = await Promise.all(state.manifest.frames.map((_, index) => loadFrame(index)));
+      if (requestId !== state.historyRequestId) return;
       const series = [0, 1, 2].map((layer) => frames.map((data) => valueAt(data, layer, state.selected.row, state.selected.column)));
       Plotly.react("history-plot", series.map((values, layer) => ({ x: state.manifest.frames.map((frame) => frame.timestamp), y: values, name: layerNames[layer], mode: "lines", line: { color: ["#48d5c8", "#f2cc60", "#f05d5e"][layer], width: 2 }, hovertemplate: "%{x|%b %d, %H:%M}<br>%{y:.2f} mm<extra>" + layerNames[layer] + "</extra>" })), {
         paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 54, r: 24, t: 30, b: 50 },
@@ -190,8 +195,7 @@
       state.view = button.dataset.view;
       document.querySelectorAll("[data-view]").forEach((item) => { item.classList.toggle("active", item === button); item.setAttribute("aria-pressed", item === button); });
       $("#maps-view").hidden = state.view !== "maps"; $("#stack-view").hidden = state.view !== "stack";
-      if (state.view === "stack") renderStack(await loadFrame(state.frameIndex));
-      else setTimeout(() => state.maps.forEach((map) => map.invalidateSize()), 0);
+      if (state.view === "stack") await renderStack(await loadFrame(state.frameIndex));
     }));
   }
 
@@ -202,7 +206,7 @@
       $("#archive-size").textContent = `${state.manifest.frames.length} hourly frames`;
       $("#timeline").max = state.manifest.frames.length - 1;
       state.frameIndex = state.manifest.frames.length - 1;
-      initialiseMaps(); bindControls(); await renderFrame(state.frameIndex);
+      initialiseCanvases(); bindControls(); await renderFrame(state.frameIndex);
       $("#loading").hidden = true;
     } catch (error) { $("#loading").hidden = true; showError(error); }
   }
