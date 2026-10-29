@@ -7,7 +7,7 @@
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
   const assetPath = new URL(".", document.currentScript.src).href;
-  const PLAYBACK_INTERVAL_MS = 120;
+  const PLAYBACK_INTERVAL_MS = 80;
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
   async function fetchWithRetry(url, options = {}, attempts = 3) {
@@ -246,7 +246,7 @@
       const available = frames.filter(Boolean).length;
       if (!available) throw new Error("The history archive is temporarily unavailable. Please try again in a moment.");
       const series = [0, 1, 2].map((layer) => frames.map((data) => data ? valueAt(data, layer, state.selected.row, state.selected.column) : null));
-      Plotly.react("history-plot", series.map((values, layer) => ({ x: state.manifest.frames.map((frame) => frame.timestamp), y: values, name: layerNames[layer], mode: "lines", line: { color: ["#48d5c8", "#f2cc60", "#f05d5e"][layer], width: 2 }, hovertemplate: "%{y:.2f} mm<extra>" + layerNames[layer] + "</extra>" })), {
+      Plotly.react("history-plot", series.map((values, layer) => ({ x: state.manifest.frames.map((frame) => frame.timestamp), y: values, name: layerNames[layer], mode: "lines", line: { color: ["#48d5c8", "#f2cc60", "#f05d5e"][layer], width: 2 }, hovertemplate: "%{y:.2f} mm<extra></extra>" })), {
         paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 54, r: 24, t: 30, b: 50 },
         font: { color: "#91a4ae", family: "Inter, sans-serif", size: 11 }, legend: { orientation: "h", x: 0, y: 1.12 }, hovermode: "x",
         xaxis: { gridcolor: "#18303d", zeroline: false }, yaxis: { title: "LPW (mm)", rangemode: "tozero", gridcolor: "#18303d", zerolinecolor: "#29404b" }

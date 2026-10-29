@@ -2,7 +2,9 @@ name: Update real-time LPW
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    # GitHub can delay or drop scheduled events. Two off-peak attempts per hour
+    # provide a fallback; the freshness gate below prevents duplicate model runs.
+    - cron: "13,43 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -21,7 +23,37 @@ jobs:
       - name: Check out website
         uses: actions/checkout@v5
 
+      - name: Refresh default branch
+        run: git pull --ff-only origin "${GITHUB_REF_NAME}"
+
+      - name: Check whether an LPW update is due
+        id: freshness
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          due = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          manifest_path = Path("lpw/data/manifest.json")
+          if not due:
+              due = True
+              if manifest_path.exists():
+                  manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                  updated_at = manifest.get("updated_at")
+                  if updated_at:
+                      last_update = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+                      due = datetime.now(timezone.utc) - last_update >= timedelta(minutes=45)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"run={'true' if due else 'false'}\n")
+          print("Running the full LPW update." if due else "A successful update is less than 45 minutes old; skipping this fallback run.")
+          PY
+
       - name: Set up Python
+        if: steps.freshness.outputs.run == 'true'
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -29,17 +61,21 @@ jobs:
           cache-dependency-path: lpw/pipeline/requirements.txt
 
       - name: Install data-pipeline dependencies
+        if: steps.freshness.outputs.run == 'true'
         run: python -m pip install -r lpw/pipeline/requirements.txt
 
       - name: Verify MATLAB-to-Python model parity
+        if: steps.freshness.outputs.run == 'true'
         working-directory: lpw/pipeline
         run: python -m unittest -v test_lpw_model.py
 
       - name: Fetch MIMIC TPW and calculate LPW
+        if: steps.freshness.outputs.run == 'true'
         working-directory: lpw/pipeline
         run: python update_data.py --hours 72 --max-new 8
 
       - name: Commit updated rolling dataset
+        if: steps.freshness.outputs.run == 'true'
         id: commit
         run: |
           git config user.name "github-actions[bot]"
