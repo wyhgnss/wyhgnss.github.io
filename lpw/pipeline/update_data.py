@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import hashlib
 import io
 import json
 import re
@@ -83,6 +84,15 @@ def load_manifest(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def model_version(model_directory: Path) -> str:
+    digest = hashlib.sha256()
+    for filename in ("pshax_coefficients.npz", "residual_model.ubj", "mimic_grid.npz"):
+        with (model_directory / filename).open("rb") as stream:
+            for block in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(block)
+    return digest.hexdigest()[:16]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--hours", type=int, default=72)
@@ -96,12 +106,18 @@ def main() -> None:
     output_directory.mkdir(parents=True, exist_ok=True)
     manifest_path = site_directory / "data" / "manifest.json"
     manifest = load_manifest(manifest_path)
-    known = {frame["timestamp"] for frame in manifest.get("frames", [])}
+    model_directory = pipeline_directory / "model"
+    active_model_version = model_version(model_directory)
+    model_changed = manifest.get("model_version") != active_model_version
+    if model_changed:
+        print("Model assets changed; rebuilding the rolling archive with the updated model.")
+    known = set() if model_changed else {frame["timestamp"] for frame in manifest.get("frames", [])}
 
     candidates = available_frames(args.hours)
     pending = [(stamp, url) for stamp, url in candidates if stamp.isoformat().replace("+00:00", "Z") not in known]
-    pending = pending[-args.max_new :]
-    model = LPWModel(pipeline_directory / "model", stride=args.stride)
+    if not model_changed:
+        pending = pending[-args.max_new :]
+    model = LPWModel(model_directory, stride=args.stride)
     new_frames = []
 
     for timestamp, source_url in pending:
@@ -119,7 +135,7 @@ def main() -> None:
             }
         )
 
-    frames = manifest.get("frames", []) + new_frames
+    frames = ([] if model_changed else manifest.get("frames", [])) + new_frames
     if candidates:
         newest = candidates[-1][0]
         cutoff = newest - timedelta(hours=args.hours - 1)
@@ -136,6 +152,7 @@ def main() -> None:
         "product": "MIMIC Layered Precipitable Water",
         "updated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source": BASE_URL,
+        "model_version": active_model_version,
         "grid": {
             "rows": rows,
             "columns": columns,

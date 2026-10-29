@@ -7,6 +7,7 @@
   const $ = (selector) => document.querySelector(selector);
   const basePath = new URL("../data/", document.currentScript.src).href;
   const assetPath = new URL(".", document.currentScript.src).href;
+  const PLAYBACK_INTERVAL_MS = 500;
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
   async function fetchWithRetry(url, options = {}, attempts = 3) {
@@ -261,7 +262,7 @@
   function setPlaying(playing) {
     clearInterval(state.timer); state.timer = null;
     $("#play").innerHTML = playing ? "<span aria-hidden='true'>❚❚</span> Pause" : "<span aria-hidden='true'>▶</span> Play";
-    if (playing) state.timer = setInterval(() => renderFrame((state.frameIndex + 1) % state.manifest.frames.length).catch(showError), 900);
+    if (playing) state.timer = setInterval(() => renderFrame((state.frameIndex + 1) % state.manifest.frames.length).catch(showError), PLAYBACK_INTERVAL_MS);
   }
 
   function showError(error) { $("#error").hidden = false; $("#error").textContent = error.message || String(error); console.error(error); }
@@ -284,7 +285,6 @@
       state.manifest = await (await fetchWithRetry(new URL("manifest.json", basePath), { cache: "no-store" })).json();
       if (!state.manifest.frames.length) throw new Error("No LPW frames have been published yet. Run the data workflow to initialise the archive.");
       await loadCoastline();
-      $("#archive-size").textContent = `${state.manifest.frames.length} hourly frames`;
       $("#timeline").max = state.manifest.frames.length - 1;
       state.frameIndex = state.manifest.frames.length - 1;
       initialiseCanvases(); bindControls(); await renderFrame(state.frameIndex);

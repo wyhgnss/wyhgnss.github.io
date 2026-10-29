@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#071018">
   <meta name="description" content="Hourly global low-, middle-, and high-layer precipitable water derived from MIMIC-TPW.">
   <title>Real-time LPW | Yuhao Wu</title>
-  <link rel="stylesheet" href="assets/lpw.css?v=20261029-1">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261029-2">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Yuhao Wu homepage">
+    <div class="brand" aria-label="PSHX layered precipitable water platform">
       <span class="brand-mark" aria-hidden="true"></span>
-      <span><b>ATMOS / LPW</b><small>Global moisture observatory</small></span>
-    </a>
+      <span><b>PSHX / LPW</b><small>Global moisture observatory</small></span>
+    </div>
     <nav aria-label="Primary navigation">
       <a href="/">Homepage</a>
       <a href="https://bin.ssec.wisc.edu/pub/mtpw2/data/" target="_blank" rel="noopener">MIMIC data ↗</a>
@@ -28,21 +28,17 @@
         <p class="intro">Explore low-, middle-, and high-tropospheric moisture derived from the latest MIMIC total precipitable water product.</p>
       </div>
       <div class="hero-side">
-        <div class="team-badge">
-          <div class="affiliation-block">
-            <div class="team-logo-frame"><img src="assets/team-logo.png" alt="INSIGHT Innovative Satellite Geodesy Research Team logo"></div>
-            <div class="affiliation-copy"><span>Research group</span><strong>INSIGHT Team</strong><small>Innovative Satellite Geodesy</small></div>
-          </div>
-          <div class="affiliation-block university-block">
+        <div class="hero-info-grid" aria-label="Affiliation and product status">
+          <div class="hero-info-card affiliation-block university-block">
             <div class="university-logo-frame"><img src="assets/wuhan-university-logo.png" alt="Wuhan University emblem"></div>
             <div class="affiliation-copy"><strong>Wuhan University</strong><small>School of Geodesy and Geomatics</small></div>
           </div>
-        </div>
-        <div class="status-grid" aria-label="Product status">
-          <article class="analysis-time-card"><span>Analysis time</span><strong id="analysis-time">—</strong><small id="analysis-time-beijing" class="analysis-local-time">—</small></article>
-          <article><span>Archive</span><strong id="archive-size">—</strong></article>
-          <article><span>Display grid</span><strong>1° global</strong></article>
-          <article><span>Selected point</span><strong id="selected-point">Click a map</strong></article>
+          <div class="hero-info-card affiliation-block research-block">
+            <div class="team-logo-frame"><img src="assets/team-logo.png" alt="INSIGHT Innovative Satellite Geodesy Research Team logo"></div>
+            <div class="affiliation-copy"><span>Research group</span><strong>INSIGHT Team</strong><small>Innovative Satellite Geodesy</small></div>
+          </div>
+          <article class="hero-info-card analysis-time-card"><span>Analysis time</span><strong id="analysis-time">—</strong><small id="analysis-time-beijing" class="analysis-local-time">—</small></article>
+          <article class="hero-info-card selected-point-card"><span>Selected point</span><strong id="selected-point">Click a map</strong></article>
         </div>
       </div>
     </section>
@@ -121,6 +117,6 @@
   </main>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="assets/lpw.js?v=20261029-1"></script>
+  <script src="assets/lpw.js?v=20261029-2"></script>
 </body>
 </html>
