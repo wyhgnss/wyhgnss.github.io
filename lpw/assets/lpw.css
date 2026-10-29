@@ -46,7 +46,7 @@ h1 em { color: #8295a0; font-family: Georgia, serif; font-weight: 400; }
 .intro { max-width: 740px; color: #9aabb5; font-size: clamp(.98rem, 1.25vw, 1.22rem); line-height: 1.65; }
 .hero-side { display: grid; gap: 14px; }
 .hero-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hero-info-card { min-width: 0; min-height: 102px; border: 1px solid var(--line); background: rgba(11, 27, 37, .74); backdrop-filter: blur(12px); }
+.hero-info-card { min-width: 0; min-height: 102px; border: 1px solid var(--line); background: rgba(11, 27, 37, .28); backdrop-filter: blur(12px); }
 .affiliation-block { display: flex; align-items: center; gap: 12px; padding: 12px; }
 .team-logo-frame, .university-logo-frame { width: 70px; height: 70px; flex: 0 0 70px; overflow: hidden; }
 .team-logo-frame { padding: 2px; background: transparent; }
@@ -59,8 +59,8 @@ h1 em { color: #8295a0; font-family: Georgia, serif; font-weight: 400; }
 .hero-info-card small { font-size: .52rem; letter-spacing: .06em; text-transform: none; }
 .hero-info-grid article { padding: 23px; }
 .hero-info-grid article > span { margin-bottom: 11px; font-size: .66rem; letter-spacing: .13em; }
-.hero-info-grid .analysis-time-card { padding-top: 17px; }
-.analysis-local-time { display: block; margin-top: 6px; color: var(--cyan); font-size: .69rem; line-height: 1.25; letter-spacing: .015em; }
+.hero-info-grid .analysis-time-card { padding: 17px 16px 23px; }
+.hero-info-card .analysis-local-time { display: block; margin-top: 6px; color: var(--cyan); font-size: .68rem; line-height: 1.15; font-weight: 400; letter-spacing: 0; text-transform: none; white-space: nowrap; }
 
 .workspace { margin: 0 clamp(12px, 2.5vw, 38px); border: 1px solid var(--line); background: rgba(9, 21, 30, .86); box-shadow: 0 30px 80px rgba(0,0,0,.27); }
 .control-bar { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 22px; border-bottom: 1px solid var(--line); }
