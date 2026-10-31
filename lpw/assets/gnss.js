@@ -301,27 +301,19 @@
   async function renderStationHistory(stationIndex) {
     const station = state.manifest.stations[stationIndex];
     const rows = rowsForStation(stationIndex);
-    const low = new Array(state.manifest.times.length).fill(null);
-    const middle = new Array(state.manifest.times.length).fill(null);
-    const high = new Array(state.manifest.times.length).fill(null);
-    rows.forEach((row) => {
-      const time = state.arrays.time[row];
-      low[time] = value(row, 0);
-      middle[time] = value(row, 1);
-      high[time] = value(row, 2);
-    });
+    const times = rows.map((row) => state.manifest.times[state.arrays.time[row]]);
+    const series = [0, 1, 2].map((layer) => rows.map((row) => value(row, layer)));
 
     $("#gnss-selected-station").textContent = `${station.name} · Station ${station.number} · ${station.latitude.toFixed(4)}°, ${station.longitude.toFixed(4)}°`;
     $("#gnss-history-empty").hidden = true;
     $("#gnss-history-status").textContent = `${rows.length.toLocaleString()} available epochs · ${state.manifest.times[0].slice(0, 10)} to ${state.manifest.times.at(-1).slice(0, 10)}`;
     $("#gnss-history-status").hidden = false;
-    await Plotly.react("gnss-history-plot", [low, middle, high].map((values, layer) => ({
+    await Plotly.react("gnss-history-plot", series.map((values, layer) => ({
       type: "scattergl",
-      x: state.manifest.times,
+      x: times,
       y: values,
       name: layerNames[layer],
       mode: "lines",
-      connectgaps: false,
       line: { color: layerColors[layer], width: 1.6 },
       hovertemplate: "%{y:.2f} mm<extra></extra>"
     })), {
