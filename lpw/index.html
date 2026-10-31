@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071018">
-  <meta name="description" content="Hourly global low-, middle-, and high-layer precipitable water derived from MIMIC-TPW.">
+  <meta name="description" content="Hourly global MIMIC-derived layered precipitable water and historical GNSS station LPW observations.">
   <title>Real-time LPW | Yuhao Wu</title>
-  <link rel="stylesheet" href="assets/lpw.css?v=20261029-5">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261031-1">
 </head>
 <body>
   <header class="topbar">
@@ -110,13 +110,76 @@
       </div>
     </section>
 
+    <section class="gnss-section" aria-labelledby="gnss-heading">
+      <header class="gnss-intro">
+        <div>
+          <p class="eyebrow">HISTORICAL GNSS ARCHIVE</p>
+          <h2 id="gnss-heading">Station observations<br><em>across the globe.</em></h2>
+        </div>
+        <p>Select a date and observation time to compare low-, middle-, and high-layer GNSS LPW. Stations without data at the selected time are simply omitted.</p>
+      </header>
+
+      <div class="gnss-workspace">
+        <div class="gnss-control-bar">
+          <div class="segmented" role="group" aria-label="GNSS visualization mode">
+            <button class="active" type="button" data-gnss-view="maps" aria-pressed="true">Flat maps</button>
+            <button type="button" data-gnss-view="stack" aria-pressed="false">3D stack</button>
+          </div>
+          <div class="gnss-date-controls">
+            <button id="gnss-step-back" class="icon-button" type="button" aria-label="Previous GNSS observation">←</button>
+            <label for="gnss-date">Date <input id="gnss-date" type="date"></label>
+            <label for="gnss-time">Time <select id="gnss-time" aria-label="Available GNSS observation time"></select></label>
+            <button id="gnss-step-forward" class="icon-button" type="button" aria-label="Next GNSS observation">→</button>
+          </div>
+          <div class="gnss-summary" aria-live="polite">
+            <span id="gnss-observation-time">—</span>
+            <strong id="gnss-station-count">— stations</strong>
+          </div>
+        </div>
+
+        <div id="gnss-loading" class="loading"><span></span> Loading historical GNSS LPW…</div>
+        <div id="gnss-error" class="error" hidden></div>
+        <div id="gnss-maps-view">
+          <div id="gnss-flat-plot" aria-label="Historical GNSS LPW flat maps"></div>
+        </div>
+        <div id="gnss-stack-view" hidden>
+          <div class="gnss-stack-copy">
+            <p class="eyebrow">STATION LAYERS</p>
+            <h3>Three GNSS moisture layers.</h3>
+            <p>Drag to rotate, scroll to zoom, and click a station marker to inspect its complete available record.</p>
+            <div class="layer-key"><i class="low"></i><span>Low · surface–900 hPa</span><i class="mid"></i><span>Middle · 900–700 hPa</span><i class="high"></i><span>High · 700–300 hPa</span></div>
+          </div>
+          <div id="gnss-stack-plot" aria-label="Historical GNSS LPW three-dimensional station layers"></div>
+        </div>
+        <footer class="gnss-legend-note">
+          <span>GNSS LPW station values · shared 0–40 mm color scale</span>
+          <span>Dataset time zone is unspecified</span>
+        </footer>
+      </div>
+
+      <div class="gnss-history-layout">
+        <div class="gnss-history-copy">
+          <p class="eyebrow">STATION HISTORY</p>
+          <h2>One station,<br>every available epoch.</h2>
+          <p>Click a station in either GNSS view to display its complete low-, middle-, and high-layer LPW record. Missing epochs remain absent and do not interrupt the query.</p>
+          <div id="gnss-selected-station" class="gnss-selected-station">Select a station marker to begin.</div>
+        </div>
+        <div class="chart-card gnss-chart-card">
+          <div id="gnss-history-empty">Select a GNSS station on any map to begin.</div>
+          <div id="gnss-history-status" hidden></div>
+          <div id="gnss-history-plot" aria-label="Selected GNSS station LPW time series"></div>
+        </div>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <p>Derived from <a href="https://bin.ssec.wisc.edu/pub/mtpw2/data/">UW–Madison SSEC MIMIC-TPW</a> using the PSHAX + residual-correction model.</p>
-      <p>Research product · Updated hourly by GitHub Actions · Times in UTC</p>
+      <p>Research products · MIMIC updated hourly by GitHub Actions · MIMIC times in UTC · GNSS time zone unspecified</p>
     </footer>
   </main>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <script src="assets/lpw.js?v=20261029-7"></script>
+  <script src="assets/gnss.js?v=20261031-3"></script>
 </body>
 </html>
