@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#071018">
   <meta name="description" content="Hourly global MIMIC-derived layered precipitable water and historical GNSS station LPW observations.">
   <title>Real-time LPW | Yuhao Wu</title>
-  <link rel="stylesheet" href="assets/lpw.css?v=20261031-1">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpw-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+  <link rel="stylesheet" href="assets/lpw.css?v=20261101-6">
 </head>
 <body>
   <header class="topbar">
@@ -14,9 +15,17 @@
       <span class="brand-mark" aria-hidden="true"></span>
       <span><b>PSHX / LPW</b><small>Global moisture observatory</small></span>
     </div>
-    <nav aria-label="Primary navigation">
+    <nav class="section-nav" aria-label="LPW sections">
+      <a href="#mimic-lpw">MIMIC LPW</a>
+      <a href="#gnss-lpw">GNSS LPW</a>
+    </nav>
+    <nav class="utility-nav" aria-label="Primary navigation">
       <a href="/">Homepage</a>
       <a href="https://bin.ssec.wisc.edu/pub/mtpw2/data/" target="_blank" rel="noopener">MIMIC data ↗</a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+        <span class="theme-toggle-track" aria-hidden="true"><i></i></span>
+        <span id="theme-toggle-label">Light</span>
+      </button>
     </nav>
   </header>
 
@@ -43,7 +52,7 @@
       </div>
     </section>
 
-    <section class="workspace" aria-label="LPW visualization">
+    <section id="mimic-lpw" class="workspace" aria-label="MIMIC LPW visualization">
       <div class="control-bar">
         <div class="segmented" role="group" aria-label="Visualization mode">
           <button class="active" type="button" data-view="maps" aria-pressed="true">Flat maps</button>
@@ -110,7 +119,7 @@
       </div>
     </section>
 
-    <section class="gnss-section" aria-labelledby="gnss-heading">
+    <section id="gnss-lpw" class="gnss-section" aria-labelledby="gnss-heading">
       <header class="gnss-intro">
         <div>
           <p class="eyebrow">HISTORICAL GNSS ARCHIVE</p>
@@ -139,8 +148,19 @@
 
         <div id="gnss-loading" class="loading"><span></span> Loading historical GNSS LPW…</div>
         <div id="gnss-error" class="error" hidden></div>
-        <div id="gnss-maps-view">
-          <div id="gnss-flat-plot" aria-label="Historical GNSS LPW flat maps"></div>
+        <div id="gnss-maps-view" class="maps-grid gnss-maps-grid">
+          <article class="map-panel gnss-map-panel">
+            <header><div><span class="layer-number">01</span><h2>Low layer</h2></div><p>Surface – 900 hPa</p></header>
+            <div id="gnss-map-low" class="gnss-map" aria-label="Historical low-layer GNSS LPW station map"></div>
+          </article>
+          <article class="map-panel gnss-map-panel">
+            <header><div><span class="layer-number">02</span><h2>Middle layer</h2></div><p>900 – 700 hPa</p></header>
+            <div id="gnss-map-mid" class="gnss-map" aria-label="Historical middle-layer GNSS LPW station map"></div>
+          </article>
+          <article class="map-panel gnss-map-panel">
+            <header><div><span class="layer-number">03</span><h2>High layer</h2></div><p>700 – 300 hPa</p></header>
+            <div id="gnss-map-high" class="gnss-map" aria-label="Historical high-layer GNSS LPW station map"></div>
+          </article>
         </div>
         <div id="gnss-stack-view" hidden>
           <div class="gnss-stack-copy">
@@ -152,8 +172,12 @@
           <div id="gnss-stack-plot" aria-label="Historical GNSS LPW three-dimensional station layers"></div>
         </div>
         <footer class="gnss-legend-note">
-          <span>GNSS LPW station values · shared 0–40 mm color scale</span>
-          <span>Dataset time zone is unspecified</span>
+          <span>GNSS layered precipitable water</span>
+          <div class="legend-scale">
+            <div class="colorbar" aria-hidden="true"></div>
+            <div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40+ mm</span></div>
+          </div>
+          <span class="quality-note">Dataset time zone is unspecified</span>
         </footer>
       </div>
 
@@ -179,7 +203,7 @@
   </main>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="assets/lpw.js?v=20261029-7"></script>
-  <script src="assets/gnss.js?v=20261101-1"></script>
+  <script src="assets/lpw.js?v=20261101-2"></script>
+  <script src="assets/gnss.js?v=20261101-9"></script>
 </body>
 </html>

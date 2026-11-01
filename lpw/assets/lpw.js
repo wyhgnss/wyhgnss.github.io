@@ -10,6 +10,36 @@
   const PLAYBACK_INTERVAL_MS = 80;
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+  function plotTheme() {
+    const light = document.documentElement.dataset.theme === "light";
+    return light
+      ? { text: "#334952", muted: "#526770", grid: "#cbd8dc", zero: "#b8c9ce", coast: "rgba(31,55,65,.78)" }
+      : { text: "#91a4ae", muted: "#78909c", grid: "#18303d", zero: "#29404b", coast: "rgba(248,252,253,.82)" };
+  }
+
+  function updateThemeToggle() {
+    const light = document.documentElement.dataset.theme === "light";
+    const button = $("#theme-toggle");
+    if (!button) return;
+    button.setAttribute("aria-pressed", String(light));
+    button.setAttribute("aria-label", `Switch to ${light ? "dark" : "light"} theme`);
+    $("#theme-toggle-label").textContent = light ? "Dark" : "Light";
+  }
+
+  function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("lpw-theme", theme); } catch (error) { console.warn("Theme preference could not be saved", error); }
+    updateThemeToggle();
+    window.dispatchEvent(new CustomEvent("lpw-theme-change", { detail: { theme } }));
+  }
+
+  function bindThemeToggle() {
+    updateThemeToggle();
+    $("#theme-toggle")?.addEventListener("click", () => {
+      setTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light");
+    });
+  }
+
   async function fetchWithRetry(url, options = {}, attempts = 3) {
     let lastError;
     for (let attempt = 0; attempt < attempts; attempt += 1) {
@@ -92,7 +122,7 @@
     const { latitude, longitude } = state.coastline;
     context.save();
     context.beginPath();
-    context.strokeStyle = "rgba(248, 252, 253, .82)";
+    context.strokeStyle = plotTheme().coast;
     context.lineWidth = .75;
     context.lineJoin = "round";
     let drawing = false;
@@ -189,7 +219,8 @@
 
   async function renderStack(data) {
     const grid = state.manifest.grid, stride = 3;
-    const layerGap = 4;
+    const layerGap = 8;
+    const theme = plotTheme();
     const x = Array.from({ length: Math.ceil(grid.columns / stride) }, (_, i) => grid.longitude_start + i * stride * grid.longitude_step);
     const y = Array.from({ length: Math.ceil(grid.rows / stride) }, (_, i) => grid.latitude_start + i * stride * grid.latitude_step);
     const traces = [0, 1, 2].map((layer) => ({
@@ -202,10 +233,10 @@
     const plot = document.getElementById("stack-plot");
     await Plotly.react(plot, traces, {
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 10, b: 10 }, showlegend: false,
-      scene: { bgcolor: "rgba(0,0,0,0)", camera: { eye: { x: 1.45, y: -1.55, z: 1.15 } }, aspectratio: { x: 2.2, y: 1.15, z: .82 },
-        xaxis: { title: "Longitude", color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
-        yaxis: { title: "Latitude", color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
-        zaxis: { title: "Layer", tickvals: [0, layerGap, layerGap * 2], ticktext: ["Low","Middle","High"], color: "#9fb0ba", gridcolor: "#18303d", zerolinecolor: "#18303d" } }
+      scene: { bgcolor: "rgba(0,0,0,0)", camera: { eye: { x: 1.45, y: -1.55, z: 1.15 } }, aspectratio: { x: 2.2, y: 1.15, z: 1.12 },
+        xaxis: { title: "Longitude", color: theme.muted, gridcolor: theme.grid, zerolinecolor: theme.grid },
+        yaxis: { title: "Latitude", color: theme.muted, gridcolor: theme.grid, zerolinecolor: theme.grid },
+        zaxis: { title: "Layer", tickvals: [0, layerGap, layerGap * 2], ticktext: ["Low","Middle","High"], color: theme.text, gridcolor: theme.grid, zerolinecolor: theme.grid } }
     }, { responsive: true, displaylogo: false });
     plot.dataset.pointClickReadyAt = String(performance.now() + 1500);
     if (!plot.dataset.pointClickBound) {
@@ -246,10 +277,11 @@
       const available = frames.filter(Boolean).length;
       if (!available) throw new Error("The history archive is temporarily unavailable. Please try again in a moment.");
       const series = [0, 1, 2].map((layer) => frames.map((data) => data ? valueAt(data, layer, state.selected.row, state.selected.column) : null));
+      const theme = plotTheme();
       Plotly.react("history-plot", series.map((values, layer) => ({ x: state.manifest.frames.map((frame) => frame.timestamp), y: values, name: layerNames[layer], mode: "lines", line: { color: ["#48d5c8", "#f2cc60", "#f05d5e"][layer], width: 2 }, hovertemplate: "%{y:.2f} mm<extra></extra>" })), {
         paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 54, r: 24, t: 30, b: 50 },
-        font: { color: "#91a4ae", family: "Inter, sans-serif", size: 11 }, legend: { orientation: "h", x: 0, y: 1.12 }, hovermode: "x",
-        xaxis: { gridcolor: "#18303d", zeroline: false }, yaxis: { title: "LPW (mm)", rangemode: "tozero", gridcolor: "#18303d", zerolinecolor: "#29404b" }
+        font: { color: theme.text, family: "Inter, sans-serif", size: 11 }, legend: { orientation: "h", x: 0, y: 1.12 }, hovermode: "x",
+        xaxis: { gridcolor: theme.grid, zeroline: false }, yaxis: { title: "LPW (mm)", rangemode: "tozero", gridcolor: theme.grid, zerolinecolor: theme.zero }
       }, { responsive: true, displaylogo: false });
       $("#history-status").textContent = available === frames.length
         ? `${available} hourly frames loaded`
@@ -281,6 +313,7 @@
   }
 
   async function start() {
+    bindThemeToggle();
     try {
       state.manifest = await (await fetchWithRetry(new URL("manifest.json", basePath), { cache: "no-store" })).json();
       if (!state.manifest.frames.length) throw new Error("No LPW frames have been published yet. Run the data workflow to initialise the archive.");
@@ -291,6 +324,22 @@
       $("#loading").hidden = true;
     } catch (error) { $("#loading").hidden = true; showError(error); }
   }
+
+  window.addEventListener("lpw-theme-change", () => {
+    if (!state.currentData) return;
+    renderFlatMaps(state.currentData);
+    if (state.view === "stack") renderStack(state.currentData).catch(showError);
+    const historyPlot = $("#history-plot");
+    if (historyPlot?.data?.length) {
+      const theme = plotTheme();
+      Plotly.relayout(historyPlot, {
+        "font.color": theme.text,
+        "xaxis.gridcolor": theme.grid,
+        "yaxis.gridcolor": theme.grid,
+        "yaxis.zerolinecolor": theme.zero
+      });
+    }
+  });
 
   start();
 })();

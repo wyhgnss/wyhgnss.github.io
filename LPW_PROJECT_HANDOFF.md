@@ -3,24 +3,25 @@
 > 用途：在新的 Codex/ChatGPT 会话中，先完整阅读本文件，再修改本项目。  
 > 最近整理：2026-11-01（Asia/Shanghai）
 > 整理时分支：`main`  
-> 整理前基准提交：`e95bb886104bca17aad2561601a1f71ec3b905e6`
+> 整理时 HEAD：`d8751e82b9fc7b9436a5b3d19867b1994f435e17`
+> 整理时工作区：存在未提交的 LPW 前端与本报告修改，禁止覆盖或还原。
 
 ## 1. 新会话快速恢复清单
 
 1. 阅读本文件和 `lpw/pipeline/README.md`。
 2. 查看 `git status --short`，不得覆盖或还原用户已有修改。
 3. 根据任务只检查相关文件，不要重新设计整个页面。
-4. 修改网页 JavaScript 后递增 `lpw/index.html` 中 `assets/lpw.js?v=...` 的缓存版本。
-5. 修改 CSS 后递增对应的 CSS 缓存版本。
+4. 修改 MIMIC 或 GNSS JavaScript 后，分别递增 `lpw/index.html` 中 `assets/lpw.js?v=...` 或 `assets/gnss.js?v=...` 的缓存版本。
+5. 修改 CSS 后递增 `assets/lpw.css?v=...` 的缓存版本。
 6. 至少执行：
 
    ```text
    node --check lpw/assets/lpw.js
-   python -m unittest -v test_lpw_model.py
+   node --check lpw/assets/gnss.js
    git diff --check
    ```
 
-   模型测试命令需在 `lpw/pipeline` 目录运行。
+   只有模型或数据管线发生变化时，才需要在 `lpw/pipeline` 目录额外运行 `python -m unittest -v test_lpw_model.py`；GNSS 导出变化时运行 `python -m unittest -v test_gnss_export.py`。
 7. 涉及交互和布局时启动本地静态服务器并进行浏览器验证。
 8. 除非用户明确要求，不要自动提交、推送、删除历史数据或运行云端工作流。
 9. 完成修改后更新本报告中的“当前实现”“已知限制”和“修改记录”。
@@ -36,7 +37,7 @@
 - 个人主页顶部菜单配置：`_data/navigation.yml`
 - LPW 页面入口：`lpw/index.html`
 - 页面语言：英文。
-- 视觉主题：暗色、半透明信息卡、真实地球和卫星背景。
+- 视觉主题：支持 Dark/Light 双主题、半透明信息卡和真实地球/卫星背景；主题选择保存在浏览器 `localStorage`。
 
 ## 3. 科学模型定义
 
@@ -152,8 +153,9 @@ xgboost==3.4.1
 ### 6.1 主要文件
 
 - `lpw/index.html`：页面结构和英文文案。
-- `lpw/assets/lpw.css`：暗色主题、响应式布局和组件样式。
+- `lpw/assets/lpw.css`：Dark/Light 双主题、响应式布局和组件样式。
 - `lpw/assets/lpw.js`：数据加载、地图、三维图、播放和时间序列。
+- `lpw/assets/gnss.js`：历史 GNSS 数据解码、日期选择、平铺/三维散点和单站时间序列。
 - `lpw/assets/coastlines.json`：本地海岸线。
 - `lpw/assets/hero-earth-satellite.png`：顶部真实地球和卫星背景。
 - `lpw/assets/team-logo.png`：INSIGHT Team 标志。
@@ -162,6 +164,8 @@ xgboost==3.4.1
 ### 6.2 品牌与文案
 
 - 左上品牌：`PSHX / LPW`，为普通 `div`，点击不会跳转主页。
+- 顶部靠左有 `MIMIC LPW` 和 `GNSS LPW` 两个锚点菜单，点击后平滑滚动到相应地图模块；固定顶部栏通过 `scroll-margin-top` 避让。
+- 顶部右侧有 Dark/Light 开关；主题选择写入 `localStorage`，刷新和重新打开页面后保持。
 - 主标题：`Layered precipitable water from surface to sky`，无结尾标点。
 - 团队名：`INSIGHT Team`。
 - 学校组件：`Wuhan University` / `School of Geodesy and Geomatics`。
@@ -170,27 +174,37 @@ xgboost==3.4.1
   - 右上：Research group。
   - 左下：Analysis time。
   - 右下：Selected point。
-- 四个组件使用暗黑半透明背景。
+- 四个组件使用随主题变化的半透明背景。
 - Analysis time 同时显示 UTC 和 Beijing `(UTC+8)`；北京时间为蓝绿色、小号、正常字重并尽量不换行。
+- 浅色主题中的团队 Logo 和武大校徽为透明底深色图形；暗色主题中为透明底白色图形。
+- 页面顶部仍使用真实地球与卫星背景，Light 主题通过浅色渐变覆盖保证深色文字可读。
 
-### 6.3 平铺视图
+当前前端缓存版本（2026-11-01）：
+
+- `assets/lpw.css?v=20261101-6`
+- `assets/lpw.js?v=20261101-2`
+- `assets/gnss.js?v=20261101-9`
+
+### 6.3 MIMIC 平铺视图
 
 - 使用原生 Canvas 直接绘制三个全球 LPW 栅格。
 - 不使用在线底图，不实现缩放和平移。
 - 叠加本地海岸线。
 - 地图内部不显示经纬网文字。
-- 色标固定为 0–40 mm。
+- 色标固定为 0–40+ mm，并位于地图模块底部。
 - 点击任意层地图选择最近网格点，并在下方加载 72 小时时间序列。
 - 当前播放间隔：`80 ms`，约 12.5 帧/秒。
 
 ### 6.4 三维叠放视图
 
-- 使用 Plotly 三个 `surface` 图层。
-- Low/Middle/High 的高度间隔由 `layerGap = 4` 控制。
+- MIMIC 使用 Plotly 三个 `surface` 图层。
+- MIMIC Low/Middle/High 的高度间隔由 `layerGap = 8` 控制，三维场景纵向比例为 `1.12`。
+- GNSS 三维叠放使用 `gap = 12`、纵向比例 `1.22`，每层绘制覆盖经度 -180–180°、纬度 -90–90° 的矩形边界框；暗色主题为白色，浅色主题为深色。
+- GNSS 三维平面保持透明，只绘制海岸线、矩形边界和站点散点，不填充陆地。
 - 三维图支持 Plotly 自带旋转、缩放。
-- 悬停记录经纬度，点击三维表面后加载相同的 72 小时时间序列。
+- MIMIC 三维表面悬停记录经纬度，点击后加载相同的 72 小时时间序列；GNSS 点击站点后加载该站完整可用历史。
 
-### 6.5 时间序列
+### 6.5 MIMIC 点位时间序列
 
 - 三条线分别代表 Low、Middle、High。
 - 悬浮标签只显示数值和 `mm`，不显示日期时间，也不在数值旁重复显示 Low/Middle/High。
@@ -211,11 +225,16 @@ xgboost==3.4.1
 - `lpw/pipeline/export_gnss_history.m` 可从原 MAT 文件重新生成数据。
 - `lpw/pipeline/test_gnss_export.py` 验证压缩文件长度、索引范围、时刻偏移和记录计数。
 - 页面脚本：`lpw/assets/gnss.js`。
+- 页面默认选择 `2023-05-20 00:00`；当天还可选择 `06:00`、`12:00`、`18:00`。如果数据中不存在默认日期，则自动回退到最新可用时刻。
 - 日期控件选择日期，时刻下拉框列出该日实际存在的全部观测时间；前后按钮逐观测时刻移动。
-- 平铺视图使用三个 Plotly 全球散点地图，共用 0–40 mm 色标和海岸线。
-- 三维视图使用三个分层 `scatter3d` 站点层，并在各层叠加海岸线。
+- GNSS 平铺视图与 MIMIC 使用相同的三卡片模板（层编号、层名和气压范围），每张卡片保留独立站点点击查询。
+- 平铺视图使用三个 Plotly 全球散点地图和海岸线；站点 marker size 为 `9`。
+- 三维视图使用三个分层 `scatter3d` 站点层，并在各层叠加海岸线和全球矩形边界；站点 marker size 为 `6`。
+- 平铺与三维视图均关闭 Plotly 内置右侧竖向 colorbar，共用模块底部的横向 `0–40+ mm` 色标，样式与 MIMIC 一致。
 - 某时刻没有数据的站点不绘制、不补值，也不会导致页面报错。
 - 点击平铺或三维站点后，下方只使用该站真实存在的时刻绘制完整 Low/Middle/High 折线；不再把该站铺到全部全局时刻后插入大量 `null`，因此零散缺站不会把折线切碎。
+- GNSS 平铺、三维悬浮标签只显示站名和 LPW 数值；单站历史标题显示站名与经纬度，不显示内部 `Station xx` 编号。
+- MIMIC 地图与其时间序列、GNSS 地图与其时间序列之间的垂直留白均已压缩。
 
 ## 7. GitHub Actions
 
@@ -277,6 +296,7 @@ python -m http.server 8768 --bind 127.0.0.1
 
 ```text
 node --check lpw/assets/lpw.js
+node --check lpw/assets/gnss.js
 git diff --check
 ```
 
@@ -290,6 +310,8 @@ git diff --check
 - 切换 3D 后三层间隔明显，点击后也能显示时间序列。
 - Analysis time 的 UTC 与北京时间相差 8 小时。
 - 手机和桌面宽度下卡片不溢出。
+- Dark/Light 开关能同步更新网页、Canvas 海岸线和 Plotly 图表；刷新后主题保持。
+- 顶部 `MIMIC LPW`、`GNSS LPW` 菜单能滚动到正确模块。
 
 ### 9.2 模型
 
@@ -316,11 +338,12 @@ python -m unittest -v test_gnss_export.py
 
 GNSS 浏览器人工检查：
 
-- 默认显示最新可用 GNSS 时刻。
+- 默认显示 `2023-05-20 00:00`；若该日期缺失则回退到最新可用时刻。
 - 修改日期后，时刻下拉框只出现该日的有效时刻。
 - 站点计数随时刻改变；缺站时仍正常绘制。
-- Flat maps 和 3D stack 均能显示三层站点散点及 0–40 mm colorbar。
-- 点击任一站点后显示站名、站号、坐标和三层完整历史折线。
+- Flat maps 和 3D stack 均能显示放大的三层站点散点，且仅使用模块底部的横向 0–40+ mm 共享色标。
+- 3D stack 保持透明平面，无陆地填色；三层海岸线和矩形边界清晰。
+- 点击任一站点后显示站名、坐标和三层完整历史折线，不显示内部测站号。
 
 ### 9.3 Workflow
 
@@ -367,4 +390,9 @@ GNSS 浏览器人工检查：
 - 2026-10-29：LPW Action 改为每小时第 13/43 分钟双触发，并增加 45 分钟新鲜度门限。
 - 2026-10-31：加入历史 GNSS LPW 查询模块、MATLAB 可重复导出脚本、稀疏压缩数据和导出测试。
 - 2026-11-01：修复 GNSS 单站历史折线被全局缺测时刻大量切断的问题，改为按该站实际观测时刻连续绘制。
+- 2026-11-01：GNSS 平铺图改为与 MIMIC 一致的三卡片模板；GNSS 三维图加入每层白色全球边界框，并增大 GNSS 与 MIMIC 三维层距。
+- 2026-11-01：加入顶部 Dark/Light 主题开关并持久化用户选择；浅色主题同步重绘网页、Plotly 图表、海岸线和三维边界。GNSS 标签与历史标题不再显示内部测站号。
+- 2026-11-01：顶部加入 MIMIC LPW/GNSS LPW 平滑定位菜单并压缩地图与对应历史图之间的留白；浅色主题使用透明底深色 Logo，暗色主题使用透明底白色 Logo；GNSS 三维保持透明平面、海岸线和矩形边界，不填充陆地。
+- 2026-11-01：GNSS 默认显示 2023-05-20 00:00；平铺测站散点大小增至 9，三维测站散点大小增至 6。
+- 2026-11-01：GNSS 平铺与三维视图移除 Plotly 右侧竖向 colorbar，统一使用模块底部的 0–40+ mm 横向共享色标，与 MIMIC 样式一致。
 

@@ -6,6 +6,7 @@
   const assetPath = new URL(".", scriptUrl);
   const layerNames = ["Low", "Middle", "High"];
   const layerColors = ["#48d5c8", "#f2cc60", "#f05d5e"];
+  const DEFAULT_GNSS_DATE = "2023-05-20";
   const colorscale = [[0,"#30123b"],[.14,"#4145ab"],[.29,"#2a9fd6"],[.43,"#1bcfd4"],[.57,"#61d04f"],[.72,"#f9e721"],[.86,"#f48a2c"],[1,"#c62028"]];
   const $ = (selector) => document.querySelector(selector);
   const state = {
@@ -15,10 +16,18 @@
     view: "maps",
     arrays: null,
     stationRows: new Map(),
-    hoveredStation: null
+    hoveredStation: null,
+    selectedStation: null
   };
 
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  function plotTheme() {
+    const light = document.documentElement.dataset.theme === "light";
+    return light
+      ? { text: "#334952", muted: "#526770", grid: "#cbd8dc", zero: "#b8c9ce", coast: "rgba(30,55,65,.72)", land: "#e4ebed", ocean: "#f7f9fa", boundary: "rgba(29,52,62,.9)", markerLine: "rgba(24,45,54,.58)" }
+      : { text: "#91a4ae", muted: "#78909c", grid: "#18303d", zero: "#29404b", coast: "rgba(232,241,245,.68)", land: "#0c1c26", ocean: "#071018", boundary: "rgba(255,255,255,.9)", markerLine: "rgba(255,255,255,.62)" };
+  }
 
   async function fetchWithRetry(url, attempts = 3) {
     let lastError;
@@ -74,7 +83,7 @@
 
   function stationDisplay(index) {
     const station = state.manifest.stations[index];
-    return `${station.name} · Station ${station.number}`;
+    return station.name;
   }
 
   function snapshot() {
@@ -91,19 +100,20 @@
   }
 
   function geoStyle(domain) {
+    const theme = plotTheme();
     return {
       domain,
       projection: { type: "equirectangular" },
       bgcolor: "rgba(0,0,0,0)",
       showframe: false,
       showcoastlines: true,
-      coastlinecolor: "rgba(232,241,245,.68)",
+      coastlinecolor: theme.coast,
       coastlinewidth: .7,
       showcountries: false,
       showland: true,
-      landcolor: "#0c1c26",
+      landcolor: theme.land,
       showocean: true,
-      oceancolor: "#071018",
+      oceancolor: theme.ocean,
       lataxis: { range: [-90, 90], showgrid: false },
       lonaxis: { range: [-180, 180], showgrid: false }
     };
@@ -136,63 +146,43 @@
   }
 
   async function renderFlatMaps(data) {
-    const mobile = window.innerWidth <= 760;
-    const plot = $("#gnss-flat-plot");
-    const traces = [0, 1, 2].map((layer) => ({
-      type: "scattergeo",
-      geo: layer ? `geo${layer + 1}` : "geo",
-      mode: "markers",
-      lat: data.latitude,
-      lon: data.longitude,
-      text: data.labels,
-      customdata: data.stations,
-      marker: {
-        color: data.values[layer],
-        colorscale,
-        cmin: 0,
-        cmax: 40,
-        size: 7,
-        opacity: .94,
-        line: { color: "rgba(255,255,255,.62)", width: .55 },
-        showscale: layer === 2,
-        colorbar: {
-          title: { text: "LPW (mm)", side: "right", font: { color: "#91a4ae", size: 10 } },
-          tickfont: { color: "#91a4ae", size: 9 },
-          thickness: 10,
-          len: mobile ? .28 : .72,
-          x: 1.015,
-          y: mobile ? .17 : .5,
-          outlinewidth: 0
-        }
-      },
-      hovertemplate: "<b>%{text}</b><br>%{marker.color:.2f} mm<extra></extra>"
+    const plotIds = ["gnss-map-low", "gnss-map-mid", "gnss-map-high"];
+    const theme = plotTheme();
+    await Promise.all(plotIds.map(async (id, layer) => {
+      const plot = document.getElementById(id);
+      const trace = {
+        type: "scattergeo",
+        mode: "markers",
+        lat: data.latitude,
+        lon: data.longitude,
+        text: data.labels,
+        customdata: data.stations,
+        marker: {
+          color: data.values[layer],
+          colorscale,
+          cmin: 0,
+          cmax: 40,
+          size: 9,
+          opacity: .94,
+          line: { color: theme.markerLine, width: .55 },
+          showscale: false
+        },
+        hovertemplate: "<b>%{text}</b><br>%{marker.color:.2f} mm<extra></extra>"
+      };
+      await Plotly.react(plot, [trace], {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: { l: 4, r: 4, t: 4, b: 4 },
+        font: { color: theme.text, family: "Inter, sans-serif", size: 11 },
+        showlegend: false,
+        geo: geoStyle({ x: [0, 1], y: [0, 1] })
+      }, { responsive: true, displaylogo: false, scrollZoom: false });
+      bindStationClick(plot);
     }));
-
-    const domains = mobile
-      ? [{ x: [0, .96], y: [.69, 1] }, { x: [0, .96], y: [.345, .655] }, { x: [0, .96], y: [0, .31] }]
-      : [{ x: [0, .315], y: [0, 1] }, { x: [.3425, .6575], y: [0, 1] }, { x: [.685, 1], y: [0, 1] }];
-    const annotations = mobile
-      ? [[.48, 1.025], [.48, .68], [.48, .335]]
-      : [[.1575, 1.04], [.5, 1.04], [.8425, 1.04]];
-
-    await Plotly.react(plot, traces, {
-      paper_bgcolor: "rgba(0,0,0,0)",
-      plot_bgcolor: "rgba(0,0,0,0)",
-      margin: { l: 12, r: mobile ? 62 : 72, t: 48, b: 18 },
-      font: { color: "#91a4ae", family: "Inter, sans-serif", size: 11 },
-      showlegend: false,
-      geo: geoStyle(domains[0]),
-      geo2: geoStyle(domains[1]),
-      geo3: geoStyle(domains[2]),
-      annotations: layerNames.map((name, layer) => ({
-        text: `<b>${name} layer</b><br><span style="font-size:9px;color:#78909c">${["Surface–900", "900–700", "700–300"][layer]} hPa</span>`,
-        x: annotations[layer][0], y: annotations[layer][1], xref: "paper", yref: "paper", showarrow: false, align: "center"
-      }))
-    }, { responsive: true, displaylogo: false, scrollZoom: false });
-    bindStationClick(plot);
   }
 
   function coastlineTrace(layer, gap) {
+    const theme = plotTheme();
     const longitude = [], latitude = [], height = [];
     for (let index = 0; index < state.coastline.latitude.length; index += 1) {
       const lat = state.coastline.latitude[index];
@@ -204,15 +194,31 @@
     }
     return {
       type: "scatter3d", mode: "lines", x: longitude, y: latitude, z: height,
-      line: { color: "rgba(220,235,241,.34)", width: 1 },
+      line: { color: theme.coast, width: 1 },
       hoverinfo: "skip", showlegend: false
+    };
+  }
+
+  function boundaryTrace(layer, gap) {
+    const theme = plotTheme();
+    return {
+      type: "scatter3d",
+      mode: "lines",
+      x: [-180, 180, 180, -180, -180],
+      y: [-90, -90, 90, 90, -90],
+      z: [0, 0, 0, 0, 0].map(() => layer * gap),
+      line: { color: theme.boundary, width: 2 },
+      hoverinfo: "skip",
+      showlegend: false
     };
   }
 
   async function renderStack(data) {
     const plot = $("#gnss-stack-plot");
-    const gap = 7;
+    const gap = 12;
+    const theme = plotTheme();
     const coastlines = [0, 1, 2].map((layer) => coastlineTrace(layer, gap));
+    const boundaries = [0, 1, 2].map((layer) => boundaryTrace(layer, gap));
     const markers = [0, 1, 2].map((layer) => ({
       type: "scatter3d",
       mode: "markers",
@@ -224,27 +230,23 @@
       customdata: data.stations,
       marker: {
         color: data.values[layer], colorscale, cmin: 0, cmax: 40,
-        size: 4.5, opacity: .95,
-        line: { color: "rgba(255,255,255,.55)", width: .45 },
-        showscale: layer === 2,
-        colorbar: {
-          title: { text: "LPW (mm)", font: { color: "#91a4ae", size: 10 } },
-          tickfont: { color: "#91a4ae", size: 9 }, thickness: 10, len: .68, outlinewidth: 0
-        }
+        size: 6, opacity: .95,
+        line: { color: theme.markerLine, width: .45 },
+        showscale: false
       },
       hovertemplate: "<b>%{text}</b><br>%{marker.color:.2f} mm<extra></extra>"
     }));
 
-    await Plotly.react(plot, [...coastlines, ...markers], {
+    await Plotly.react(plot, [...boundaries, ...coastlines, ...markers], {
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
-      margin: { l: 0, r: 48, t: 10, b: 10 }, showlegend: false,
+      margin: { l: 0, r: 0, t: 10, b: 10 }, showlegend: false,
       scene: {
         bgcolor: "rgba(0,0,0,0)",
         camera: { eye: { x: 1.45, y: -1.55, z: 1.18 } },
-        aspectratio: { x: 2.2, y: 1.15, z: .9 },
-        xaxis: { title: "Longitude", range: [-180, 180], color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
-        yaxis: { title: "Latitude", range: [-90, 90], color: "#78909c", gridcolor: "#18303d", zerolinecolor: "#18303d" },
-        zaxis: { title: "Layer", range: [-1, gap * 2 + 1], tickvals: [0, gap, gap * 2], ticktext: layerNames, color: "#9fb0ba", gridcolor: "#18303d", zerolinecolor: "#18303d" }
+        aspectratio: { x: 2.2, y: 1.15, z: 1.22 },
+        xaxis: { title: "Longitude", range: [-180, 180], color: theme.muted, gridcolor: theme.grid, zerolinecolor: theme.grid },
+        yaxis: { title: "Latitude", range: [-90, 90], color: theme.muted, gridcolor: theme.grid, zerolinecolor: theme.grid },
+        zaxis: { title: "Layer", range: [-1, gap * 2 + 1], tickvals: [0, gap, gap * 2], ticktext: layerNames, color: theme.text, gridcolor: theme.grid, zerolinecolor: theme.grid }
       }
     }, { responsive: true, displaylogo: false });
     bind3DStationClick(plot);
@@ -299,15 +301,17 @@
   }
 
   async function renderStationHistory(stationIndex) {
+    state.selectedStation = stationIndex;
     const station = state.manifest.stations[stationIndex];
     const rows = rowsForStation(stationIndex);
     const times = rows.map((row) => state.manifest.times[state.arrays.time[row]]);
     const series = [0, 1, 2].map((layer) => rows.map((row) => value(row, layer)));
 
-    $("#gnss-selected-station").textContent = `${station.name} · Station ${station.number} · ${station.latitude.toFixed(4)}°, ${station.longitude.toFixed(4)}°`;
+    $("#gnss-selected-station").textContent = `${station.name} · ${station.latitude.toFixed(4)}°, ${station.longitude.toFixed(4)}°`;
     $("#gnss-history-empty").hidden = true;
     $("#gnss-history-status").textContent = `${rows.length.toLocaleString()} available epochs · ${state.manifest.times[0].slice(0, 10)} to ${state.manifest.times.at(-1).slice(0, 10)}`;
     $("#gnss-history-status").hidden = false;
+    const theme = plotTheme();
     await Plotly.react("gnss-history-plot", series.map((values, layer) => ({
       type: "scattergl",
       x: times,
@@ -319,10 +323,10 @@
     })), {
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 54, r: 24, t: 42, b: 54 },
-      font: { color: "#91a4ae", family: "Inter, sans-serif", size: 11 },
+      font: { color: theme.text, family: "Inter, sans-serif", size: 11 },
       legend: { orientation: "h", x: 0, y: 1.1 }, hovermode: "x",
-      xaxis: { gridcolor: "#18303d", zeroline: false, rangeslider: { visible: true, thickness: .08 } },
-      yaxis: { title: "GNSS LPW (mm)", rangemode: "tozero", gridcolor: "#18303d", zerolinecolor: "#29404b" }
+      xaxis: { gridcolor: theme.grid, zeroline: false, rangeslider: { visible: true, thickness: .08 } },
+      yaxis: { title: "GNSS LPW (mm)", rangemode: "tozero", gridcolor: theme.grid, zerolinecolor: theme.zero }
     }, { responsive: true, displaylogo: false });
   }
 
@@ -369,13 +373,20 @@
       $("#gnss-date").min = state.manifest.times[0].slice(0, 10);
       $("#gnss-date").max = state.manifest.times.at(-1).slice(0, 10);
       bindControls();
-      await renderTime(state.manifest.times.length - 1);
+      const defaultTimes = availableTimesOnDate(DEFAULT_GNSS_DATE);
+      await renderTime(defaultTimes[0] ?? state.manifest.times.length - 1);
       $("#gnss-loading").hidden = true;
     } catch (error) {
       $("#gnss-loading").hidden = true;
       showError(error);
     }
   }
+
+  window.addEventListener("lpw-theme-change", () => {
+    if (!state.manifest || !state.arrays) return;
+    renderTime(state.timeIndex).catch(showError);
+    if (Number.isInteger(state.selectedStation)) renderStationHistory(state.selectedStation).catch(showError);
+  });
 
   start();
 })();
