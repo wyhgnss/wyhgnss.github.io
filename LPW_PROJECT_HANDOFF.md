@@ -273,6 +273,16 @@ schedule:
 
 `.github/workflows/download_TPW_gif.yml` 是旧的 TPW PNG/GIF 下载任务，与 LPW 模型更新是两套独立流程。修改 LPW 时不要误删或混用。
 
+### 7.4 Cloudflare 外部每小时调度器
+
+- 调度器源码：`automation/lpw-scheduler/`。
+- Cloudflare Cron Trigger：每小时第 7 分钟（UTC）执行一次，即 `7 * * * *`。
+- Worker 调用现有 `update-lpw.yml` 的 `workflow_dispatch` API，并发送 `force: false`。
+- GitHub 原有第 13/43 分钟的 `schedule` 保留为兜底；45 分钟新鲜度门限会阻止重复模型计算。
+- GitHub 网页手动点击 **Run workflow** 时，`force` 默认值为 `true`，仍可无条件执行完整更新。
+- GitHub Fine-grained PAT 必须仅授权本仓库，并只授予 `Actions: Read and write`；令牌通过 Cloudflare `GITHUB_TOKEN` Secret 保存，禁止写入仓库。
+- 新会话不能假定 Worker 已部署。应检查 Cloudflare Worker、Cron Trigger 和 Secret 状态；首次部署步骤见 `automation/lpw-scheduler/README.md`。
+
 ## 8. 部署流程
 
 1. 在本地仓库修改并验证。
@@ -395,4 +405,5 @@ GNSS 浏览器人工检查：
 - 2026-11-01：顶部加入 MIMIC LPW/GNSS LPW 平滑定位菜单并压缩地图与对应历史图之间的留白；浅色主题使用透明底深色 Logo，暗色主题使用透明底白色 Logo；GNSS 三维保持透明平面、海岸线和矩形边界，不填充陆地。
 - 2026-11-01：GNSS 默认显示 2023-05-20 00:00；平铺测站散点大小增至 9，三维测站散点大小增至 6。
 - 2026-11-01：GNSS 平铺与三维视图移除 Plotly 右侧竖向 colorbar，统一使用模块底部的 0–40+ mm 横向共享色标，与 MIMIC 样式一致。
+- 2026-11-05：加入 Cloudflare Workers 外部小时调度器；每小时第 7 分钟调用 `workflow_dispatch`，GitHub 第 13/43 分钟定时任务继续兜底，并为手动触发加入 `force` 输入以区分强制更新和外部常规更新。
 

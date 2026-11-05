@@ -6,6 +6,12 @@ on:
     # provide a fallback; the freshness gate below prevents duplicate model runs.
     - cron: "13,43 * * * *"
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Ignore the freshness gate and run a full update"
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -29,6 +35,8 @@ jobs:
       - name: Check whether an LPW update is due
         id: freshness
         shell: bash
+        env:
+          FORCE_UPDATE: ${{ inputs.force }}
         run: |
           python - <<'PY'
           import json
@@ -36,7 +44,9 @@ jobs:
           from datetime import datetime, timedelta, timezone
           from pathlib import Path
 
-          due = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          is_dispatch = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          force_update = os.environ.get("FORCE_UPDATE", "").lower() == "true"
+          due = is_dispatch and force_update
           manifest_path = Path("lpw/data/manifest.json")
           if not due:
               due = True

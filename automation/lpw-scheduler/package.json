@@ -1,0 +1,10 @@
+{
+  "name": "lpw-hourly-scheduler",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "deploy": "npx wrangler@latest deploy",
+    "secret": "npx wrangler@latest secret put GITHUB_TOKEN"
+  }
+}
