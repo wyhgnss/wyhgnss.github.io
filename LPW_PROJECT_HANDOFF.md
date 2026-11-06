@@ -127,6 +127,8 @@ h5py==3.12.1
 numpy==2.1.3
 requests==2.32.3
 xgboost==3.4.1
+boto3==1.43.125
+netCDF4==1.7.5.1.post1
 ```
 
 ### 5.3 浏览器数据格式
@@ -179,11 +181,12 @@ xgboost==3.4.1
 - 浅色主题中的团队 Logo 和武大校徽为透明底深色图形；暗色主题中为透明底白色图形。
 - 页面顶部仍使用真实地球与卫星背景，Light 主题通过浅色渐变覆盖保证深色文字可读。
 
-当前前端缓存版本（2026-11-01）：
+当前前端缓存版本（2026-11-06）：
 
-- `assets/lpw.css?v=20261101-6`
+- `assets/lpw.css?v=20261106-2`
 - `assets/lpw.js?v=20261101-2`
 - `assets/gnss.js?v=20261101-9`
+- `assets/download.js?v=20261106-2`
 
 ### 6.3 MIMIC 平铺视图
 
@@ -236,6 +239,28 @@ xgboost==3.4.1
 - GNSS 平铺、三维悬浮标签只显示站名和 LPW 数值；单站历史标题显示站名与经纬度，不显示内部 `Station xx` 编号。
 - MIMIC 地图与其时间序列、GNSS 地图与其时间序列之间的垂直留白均已压缩。
 
+### 6.7 GNSS LPW 按站下载页面
+
+- 顶部 `MIMIC LPW`、`GNSS LPW` 菜单之后新增 `Download data`，打开 `lpw/download.html`。
+- 下载页保持主页面的英文界面、Dark/Light 主题、品牌和响应式顶部栏。
+- 页面脚本为 `lpw/assets/download.js`，直接读取现有 `lpw/data/gnss/manifest.json` 和 `observations.bin.gz`，不生成第二份 GNSS 数据资产。
+- 页面只列出至少包含一条真实观测的站点；支持按站名或站号搜索，并显示站号、经纬度、可用历元数和首末观测时间。
+- 选择站点后可在浏览器端生成 UTF-8、Tab 分隔的 `.txt` 文件。文件名为 `gnss-lpw_<station>.txt`。
+- TXT 文件包含站点元数据注释，数据列固定为 `dataset_time`、`low_lpw_mm`、`middle_lpw_mm`、`high_lpw_mm`。
+- GNSS 原始时间仍标为 dataset time / time zone unspecified，不擅自转换为 UTC 或北京时间。
+- 下载页依赖浏览器 `DecompressionStream` 解压现有 gzip 档案，与 GNSS 可视化页的兼容性要求相同。
+
+### 6.8 MIMIC 0.25° NetCDF 下载
+
+- `lpw/download.html` 顶部新增 MIMIC LPW NetCDF 区域，用户先选择档案年份，再选择该年实际有产品的 UTC 日期。
+- 每个可下载文件对应一个分析时次，页面显示 UTC 时刻、文件大小和 SHA-256 摘要。
+- 下载清单入口为同源文件 `lpw/data/mimic-archive.json`；该文件只保存小型根索引，年度清单和 NetCDF 文件保存在 Cloudflare R2。
+- R2 对象路径为 `mimic-lpw/<year>/<month>/mimic_lpw_0p25_<timestamp>.nc`，年度清单为 `mimic-lpw/<year>/manifest.json`。
+- 每个 NetCDF-4 文件使用原生 721 × 1440 全球网格，包含一个 UTC 时次以及 `lpw_low`、`lpw_middle`、`lpw_high` 三个变量。
+- 三层变量使用压缩 `int16`、`0.01 mm` scale factor 和 `-32768` 缺测值，并写入 CF-1.10、源文件地址、模型版本、时间范围和空间范围元数据。
+- 管线只进行一次 `stride=1` 完整模型推理，再用 `[::4, ::4]` 从相同结果生成现有 1°浏览器帧，避免重复模型计算。2026-11-06 本机完整 721 × 1440 合成网格测试约 6.9 秒/帧。
+- R2 未配置时，实时 1°产品继续正常更新，下载页明确显示0.25°档案尚未启用；R2配置不完整时管线主动报错。
+
 ## 7. GitHub Actions
 
 ### 7.1 LPW 工作流
@@ -250,6 +275,9 @@ xgboost==3.4.1
 - 并发组：`update-lpw`，`cancel-in-progress: false`。
 - 完整更新命令：`python update_data.py --hours 72 --max-new 8`。
 - 成功后由 `github-actions[bot]` 提交 `lpw/data`，随后请求 Pages 重建。
+- 设置完整 R2 凭据后，同一步骤还会生成0.25° NetCDF、上传 R2、更新年度清单，并把小型根清单同步到 `lpw/data/mimic-archive.json`。
+- R2所需 GitHub Actions Secrets：`R2_ACCOUNT_ID`、`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY`、`R2_BUCKET`；Actions Variable：`R2_PUBLIC_BASE_URL`。
+- R2 Token 必须使用仅限目标 Bucket 的 `Object Read & Write` 权限；Bucket 自定义域名建议为 `data.wuyuhao.top`，前端跨域读取年度清单需应用 `lpw/pipeline/r2-cors.json`。
 
 ### 7.2 当前定时可靠性方案
 
@@ -282,6 +310,42 @@ schedule:
 - GitHub 网页手动点击 **Run workflow** 时，`force` 默认值为 `true`，仍可无条件执行完整更新。
 - GitHub Fine-grained PAT 必须仅授权本仓库，并只授予 `Actions: Read and write`；令牌通过 Cloudflare `GITHUB_TOKEN` Secret 保存，禁止写入仓库。
 - 新会话不能假定 Worker 已部署。应检查 Cloudflare Worker、Cron Trigger 和 Secret 状态；首次部署步骤见 `automation/lpw-scheduler/README.md`。
+
+#### 7.4.1 2026-11-06 首次部署记录与 Windows 注意事项
+
+本机首次部署时遇到并解决了以下问题：
+
+1. PowerShell 最初无法识别 `npx`，原因是系统未安装带 npm/npx 的 Node.js。安装 Node.js LTS 后，`node`、`npm` 和 `npx` 位于 `C:\Program Files\nodejs\`。
+2. PowerShell 执行策略禁止加载 `npm.ps1` 和 `npx.ps1`。不需要修改系统执行策略，直接使用 `npm.cmd` 和 `npx.cmd` 即可。
+3. Cloudflare 账号首次发布 Worker 前需要注册账户级 `workers.dev` 子域名。可在 Cloudflare **Workers & Pages** 的账户详情中设置；这不是网站自定义域名，也不需要修改现有 DNS。
+4. 如果 Wrangler 报错“Could not detect a directory containing static files”，说明当前目录或命令把项目误当成静态 Pages 项目。该调度器是 Worker，不应使用 `wrangler pages deploy`。必须进入 `automation/lpw-scheduler` 并显式指定 `wrangler.jsonc`。
+5. `wrangler secret put GITHUB_TOKEN` 提示 `Enter a secret value` 时，应粘贴 GitHub Fine-grained PAT，而不是 GitHub 或 Cloudflare 密码。终端不会回显 Secret 内容，这是正常行为。
+
+本机验证可用的 PowerShell 部署命令为：
+
+```powershell
+Set-Location -LiteralPath "C:\Users\Administrator\Documents\GitHub\wyhgnss.github.io\automation\lpw-scheduler"
+
+npx.cmd wrangler@latest login
+npx.cmd wrangler@latest deploy --config ".\wrangler.jsonc"
+npx.cmd wrangler@latest secret put GITHUB_TOKEN --config ".\wrangler.jsonc"
+npx.cmd wrangler@latest deploy --config ".\wrangler.jsonc"
+```
+
+其中 GitHub Fine-grained PAT 必须满足：
+
+- Repository access：仅 `wyhgnss/wyhgnss.github.io`。
+- Repository permissions：`Actions: Read and write`。
+- Token 只保存为 Cloudflare 加密 Secret `GITHUB_TOKEN`，禁止写入代码、配置文件、终端历史或交接文档。
+- Token 设置合理的到期时间，并在到期前续期和替换 Cloudflare Secret。
+
+部署完成后应核验：
+
+1. Cloudflare **Workers & Pages > lpw-hourly-scheduler > Settings > Triggers** 中存在 `7 * * * *`。
+2. **Variables and Secrets** 中存在加密的 `GITHUB_TOKEN`。
+3. 打开部署生成的 `workers.dev` 地址只返回非敏感健康信息，不会触发 GitHub Actions。
+4. 下一个北京时间 `xx:07` 后，Cloudflare Observability 日志中应出现 GitHub `204` 响应，GitHub Actions 中应出现 `workflow_dispatch` 运行。
+5. 若 `manifest.updated_at` 距当前不足 45 分钟，该运行会快速跳过完整计算，这是预期行为。
 
 ## 8. 部署流程
 
@@ -330,6 +394,7 @@ git diff --check
 ```text
 python -m pip install -r requirements.txt
 python -m unittest -v test_lpw_model.py
+python -m unittest -v test_r2_archive.py
 ```
 
 必要时本地更新数据：
@@ -375,6 +440,8 @@ GNSS 浏览器人工检查：
 8. 浏览器需要支持 `DecompressionStream`；页面已对旧浏览器给出错误提示。
 9. GNSS 原始 `TIME2` 没有时区元数据；除非获得用户确认，不应改标为 UTC 或北京时间。
 10. GNSS 历史数据约 4.9 MB（清单加压缩观测），首次访问需额外下载；之后可由浏览器缓存。
+11. 0.25° NetCDF 档案依赖外部 R2 Bucket、自定义公开域名、CORS 和 GitHub Secrets；代码提交本身不会创建这些云端资源。
+12. 只有配置了完整 R2环境变量的运行才会执行完整 721 × 1440 推理和上传；首次启用只归档之后新处理的时次，不会自动回填全部历史 MIMIC 数据。
 
 ## 11. 修改原则
 
@@ -406,4 +473,7 @@ GNSS 浏览器人工检查：
 - 2026-11-01：GNSS 默认显示 2023-05-20 00:00；平铺测站散点大小增至 9，三维测站散点大小增至 6。
 - 2026-11-01：GNSS 平铺与三维视图移除 Plotly 右侧竖向 colorbar，统一使用模块底部的 0–40+ mm 横向共享色标，与 MIMIC 样式一致。
 - 2026-11-05：加入 Cloudflare Workers 外部小时调度器；每小时第 7 分钟调用 `workflow_dispatch`，GitHub 第 13/43 分钟定时任务继续兜底，并为手动触发加入 `force` 输入以区分强制更新和外部常规更新。
+- 2026-11-06：记录 Cloudflare Worker 首次部署结果与 Windows 故障排查：使用 Node.js LTS、`npx.cmd`、账户级 `workers.dev` 子域名、显式 `wrangler.jsonc` 部署、`GITHUB_TOKEN` Secret 和部署后验证流程。
+- 2026-11-06：顶部新增 `Download data` 菜单和独立 GNSS 下载页；用户可搜索并选择有真实观测的站点，在浏览器端导出包含三层 LPW 的 Tab 分隔 TXT 文件。
+- 2026-11-06：加入 MIMIC 0.25° NetCDF 产品生成与 Cloudflare R2 年/月归档；下载页可按年份和日期浏览小时产品。新增 R2 年度/根清单、Actions 环境配置、CORS 模板和归档测试。
 

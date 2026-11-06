@@ -1,0 +1,21 @@
+[
+  {
+    "AllowedOrigins": [
+      "https://wuyuhao.top",
+      "https://wyhgnss.github.io"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "AllowedHeaders": [
+      "*"
+    ],
+    "ExposeHeaders": [
+      "Content-Length",
+      "Content-Type",
+      "ETag"
+    ],
+    "MaxAgeSeconds": 3600
+  }
+]

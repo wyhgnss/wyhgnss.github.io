@@ -45,3 +45,55 @@ Validate the generated archive from this directory with:
 ```bash
 python -m unittest -v test_gnss_export.py
 ```
+
+## Global 0.25-degree MIMIC LPW NetCDF archive
+
+When the R2 environment variables below are present, `update_data.py` evaluates
+the LPW model once on the native 721 × 1440 MIMIC grid, uploads a compressed
+NetCDF-4 product to Cloudflare R2, and then samples the same result every fourth
+cell for the existing 1-degree browser frame.
+
+Each NetCDF file contains one UTC analysis time and these packed `int16`
+variables with a `0.01 mm` scale factor:
+
+- `lpw_low`: surface–900 hPa.
+- `lpw_middle`: 900–700 hPa.
+- `lpw_high`: 700–300 hPa.
+
+R2 object layout:
+
+```text
+mimic-lpw/
+  manifest.json
+  2026/
+    manifest.json
+    11/
+      mimic_lpw_0p25_20261106T120000Z.nc
+```
+
+Required GitHub Actions secrets:
+
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+
+Required GitHub Actions variable:
+
+- `R2_PUBLIC_BASE_URL`, for example `https://data.wuyuhao.top`
+
+Create an R2 token with **Object Read & Write** access limited to the archive
+bucket. Connect the bucket to the public custom domain, then apply
+`r2-cors.json` so the website can read annual manifests. If none of the R2
+variables are present, the pipeline keeps publishing only the existing rolling
+browser dataset. A partial R2 configuration is treated as an error.
+
+The uploader maintains `lpw/data/mimic-archive.json` as a small same-origin copy
+of the root archive index. The download page uses it to populate year and date
+selectors, while NetCDF files and annual manifests remain in R2.
+
+Run archive tests with:
+
+```text
+python -m unittest -v test_r2_archive.py
+```

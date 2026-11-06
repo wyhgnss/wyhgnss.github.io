@@ -227,3 +227,94 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
 }
 
 #mimic-lpw, #gnss-lpw { scroll-margin-top: 92px; }
+
+.section-nav a[aria-current="page"] { color: var(--cyan); }
+.section-nav a[aria-current="page"]::after { right: 0; }
+
+.download-main { max-width: 1800px; margin: auto; }
+.download-hero { position: relative; isolation: isolate; overflow: hidden; min-height: 430px; padding: clamp(64px, 8vw, 126px) clamp(20px, 8vw, 142px) 72px; border-bottom: 1px solid var(--line); }
+.download-hero::before { content: ""; position: absolute; z-index: -2; inset: 0; background: linear-gradient(90deg, rgba(7,16,24,.98) 0%, rgba(7,16,24,.88) 48%, rgba(7,16,24,.35) 100%), url("hero-earth-satellite.png") 76% center / cover no-repeat; opacity: .86; }
+.download-hero::after { content: ""; position: absolute; z-index: -1; inset: 0; background: radial-gradient(circle at 75% 38%, rgba(72,213,200,.16), transparent 26rem); }
+.download-hero h1 { max-width: 980px; margin-bottom: 24px; }
+.download-hero .intro { max-width: 820px; }
+.download-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+.download-summary span { display: inline-flex; align-items: baseline; gap: 6px; min-height: 40px; padding: 10px 14px; border: 1px solid var(--line); background: rgba(11,27,37,.56); color: var(--muted); font-size: .76rem; backdrop-filter: blur(10px); }
+.download-summary strong { color: var(--ink); font-size: .8rem; }
+
+.download-workspace { display: grid; grid-template-columns: minmax(300px, .78fr) minmax(440px, 1.22fr); gap: clamp(28px, 5vw, 86px); padding: clamp(54px, 7vw, 104px) clamp(20px, 8vw, 142px); border-bottom: 1px solid var(--line); }
+.download-copy, .download-card { min-width: 0; }
+.download-copy > h2, .download-notes h2 { margin-bottom: 18px; font-size: clamp(1.8rem, 3vw, 3.3rem); line-height: 1.04; letter-spacing: -.045em; }
+.download-copy > p:not(.eyebrow) { max-width: 590px; margin-bottom: 30px; color: var(--muted); line-height: 1.7; }
+.download-field { display: grid; gap: 9px; margin-top: 18px; }
+.download-field > span { color: var(--muted); font-size: .68rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.download-field input, .download-field select { min-width: 0; width: 100%; max-width: 100%; border: 1px solid var(--line); border-radius: 0; outline: 0; color: var(--ink); background: var(--panel); transition: border-color .2s, box-shadow .2s; }
+.download-field input { min-height: 46px; padding: 0 14px; }
+.download-field select { min-height: 46px; padding: 6px; }
+#station-select { min-height: 330px; }
+.download-field option { padding: 9px 10px; }
+.download-field input:focus, .download-field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 14%, transparent); }
+.download-field input:disabled, .download-field select:disabled { cursor: wait; opacity: .56; }
+.download-loading { margin-top: 18px; border: 1px solid var(--line); background: var(--panel); }
+
+.download-card { align-self: start; position: sticky; top: 108px; padding: clamp(26px, 4vw, 50px); border: 1px solid var(--line); background: linear-gradient(145deg, rgba(14,29,40,.98), rgba(8,20,29,.94)); box-shadow: 0 24px 70px rgba(0,0,0,.2); }
+.download-card header { padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.download-card header > span, .download-format > span { display: block; margin-bottom: 9px; color: var(--cyan); font-size: .66rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.download-card header h2 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 4.1rem); letter-spacing: -.05em; }
+.download-card header p { margin: 0; color: var(--muted); }
+.download-metadata { display: grid; grid-template-columns: 1fr 1fr; margin: 0; }
+.download-metadata div { min-width: 0; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.download-metadata div:nth-child(odd) { padding-right: 20px; border-right: 1px solid var(--line); }
+.download-metadata div:nth-child(even) { padding-left: 20px; }
+.download-metadata dt { margin-bottom: 7px; color: var(--muted); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.download-metadata dd { margin: 0; overflow-wrap: anywhere; font-size: .93rem; font-weight: 650; }
+.download-format { margin: 26px 0; }
+.download-format code { display: block; overflow-x: auto; padding: 13px 14px; border: 1px solid var(--line); background: rgba(3,11,17,.55); color: var(--muted); font-size: .7rem; white-space: nowrap; }
+.download-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 52px; border: 1px solid var(--cyan); background: var(--cyan); color: #041315; cursor: pointer; font-weight: 750; transition: transform .2s, box-shadow .2s, opacity .2s; }
+.download-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 13px 28px color-mix(in srgb, var(--cyan) 22%, transparent); }
+.download-button:disabled { cursor: not-allowed; opacity: .42; }
+.download-button span { font-size: 1.2rem; }
+.download-status { min-height: 1.4em; margin: 14px 0 0; color: var(--muted); font-size: .75rem; line-height: 1.55; }
+
+.mimic-download-workspace { background: linear-gradient(180deg, rgba(72,213,200,.035), transparent 42%); }
+.mimic-download-card header h2 { font-size: clamp(1.9rem, 3.3vw, 3.5rem); }
+.mimic-product-list { display: grid; gap: 10px; margin-top: 24px; }
+.mimic-product-empty { padding: 28px 0; color: var(--muted); line-height: 1.65; }
+.mimic-product-row { display: grid; grid-template-columns: minmax(130px, .7fr) minmax(190px, 1.3fr) auto; gap: 16px; align-items: center; padding: 15px 16px; border: 1px solid var(--line); background: rgba(3,11,17,.35); }
+.mimic-product-row time { font-weight: 700; }
+.mimic-product-meta { min-width: 0; color: var(--muted); font-size: .72rem; overflow-wrap: anywhere; }
+.mimic-product-link { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 13px; border: 1px solid var(--cyan); color: var(--cyan); text-decoration: none; font-size: .73rem; font-weight: 700; white-space: nowrap; transition: color .2s, background .2s; }
+.mimic-product-link:hover { color: #041315; background: var(--cyan); }
+
+.download-notes { display: grid; grid-template-columns: minmax(250px, .55fr) minmax(0, 1.45fr); gap: clamp(28px, 6vw, 100px); padding: clamp(54px, 7vw, 96px) clamp(20px, 8vw, 142px); }
+.download-note-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.download-note-grid article { min-height: 180px; padding: 24px; border: 1px solid var(--line); background: var(--panel); }
+.download-note-grid strong { color: var(--cyan); font-size: .8rem; letter-spacing: .03em; }
+.download-note-grid p { margin: 22px 0 0; color: var(--muted); font-size: .84rem; line-height: 1.65; }
+
+:root[data-theme="light"] .download-hero::before { background: linear-gradient(90deg, rgba(243,246,247,.98) 0%, rgba(243,246,247,.9) 48%, rgba(243,246,247,.45) 100%), url("hero-earth-satellite.png") 76% center / cover no-repeat; opacity: .9; }
+:root[data-theme="light"] .download-summary span { background: rgba(255,255,255,.65); }
+:root[data-theme="light"] .download-card { background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(234,240,242,.95)); box-shadow: 0 24px 70px rgba(46,76,88,.12); }
+:root[data-theme="light"] .download-format code { background: rgba(228,237,240,.8); }
+:root[data-theme="light"] .mimic-product-row { background: rgba(255,255,255,.72); }
+:root[data-theme="light"] .download-button { color: #fff; }
+:root[data-theme="light"] .download-field input, :root[data-theme="light"] .download-field select { color-scheme: light; }
+
+@media (max-width: 980px) {
+  .download-workspace, .download-notes { grid-template-columns: minmax(0, 1fr); }
+  .download-card { position: static; }
+  .download-note-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .download-hero { min-height: 0; padding-top: 54px; }
+  .download-summary { display: grid; }
+  .download-summary span { width: 100%; }
+  .download-workspace { padding-block: 48px; }
+  .download-metadata { grid-template-columns: 1fr; }
+  .download-metadata div:nth-child(odd) { padding-right: 0; border-right: 0; }
+  .download-metadata div:nth-child(even) { padding-left: 0; }
+  .download-note-grid { grid-template-columns: 1fr; }
+  .download-note-grid article { min-height: 0; }
+  .mimic-product-row { grid-template-columns: 1fr; gap: 8px; }
+  .mimic-product-link { width: 100%; }
+}

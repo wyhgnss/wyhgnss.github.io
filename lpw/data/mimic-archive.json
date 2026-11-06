@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "product": "Global 0.25-degree MIMIC Layered Precipitable Water",
+  "format": "NetCDF-4",
+  "resolution_degrees": 0.25,
+  "archive_base_url": "https://data.wuyuhao.top/mimic-lpw/",
+  "years": []
+}

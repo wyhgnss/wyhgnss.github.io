@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018">
+  <meta name="description" content="Download global 0.25-degree MIMIC LPW NetCDF products and historical GNSS LPW station text files.">
+  <title>Download LPW Data | Yuhao Wu</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpw-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+  <link rel="stylesheet" href="assets/lpw.css?v=20261106-2">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" aria-label="PSHX layered precipitable water platform">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span><b>PSHX / LPW</b><small>Global moisture observatory</small></span>
+    </div>
+    <nav class="section-nav" aria-label="LPW sections">
+      <a href="index.html#mimic-lpw">MIMIC LPW</a>
+      <a href="index.html#gnss-lpw">GNSS LPW</a>
+      <a href="download.html" aria-current="page">Download data</a>
+    </nav>
+    <nav class="utility-nav" aria-label="Primary navigation">
+      <a href="/">Homepage</a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+        <span class="theme-toggle-track" aria-hidden="true"><i></i></span>
+        <span id="theme-toggle-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="download-main">
+    <section class="download-hero">
+      <p class="eyebrow">LPW DATA ACCESS</p>
+      <h1>Download atmospheric<br><em>moisture products.</em></h1>
+      <p class="intro">Browse global 0.25° MIMIC LPW NetCDF products by year and date, or export the complete observation history for an individual GNSS station.</p>
+      <div class="download-summary" aria-label="Dataset summary">
+        <span><strong>0.25°</strong> global MIMIC NetCDF</span>
+        <span><strong id="mimic-archive-range">—</strong> MIMIC archive</span>
+        <span><strong id="download-station-total">—</strong> GNSS stations</span>
+        <span><strong id="download-time-range">—</strong> GNSS dataset time</span>
+      </div>
+    </section>
+
+    <section id="mimic-download" class="download-workspace mimic-download-workspace" aria-labelledby="mimic-download-heading">
+      <div class="download-copy">
+        <p class="eyebrow">MIMIC LPW NETCDF</p>
+        <h2 id="mimic-download-heading">Global 0.25° gridded products</h2>
+        <p>Select an archive year and an available UTC date. Each listed file contains one analysis time and the Low, Middle, and High LPW grids.</p>
+        <label class="download-field" for="mimic-year">
+          <span>Archive year</span>
+          <select id="mimic-year" disabled></select>
+        </label>
+        <label class="download-field" for="mimic-date">
+          <span>Available date</span>
+          <select id="mimic-date" disabled></select>
+        </label>
+        <div id="mimic-download-loading" class="loading download-loading"><span></span> Loading the MIMIC product archive…</div>
+        <div id="mimic-download-error" class="error" hidden></div>
+      </div>
+
+      <div class="download-card mimic-download-card">
+        <header>
+          <span>Available NetCDF products</span>
+          <h2 id="mimic-selected-date">—</h2>
+          <p id="mimic-date-summary">Select a year and date to browse the archive.</p>
+        </header>
+        <div id="mimic-product-list" class="mimic-product-list" aria-live="polite"></div>
+        <p id="mimic-download-status" class="download-status" aria-live="polite">Preparing the MIMIC archive index.</p>
+      </div>
+    </section>
+
+    <section id="gnss-download" class="download-workspace" aria-labelledby="download-heading">
+      <div class="download-copy">
+        <p class="eyebrow">SELECT A STATION</p>
+        <h2 id="download-heading">GNSS layered precipitable water</h2>
+        <p>Search by station name or number. Only stations with at least one published observation are listed.</p>
+        <label class="download-field" for="station-search">
+          <span>Search stations</span>
+          <input id="station-search" type="search" placeholder="Station name or number" autocomplete="off" disabled>
+        </label>
+        <label class="download-field" for="station-select">
+          <span>Available stations</span>
+          <select id="station-select" size="11" disabled aria-describedby="download-status"></select>
+        </label>
+        <div id="download-loading" class="loading download-loading"><span></span> Loading the GNSS archive…</div>
+        <div id="download-error" class="error" hidden></div>
+      </div>
+
+      <div class="download-card">
+        <header>
+          <span>Selected station</span>
+          <h2 id="station-name">—</h2>
+          <p id="station-coordinates">Select a station from the list.</p>
+        </header>
+        <dl class="download-metadata">
+          <div><dt>Station number</dt><dd id="station-number">—</dd></div>
+          <div><dt>Available epochs</dt><dd id="station-epochs">—</dd></div>
+          <div><dt>First observation</dt><dd id="station-first-time">—</dd></div>
+          <div><dt>Last observation</dt><dd id="station-last-time">—</dd></div>
+        </dl>
+        <div class="download-format">
+          <span>TXT columns</span>
+          <code>dataset_time · low_lpw_mm · middle_lpw_mm · high_lpw_mm</code>
+        </div>
+        <button id="download-button" class="download-button" type="button" disabled>
+          <span aria-hidden="true">↓</span> Download station TXT
+        </button>
+        <p id="download-status" class="download-status" aria-live="polite">Preparing the station catalogue and observation archive.</p>
+      </div>
+    </section>
+
+    <section class="download-notes" aria-labelledby="download-notes-heading">
+      <div>
+        <p class="eyebrow">FILE NOTES</p>
+        <h2 id="download-notes-heading">Ready for analysis.</h2>
+      </div>
+      <div class="download-note-grid">
+        <article><strong>MIMIC NetCDF-4</strong><p>One UTC analysis time per file on the native 721 × 1440 global grid, with packed 0.01 mm values.</p></article>
+        <article><strong>Plain text</strong><p>Tab-separated UTF-8 text with metadata comments and one observation per row.</p></article>
+        <article><strong>Three atmospheric layers</strong><p>Low: surface–900 hPa · Middle: 900–700 hPa · High: 700–300 hPa.</p></article>
+        <article><strong>Dataset time</strong><p>The source GNSS time vector has no time-zone metadata, so timestamps are not relabeled as UTC or Beijing time.</p></article>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>MIMIC 0.25° NetCDF archive · historical GNSS station TXT export</p>
+      <p><a href="index.html">Return to LPW visualization</a></p>
+    </footer>
+  </main>
+
+  <script src="assets/download.js?v=20261106-2"></script>
+</body>
+</html>
