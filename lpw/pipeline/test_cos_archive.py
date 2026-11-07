@@ -184,7 +184,7 @@ class COSManifestTest(unittest.TestCase):
         product_key = (self.config.bucket, "mimic-lpw/2026/01/mimic_lpw_0p25_20260102T030000Z.nc")
         self.assertEqual(client.objects[product_key], b"netcdf-test-data")
         self.assertIs(client.body_types[product_key], bytes)
-        self.assertEqual(client.metadata[product_key]["ContentLength"], len(b"netcdf-test-data"))
+        self.assertEqual(client.metadata[product_key]["ContentLength"], str(len(b"netcdf-test-data")))
         self.assertGreaterEqual(client.put_calls, 4)
         sleep.assert_called_once_with(1)
 

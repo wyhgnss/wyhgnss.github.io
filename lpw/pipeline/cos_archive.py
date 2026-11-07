@@ -284,7 +284,7 @@ class COSArchive:
             Bucket=self.config.bucket,
             Key=object_key,
             Body=product_bytes,
-            ContentLength=len(product_bytes),
+            ContentLength=str(len(product_bytes)),
             ContentType="application/x-netcdf",
             ContentDisposition=f'attachment; filename="{filename}"',
             CacheControl="public, max-age=31536000, immutable",
