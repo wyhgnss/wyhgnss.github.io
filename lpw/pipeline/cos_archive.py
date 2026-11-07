@@ -276,19 +276,23 @@ class COSArchive:
         size = path.stat().st_size
         checksum = file_sha256(path)
 
-        with path.open("rb") as stream:
-            self._put_object(
-                Bucket=self.config.bucket,
-                Key=object_key,
-                Body=stream,
-                ContentType="application/x-netcdf",
-                ContentDisposition=f'attachment; filename="{filename}"',
-                CacheControl="public, max-age=31536000, immutable",
-                Metadata={
-                    "x-cos-meta-sha256": checksum,
-                    "x-cos-meta-model-version": model_version,
-                },
-            )
+        # Products are only a few MiB.  Passing an in-memory byte buffer gives
+        # the COS SDK a fixed-size request body and avoids the very slow
+        # chunked/file-stream uploads seen from GitHub-hosted runners.
+        product_bytes = path.read_bytes()
+        self._put_object(
+            Bucket=self.config.bucket,
+            Key=object_key,
+            Body=product_bytes,
+            ContentLength=len(product_bytes),
+            ContentType="application/x-netcdf",
+            ContentDisposition=f'attachment; filename="{filename}"',
+            CacheControl="public, max-age=31536000, immutable",
+            Metadata={
+                "x-cos-meta-sha256": checksum,
+                "x-cos-meta-model-version": model_version,
+            },
+        )
 
         timestamp_text = timestamp_utc.isoformat().replace("+00:00", "Z")
         year_key = self._key(f"{year}/manifest.json")

@@ -43,6 +43,7 @@ class FakeCOSClient:
     def __init__(self) -> None:
         self.objects = {}
         self.metadata = {}
+        self.body_types = {}
 
     def get_object(self, Bucket, Key):
         if (Bucket, Key) not in self.objects:
@@ -50,6 +51,7 @@ class FakeCOSClient:
         return {"Body": FakeCOSBody(self.objects[(Bucket, Key)])}
 
     def put_object(self, Bucket, Key, Body, **kwargs):
+        self.body_types[(Bucket, Key)] = type(Body)
         data = Body.read() if hasattr(Body, "read") else Body
         self.objects[(Bucket, Key)] = bytes(data)
         self.metadata[(Bucket, Key)] = kwargs
@@ -165,7 +167,7 @@ class COSManifestTest(unittest.TestCase):
                 COSConfig.from_environment()
 
     @patch("cos_archive.time.sleep")
-    def test_retries_transient_upload_and_rewinds_stream(self, sleep) -> None:
+    def test_retries_transient_upload_with_fixed_length_bytes(self, sleep) -> None:
         client = FlakyCOSClient()
         archive = COSArchive(self.config, client=client)
         with TemporaryDirectory() as directory:
@@ -181,6 +183,8 @@ class COSManifestTest(unittest.TestCase):
             )
         product_key = (self.config.bucket, "mimic-lpw/2026/01/mimic_lpw_0p25_20260102T030000Z.nc")
         self.assertEqual(client.objects[product_key], b"netcdf-test-data")
+        self.assertIs(client.body_types[product_key], bytes)
+        self.assertEqual(client.metadata[product_key]["ContentLength"], len(b"netcdf-test-data"))
         self.assertGreaterEqual(client.put_calls, 4)
         sleep.assert_called_once_with(1)
 

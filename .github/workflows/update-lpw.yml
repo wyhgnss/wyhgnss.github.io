@@ -89,7 +89,7 @@ jobs:
           TENCENT_COS_REGION: ${{ vars.TENCENT_COS_REGION }}
           TENCENT_COS_PUBLIC_BASE_URL: ${{ vars.TENCENT_COS_PUBLIC_BASE_URL }}
           TENCENT_COS_PREFIX: mimic-lpw
-        run: python update_data.py --hours 72 --max-new 8
+        run: python update_data.py --hours 72 --max-new 1
 
       - name: Commit updated rolling dataset
         if: steps.freshness.outputs.run == 'true'
