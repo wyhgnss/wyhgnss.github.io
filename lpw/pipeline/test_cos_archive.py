@@ -206,6 +206,20 @@ class COSManifestTest(unittest.TestCase):
         self.assertEqual(client.put_calls, 2)
         sleep.assert_called_once_with(1)
 
+    @patch("cos_archive.time.sleep")
+    def test_retries_wrapped_ssl_eof(self, sleep) -> None:
+        client = FlakyCOSClient(
+            TransientWriteTimeoutError(
+                "Max retries exceeded (Caused by SSLError(SSLEOFError(8, "
+                "'EOF occurred in violation of protocol')))"
+            )
+        )
+        archive = COSArchive(self.config, client=client)
+        archive._put_object(Bucket=self.config.bucket, Key="ssl-eof-test", Body=b"data")
+        self.assertEqual(client.objects[(self.config.bucket, "ssl-eof-test")], b"data")
+        self.assertEqual(client.put_calls, 2)
+        sleep.assert_called_once_with(1)
+
 
 if __name__ == "__main__":
     unittest.main()

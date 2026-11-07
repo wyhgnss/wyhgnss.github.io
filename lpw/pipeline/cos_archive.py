@@ -201,6 +201,9 @@ def _transient_cos_error(error: Exception) -> bool:
             "operation timed out",
             "read timed out",
             "write operation timed out",
+            "eof occurred in violation of protocol",
+            "ssleoferror",
+            "sslerror",
         )
     )
     return transient_network_error or status == 429 or (isinstance(status, int) and status >= 500) or code in {
