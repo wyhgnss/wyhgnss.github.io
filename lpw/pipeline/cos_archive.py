@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -186,6 +187,20 @@ def _missing_object(error: Exception) -> bool:
     return status == 404 or code in {"404", "NoSuchKey", "NoSuchResource", "NotFound"}
 
 
+def _transient_cos_error(error: Exception) -> bool:
+    status_getter = getattr(error, "get_status_code", None)
+    code_getter = getattr(error, "get_error_code", None)
+    status = status_getter() if callable(status_getter) else None
+    code = str(code_getter() if callable(code_getter) else "")
+    return status == 429 or (isinstance(status, int) and status >= 500) or code in {
+        "UserNetworkTooSlow",
+        "RequestTimeout",
+        "SlowDown",
+        "InternalError",
+        "ServiceUnavailable",
+    }
+
+
 class COSArchive:
     def __init__(self, config: COSConfig, client: Any | None = None) -> None:
         self.config = config
@@ -205,6 +220,21 @@ class COSArchive:
     def _key(self, suffix: str) -> str:
         return f"{self.config.prefix.strip('/')}/{suffix.lstrip('/')}"
 
+    def _put_object(self, *, attempts: int = 4, **kwargs: Any) -> Any:
+        body = kwargs.get("Body")
+        for attempt in range(1, attempts + 1):
+            if attempt > 1 and hasattr(body, "seek"):
+                body.seek(0)
+            try:
+                return self.client.put_object(**kwargs)
+            except Exception as error:
+                if attempt == attempts or not _transient_cos_error(error):
+                    raise
+                delay = 2 ** (attempt - 1)
+                print(f"Transient COS upload error; retrying in {delay}s (attempt {attempt + 1}/{attempts}): {error}")
+                time.sleep(delay)
+        raise RuntimeError("COS upload retry loop exited unexpectedly")
+
     def _read_json(self, key: str, fallback: dict) -> dict:
         try:
             response = self.client.get_object(Bucket=self.config.bucket, Key=key)
@@ -220,7 +250,7 @@ class COSArchive:
 
     def _write_json(self, key: str, payload: dict) -> None:
         body = (json.dumps(payload, indent=2, sort_keys=False) + "\n").encode("utf-8")
-        self.client.put_object(
+        self._put_object(
             Bucket=self.config.bucket,
             Key=key,
             Body=body,
@@ -247,7 +277,7 @@ class COSArchive:
         checksum = file_sha256(path)
 
         with path.open("rb") as stream:
-            self.client.put_object(
+            self._put_object(
                 Bucket=self.config.bucket,
                 Key=object_key,
                 Body=stream,

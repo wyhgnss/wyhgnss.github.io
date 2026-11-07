@@ -26,6 +26,14 @@ class MissingObjectError(Exception):
         return "NoSuchKey"
 
 
+class TransientObjectError(Exception):
+    def get_status_code(self):
+        return 400
+
+    def get_error_code(self):
+        return "UserNetworkTooSlow"
+
+
 class FakeCOSBody(io.BytesIO):
     def get_raw_stream(self):
         return self
@@ -46,6 +54,22 @@ class FakeCOSClient:
         self.objects[(Bucket, Key)] = bytes(data)
         self.metadata[(Bucket, Key)] = kwargs
         return {"ETag": "test-etag"}
+
+
+class FlakyCOSClient(FakeCOSClient):
+    def __init__(self) -> None:
+        super().__init__()
+        self.failures_remaining = 1
+        self.put_calls = 0
+
+    def put_object(self, Bucket, Key, Body, **kwargs):
+        self.put_calls += 1
+        if self.failures_remaining:
+            self.failures_remaining -= 1
+            if hasattr(Body, "read"):
+                Body.read(5)
+            raise TransientObjectError("test transient upload error")
+        return super().put_object(Bucket, Key, Body, **kwargs)
 
 
 class NetCDFProductTest(unittest.TestCase):
@@ -139,6 +163,26 @@ class COSManifestTest(unittest.TestCase):
         with patch.dict(os.environ, {"TENCENT_COS_SECRET_ID": "secret-id"}, clear=True):
             with self.assertRaisesRegex(RuntimeError, "Incomplete Tencent COS configuration"):
                 COSConfig.from_environment()
+
+    @patch("cos_archive.time.sleep")
+    def test_retries_transient_upload_and_rewinds_stream(self, sleep) -> None:
+        client = FlakyCOSClient()
+        archive = COSArchive(self.config, client=client)
+        with TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            product = directory_path / "product.nc"
+            product.write_bytes(b"netcdf-test-data")
+            archive.upload_product(
+                product,
+                datetime(2026, 1, 2, 3, tzinfo=timezone.utc),
+                "https://example.test/source.nc",
+                "model123",
+                directory_path / "mimic-archive.json",
+            )
+        product_key = (self.config.bucket, "mimic-lpw/2026/01/mimic_lpw_0p25_20260102T030000Z.nc")
+        self.assertEqual(client.objects[product_key], b"netcdf-test-data")
+        self.assertGreaterEqual(client.put_calls, 4)
+        sleep.assert_called_once_with(1)
 
 
 if __name__ == "__main__":
