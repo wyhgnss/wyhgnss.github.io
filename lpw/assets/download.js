@@ -15,6 +15,7 @@
     selectedStation: null,
     stationMapReady: false,
     mimicRoot: null,
+    mimicRootManifestUrl: null,
     mimicYearManifest: null,
     mimicYearManifestUrl: null
   };
@@ -285,7 +286,10 @@
     if (!entry) throw new Error(`No MIMIC archive index is available for ${year}.`);
     $("#mimic-date").disabled = true;
     $("#mimic-download-status").textContent = `Loading the ${year} archive index…`;
-    state.mimicYearManifestUrl = new URL(entry.url, state.mimicRoot.archive_base_url).href;
+    const manifestBase = state.mimicRoot.storage === "github-releases"
+      ? state.mimicRootManifestUrl
+      : state.mimicRoot.archive_base_url;
+    state.mimicYearManifestUrl = new URL(entry.url, manifestBase).href;
     const response = await fetchWithRetry(state.mimicYearManifestUrl);
     state.mimicYearManifest = await response.json();
     populateMimicDates();
@@ -376,6 +380,7 @@
   async function startMimicArchive() {
     try {
       const response = await fetchWithRetry(archiveManifestPath);
+      state.mimicRootManifestUrl = response.url;
       state.mimicRoot = await response.json();
       if (!state.mimicRoot.enabled || !state.mimicRoot.years?.length) {
         throw new Error("The 0.25° MIMIC NetCDF archive has not been activated in Tencent COS yet.");

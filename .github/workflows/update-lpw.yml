@@ -79,16 +79,46 @@ jobs:
         working-directory: lpw/pipeline
         run: python -m unittest -v test_lpw_model.py
 
-      - name: Fetch MIMIC TPW and calculate LPW
+      - name: Generate latest MIMIC NetCDF release asset
         if: steps.freshness.outputs.run == 'true'
         working-directory: lpw/pipeline
+        run: python github_release_archive.py --hours 96 --output-directory "${RUNNER_TEMP}/mimic-release"
+
+      - name: Read MIMIC release metadata
+        if: steps.freshness.outputs.run == 'true'
+        id: mimic_release
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          metadata = json.loads((Path(os.environ["RUNNER_TEMP"]) / "mimic-release" / "release-upload.json").read_text())
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"asset_path={metadata.get('asset_path', '')}\n")
+              output.write(f"release_tag={metadata.get('release_tag', '')}\n")
+          PY
+
+      - name: Upload MIMIC NetCDF to repository release
+        if: steps.mimic_release.outputs.asset_path != ''
         env:
-          TENCENT_COS_SECRET_ID: ${{ secrets.TENCENT_COS_SECRET_ID }}
-          TENCENT_COS_SECRET_KEY: ${{ secrets.TENCENT_COS_SECRET_KEY }}
-          TENCENT_COS_BUCKET: ${{ vars.TENCENT_COS_BUCKET }}
-          TENCENT_COS_REGION: ${{ vars.TENCENT_COS_REGION }}
-          TENCENT_COS_PUBLIC_BASE_URL: ${{ vars.TENCENT_COS_PUBLIC_BASE_URL }}
-          TENCENT_COS_PREFIX: mimic-lpw
+          GH_TOKEN: ${{ github.token }}
+          ASSET_PATH: ${{ steps.mimic_release.outputs.asset_path }}
+          RELEASE_TAG: ${{ steps.mimic_release.outputs.release_tag }}
+        run: |
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --target "$GITHUB_SHA" \
+              --title "MIMIC LPW ${RELEASE_TAG#mimic-lpw-}" \
+              --notes "Hourly global 0.25-degree MIMIC layered precipitable water NetCDF products." \
+              --latest=false
+          fi
+          gh release upload "$RELEASE_TAG" "$ASSET_PATH" --clobber
+
+      - name: Refresh rolling browser LPW dataset
+        if: steps.freshness.outputs.run == 'true'
+        working-directory: lpw/pipeline
         run: python update_data.py --hours 72 --max-new 1
 
       - name: Commit updated rolling dataset

@@ -48,10 +48,10 @@ python -m unittest -v test_gnss_export.py
 
 ## Global 0.25-degree MIMIC LPW NetCDF archive
 
-When the Tencent COS environment variables below are present, `update_data.py` evaluates
-the LPW model once on the native 721 × 1440 MIMIC grid, uploads a compressed
-NetCDF-4 product to Tencent Cloud Object Storage (COS), and then samples the same result every fourth
-cell for the existing 1-degree browser frame.
+GitHub Actions generates the native-grid NetCDF product and uploads it as an
+asset of a monthly GitHub Release. Binary products are deliberately not
+committed to the Git branch: Git history would grow by roughly 25 GB per year
+and deleting old working-tree files would not remove their historical objects.
 
 Each NetCDF file contains one UTC analysis time and these packed `int16`
 variables with a `0.01 mm` scale factor:
@@ -60,47 +60,32 @@ variables with a `0.01 mm` scale factor:
 - `lpw_middle`: 900–700 hPa.
 - `lpw_high`: 700–300 hPa.
 
-COS object layout:
+Release layout:
 
 ```text
-mimic-lpw/
-  manifest.json
-  2026/
-    manifest.json
-    11/
-      mimic_lpw_0p25_20261106T120000Z.nc
+Release tag: mimic-lpw-2026-11
+  mimic_lpw_0p25_20261106T120000Z.nc
+  mimic_lpw_0p25_20261106T130000Z.nc
 ```
 
-Required GitHub Actions secrets (use a least-privilege CAM sub-user):
+Each month uses a separate release so the asset count remains below GitHub's
+per-release limit. `github_release_archive.py` imports the existing Tencent COS
+annual manifest on its first run, preserving links to products already stored
+there, and adds new GitHub Release download URLs afterwards.
 
-- `TENCENT_COS_SECRET_ID`
-- `TENCENT_COS_SECRET_KEY`
+The small indexes remain in Git and are published by GitHub Pages:
 
-Required GitHub Actions variables:
+```text
+lpw/data/mimic-archive.json
+lpw/data/mimic-releases/2026.json
+```
 
-- `TENCENT_COS_BUCKET`, including the APPID suffix, for example `lpw-archive-1250000000`
-- `TENCENT_COS_REGION`, for example `ap-guangzhou`
-
-Optional GitHub Actions variable:
-
-- `TENCENT_COS_PUBLIC_BASE_URL`; if omitted, the uploader uses the bucket's
-  default `https://<bucket>.cos.<region>.myqcloud.com` domain.
-
-Grant the CAM sub-user only `GetObject` and `PutObject` access under the
-`mimic-lpw/*` prefix of the target bucket. The bucket must allow anonymous read
-for those published objects (or use an equivalent bucket policy), because the
-download page links directly to NetCDF files. In the bucket's **Security
-Management > CORS** settings, allow `GET` and `HEAD` from
-`https://wuyuhao.top` and `https://wyhgnss.github.io`. If none of the COS
-variables are present, the pipeline keeps publishing only the existing rolling
-browser dataset. A partial COS configuration is treated as an error.
-
-The uploader maintains `lpw/data/mimic-archive.json` as a small same-origin copy
-of the root archive index. The download page uses it to populate year and date
-selectors, while NetCDF files and annual manifests remain in COS.
+The download page reads these same-origin indexes and links directly to public
+release assets. The workflow needs only its built-in `GITHUB_TOKEN` with
+`contents: write`; Tencent COS secrets and variables are no longer used.
 
 Run archive tests with:
 
 ```text
-python -m unittest -v test_cos_archive.py
+python -m unittest -v test_github_release_archive.py test_cos_archive.py
 ```
