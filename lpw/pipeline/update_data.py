@@ -20,7 +20,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from lpw_model import LPWModel
-from r2_archive import PRODUCT_PREFIX, R2Archive, R2Config, write_netcdf
+from cos_archive import COSArchive, COSConfig, PRODUCT_PREFIX, write_netcdf
 
 
 BASE_URL = "https://bin.ssec.wisc.edu/pub/mtpw2/data/"
@@ -119,14 +119,14 @@ def main() -> None:
     pending = [(stamp, url) for stamp, url in candidates if stamp.isoformat().replace("+00:00", "Z") not in known]
     if not model_changed:
         pending = pending[-args.max_new :]
-    archive_config = R2Config.from_environment()
-    archive = R2Archive(archive_config) if archive_config else None
+    archive_config = COSConfig.from_environment()
+    archive = COSArchive(archive_config) if archive_config else None
     model_stride = 1 if archive else args.stride
     model = LPWModel(model_directory, stride=model_stride)
     if archive:
-        print(f"R2 archive enabled: {archive_config.archive_base_url}")
+        print(f"Tencent COS archive enabled: {archive_config.archive_base_url}")
     else:
-        print("R2 archive is not configured; publishing only the rolling browser dataset.")
+        print("Tencent COS archive is not configured; publishing only the rolling browser dataset.")
     new_frames = []
 
     with TemporaryDirectory(prefix="lpw-netcdf-") as temporary_directory:
@@ -155,7 +155,7 @@ def main() -> None:
                     active_model_version,
                     site_directory / "data" / "mimic-archive.json",
                 )
-                print(f"Archived {entry['url']} ({entry['bytes']:,} bytes) in R2.")
+                print(f"Archived {entry['url']} ({entry['bytes']:,} bytes) in Tencent COS.")
                 display_layers = (
                     result.low[::args.stride, ::args.stride],
                     result.middle[::args.stride, ::args.stride],

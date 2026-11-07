@@ -83,12 +83,12 @@ jobs:
         if: steps.freshness.outputs.run == 'true'
         working-directory: lpw/pipeline
         env:
-          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET: ${{ secrets.R2_BUCKET }}
-          R2_PUBLIC_BASE_URL: ${{ vars.R2_PUBLIC_BASE_URL }}
-          R2_PREFIX: mimic-lpw
+          TENCENT_COS_SECRET_ID: ${{ secrets.TENCENT_COS_SECRET_ID }}
+          TENCENT_COS_SECRET_KEY: ${{ secrets.TENCENT_COS_SECRET_KEY }}
+          TENCENT_COS_BUCKET: ${{ vars.TENCENT_COS_BUCKET }}
+          TENCENT_COS_REGION: ${{ vars.TENCENT_COS_REGION }}
+          TENCENT_COS_PUBLIC_BASE_URL: ${{ vars.TENCENT_COS_PUBLIC_BASE_URL }}
+          TENCENT_COS_PREFIX: mimic-lpw
         run: python update_data.py --hours 72 --max-new 8
 
       - name: Commit updated rolling dataset

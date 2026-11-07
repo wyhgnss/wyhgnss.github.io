@@ -14,15 +14,24 @@ try:
 except ImportError:
     Dataset = None
 
+from cos_archive import COSArchive, COSConfig, write_netcdf
 from lpw_model import LPWResult
-from r2_archive import R2Archive, R2Config, write_netcdf
 
 
 class MissingObjectError(Exception):
-    response = {"Error": {"Code": "NoSuchKey"}}
+    def get_status_code(self):
+        return 404
+
+    def get_error_code(self):
+        return "NoSuchKey"
 
 
-class FakeS3Client:
+class FakeCOSBody(io.BytesIO):
+    def get_raw_stream(self):
+        return self
+
+
+class FakeCOSClient:
     def __init__(self) -> None:
         self.objects = {}
         self.metadata = {}
@@ -30,7 +39,7 @@ class FakeS3Client:
     def get_object(self, Bucket, Key):
         if (Bucket, Key) not in self.objects:
             raise MissingObjectError(Key)
-        return {"Body": io.BytesIO(self.objects[(Bucket, Key)])}
+        return {"Body": FakeCOSBody(self.objects[(Bucket, Key)])}
 
     def put_object(self, Bucket, Key, Body, **kwargs):
         data = Body.read() if hasattr(Body, "read") else Body
@@ -46,11 +55,18 @@ class NetCDFProductTest(unittest.TestCase):
         longitude = np.repeat(np.asarray([[-180.0, -179.75, -179.5]], dtype=np.float32), 2, axis=0)
         low = np.asarray([[1.23, 2.34, np.nan], [4.56, 5.67, 6.78]], dtype=np.float32)
         result = LPWResult(low=low, middle=low + 1, high=low + 2)
-        timestamp = datetime(2026, 11, 6, 12, tzinfo=timezone.utc)
 
         with TemporaryDirectory() as directory:
             path = Path(directory) / "product.nc"
-            write_netcdf(path, result, latitude, longitude, timestamp, "https://example.test/source.nc", "model123")
+            write_netcdf(
+                path,
+                result,
+                latitude,
+                longitude,
+                datetime(2026, 11, 6, 12, tzinfo=timezone.utc),
+                "https://example.test/source.nc",
+                "model123",
+            )
             with Dataset(path) as dataset:
                 self.assertEqual(dataset.Conventions, "CF-1.10")
                 self.assertEqual(dataset.model_version, "model123")
@@ -62,17 +78,16 @@ class NetCDFProductTest(unittest.TestCase):
                 np.testing.assert_allclose(values[~values.mask], low[~np.isnan(low)], atol=0.011)
 
 
-class R2ManifestTest(unittest.TestCase):
+class COSManifestTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.config = R2Config(
-            account_id="account",
-            access_key_id="access",
-            secret_access_key="secret",
-            bucket="lpw-archive",
-            public_base_url="https://data.example.test",
+        self.config = COSConfig(
+            secret_id="secret-id",
+            secret_key="secret-key",
+            bucket="lpw-archive-1250000000",
+            region="ap-guangzhou",
         )
-        self.client = FakeS3Client()
-        self.archive = R2Archive(self.config, client=self.client)
+        self.client = FakeCOSClient()
+        self.archive = COSArchive(self.config, client=self.client)
 
     def test_uploads_products_and_builds_year_index(self) -> None:
         with TemporaryDirectory() as directory:
@@ -96,7 +111,7 @@ class R2ManifestTest(unittest.TestCase):
                 local_manifest,
             )
 
-            year_key = ("lpw-archive", "mimic-lpw/2026/manifest.json")
+            year_key = ("lpw-archive-1250000000", "mimic-lpw/2026/manifest.json")
             year_manifest = json.loads(self.client.objects[year_key])
             self.assertEqual(len(year_manifest["files"]), 2)
             self.assertEqual(year_manifest["files"][0]["date"], "2026-01-02")
@@ -104,23 +119,26 @@ class R2ManifestTest(unittest.TestCase):
 
             root_manifest = json.loads(local_manifest.read_text(encoding="utf-8"))
             self.assertTrue(root_manifest["enabled"])
-            self.assertEqual(root_manifest["archive_base_url"], "https://data.example.test/mimic-lpw/")
+            self.assertEqual(
+                root_manifest["archive_base_url"],
+                "https://lpw-archive-1250000000.cos.ap-guangzhou.myqcloud.com/mimic-lpw/",
+            )
             self.assertEqual(root_manifest["years"][0]["file_count"], 2)
 
     def test_environment_configuration_is_optional_but_not_partial(self) -> None:
         names = [
-            "R2_ACCOUNT_ID",
-            "R2_ACCESS_KEY_ID",
-            "R2_SECRET_ACCESS_KEY",
-            "R2_BUCKET",
-            "R2_PUBLIC_BASE_URL",
-            "R2_PREFIX",
+            "TENCENT_COS_SECRET_ID",
+            "TENCENT_COS_SECRET_KEY",
+            "TENCENT_COS_BUCKET",
+            "TENCENT_COS_REGION",
+            "TENCENT_COS_PUBLIC_BASE_URL",
+            "TENCENT_COS_PREFIX",
         ]
         with patch.dict(os.environ, {name: "" for name in names}, clear=False):
-            self.assertIsNone(R2Config.from_environment())
-        with patch.dict(os.environ, {"R2_ACCOUNT_ID": "account"}, clear=True):
-            with self.assertRaisesRegex(RuntimeError, "Incomplete R2 configuration"):
-                R2Config.from_environment()
+            self.assertIsNone(COSConfig.from_environment())
+        with patch.dict(os.environ, {"TENCENT_COS_SECRET_ID": "secret-id"}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "Incomplete Tencent COS configuration"):
+                COSConfig.from_environment()
 
 
 if __name__ == "__main__":

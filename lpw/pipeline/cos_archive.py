@@ -1,4 +1,4 @@
-"""Create 0.25-degree LPW NetCDF products and archive them in Cloudflare R2."""
+"""Create 0.25-degree LPW NetCDF products and archive them in Tencent COS."""
 
 from __future__ import annotations
 
@@ -21,41 +21,43 @@ PRODUCT_PREFIX = "mimic_lpw_0p25"
 
 
 @dataclass(frozen=True)
-class R2Config:
-    account_id: str
-    access_key_id: str
-    secret_access_key: str
+class COSConfig:
+    secret_id: str
+    secret_key: str
     bucket: str
-    public_base_url: str
+    region: str
+    public_base_url: str = ""
     prefix: str = "mimic-lpw"
 
     @property
-    def endpoint_url(self) -> str:
-        return f"https://{self.account_id}.r2.cloudflarestorage.com"
+    def object_base_url(self) -> str:
+        if self.public_base_url:
+            return self.public_base_url.rstrip("/")
+        return f"https://{self.bucket}.cos.{self.region}.myqcloud.com"
 
     @property
     def archive_base_url(self) -> str:
-        return f"{self.public_base_url.rstrip('/')}/{self.prefix.strip('/')}/"
+        return f"{self.object_base_url}/{self.prefix.strip('/')}/"
 
     @classmethod
-    def from_environment(cls) -> R2Config | None:
+    def from_environment(cls) -> COSConfig | None:
         names = {
-            "account_id": "R2_ACCOUNT_ID",
-            "access_key_id": "R2_ACCESS_KEY_ID",
-            "secret_access_key": "R2_SECRET_ACCESS_KEY",
-            "bucket": "R2_BUCKET",
-            "public_base_url": "R2_PUBLIC_BASE_URL",
+            "secret_id": "TENCENT_COS_SECRET_ID",
+            "secret_key": "TENCENT_COS_SECRET_KEY",
+            "bucket": "TENCENT_COS_BUCKET",
+            "region": "TENCENT_COS_REGION",
         }
         values = {field: os.environ.get(name, "").strip() for field, name in names.items()}
-        prefix = os.environ.get("R2_PREFIX", "mimic-lpw").strip().strip("/")
-        if not any(values.values()):
+        public_base_url = os.environ.get("TENCENT_COS_PUBLIC_BASE_URL", "").strip()
+        prefix = os.environ.get("TENCENT_COS_PREFIX", "mimic-lpw").strip().strip("/")
+        if not any(values.values()) and not public_base_url:
             return None
         missing = [names[field] for field, value in values.items() if not value]
         if missing:
-            raise RuntimeError(f"Incomplete R2 configuration; missing: {', '.join(missing)}")
+            raise RuntimeError(f"Incomplete Tencent COS configuration; missing: {', '.join(missing)}")
         if not prefix:
-            raise RuntimeError("R2_PREFIX must not be empty")
-        return cls(**values, prefix=prefix)
+            raise RuntimeError("TENCENT_COS_PREFIX must not be empty")
+        return cls(**values, public_base_url=public_base_url, prefix=prefix)
 
 
 def _axis_from_grid(grid: np.ndarray, axis: int) -> np.ndarray:
@@ -170,24 +172,27 @@ def file_sha256(path: Path) -> str:
 
 
 def _missing_object(error: Exception) -> bool:
-    response = getattr(error, "response", {})
-    code = str(response.get("Error", {}).get("Code", ""))
-    return code in {"404", "NoSuchKey", "NotFound"}
+    status_getter = getattr(error, "get_status_code", None)
+    code_getter = getattr(error, "get_error_code", None)
+    status = status_getter() if callable(status_getter) else None
+    code = str(code_getter() if callable(code_getter) else "")
+    return status == 404 or code in {"404", "NoSuchKey", "NoSuchResource", "NotFound"}
 
 
-class R2Archive:
-    def __init__(self, config: R2Config, client: Any | None = None) -> None:
+class COSArchive:
+    def __init__(self, config: COSConfig, client: Any | None = None) -> None:
         self.config = config
         if client is None:
-            import boto3
+            from qcloud_cos import CosConfig as TencentCosConfig
+            from qcloud_cos import CosS3Client
 
-            client = boto3.client(
-                service_name="s3",
-                endpoint_url=config.endpoint_url,
-                aws_access_key_id=config.access_key_id,
-                aws_secret_access_key=config.secret_access_key,
-                region_name="auto",
+            sdk_config = TencentCosConfig(
+                Region=config.region,
+                SecretId=config.secret_id,
+                SecretKey=config.secret_key,
+                Scheme="https",
             )
+            client = CosS3Client(sdk_config)
         self.client = client
 
     def _key(self, suffix: str) -> str:
@@ -200,8 +205,11 @@ class R2Archive:
             if _missing_object(error):
                 return fallback
             raise
-        body = response["Body"].read()
-        return json.loads(body.decode("utf-8"))
+        body = response["Body"]
+        raw_stream_getter = getattr(body, "get_raw_stream", None)
+        if callable(raw_stream_getter):
+            body = raw_stream_getter()
+        return json.loads(body.read().decode("utf-8"))
 
     def _write_json(self, key: str, payload: dict) -> None:
         body = (json.dumps(payload, indent=2, sort_keys=False) + "\n").encode("utf-8")
@@ -239,7 +247,10 @@ class R2Archive:
                 ContentType="application/x-netcdf",
                 ContentDisposition=f'attachment; filename="{filename}"',
                 CacheControl="public, max-age=31536000, immutable",
-                Metadata={"sha256": checksum, "model-version": model_version},
+                Metadata={
+                    "x-cos-meta-sha256": checksum,
+                    "x-cos-meta-model-version": model_version,
+                },
             )
 
         timestamp_text = timestamp_utc.isoformat().replace("+00:00", "Z")
@@ -281,14 +292,12 @@ class R2Archive:
                 "years": [],
             },
         )
-        first_timestamp = year_manifest["files"][0]["timestamp"]
-        last_timestamp = year_manifest["files"][-1]["timestamp"]
         year_entry = {
             "year": year,
             "url": f"{year}/manifest.json",
             "file_count": len(year_manifest["files"]),
-            "first_timestamp": first_timestamp,
-            "last_timestamp": last_timestamp,
+            "first_timestamp": year_manifest["files"][0]["timestamp"],
+            "last_timestamp": year_manifest["files"][-1]["timestamp"],
         }
         years = {int(item["year"]): item for item in root_manifest.get("years", [])}
         years[year] = year_entry

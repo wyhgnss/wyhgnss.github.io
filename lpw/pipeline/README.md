@@ -48,9 +48,9 @@ python -m unittest -v test_gnss_export.py
 
 ## Global 0.25-degree MIMIC LPW NetCDF archive
 
-When the R2 environment variables below are present, `update_data.py` evaluates
+When the Tencent COS environment variables below are present, `update_data.py` evaluates
 the LPW model once on the native 721 × 1440 MIMIC grid, uploads a compressed
-NetCDF-4 product to Cloudflare R2, and then samples the same result every fourth
+NetCDF-4 product to Tencent Cloud Object Storage (COS), and then samples the same result every fourth
 cell for the existing 1-degree browser frame.
 
 Each NetCDF file contains one UTC analysis time and these packed `int16`
@@ -60,7 +60,7 @@ variables with a `0.01 mm` scale factor:
 - `lpw_middle`: 900–700 hPa.
 - `lpw_high`: 700–300 hPa.
 
-R2 object layout:
+COS object layout:
 
 ```text
 mimic-lpw/
@@ -71,29 +71,36 @@ mimic-lpw/
       mimic_lpw_0p25_20261106T120000Z.nc
 ```
 
-Required GitHub Actions secrets:
+Required GitHub Actions secrets (use a least-privilege CAM sub-user):
 
-- `R2_ACCOUNT_ID`
-- `R2_ACCESS_KEY_ID`
-- `R2_SECRET_ACCESS_KEY`
-- `R2_BUCKET`
+- `TENCENT_COS_SECRET_ID`
+- `TENCENT_COS_SECRET_KEY`
 
-Required GitHub Actions variable:
+Required GitHub Actions variables:
 
-- `R2_PUBLIC_BASE_URL`, for example `https://data.wuyuhao.top`
+- `TENCENT_COS_BUCKET`, including the APPID suffix, for example `lpw-archive-1250000000`
+- `TENCENT_COS_REGION`, for example `ap-guangzhou`
 
-Create an R2 token with **Object Read & Write** access limited to the archive
-bucket. Connect the bucket to the public custom domain, then apply
-`r2-cors.json` so the website can read annual manifests. If none of the R2
+Optional GitHub Actions variable:
+
+- `TENCENT_COS_PUBLIC_BASE_URL`; if omitted, the uploader uses the bucket's
+  default `https://<bucket>.cos.<region>.myqcloud.com` domain.
+
+Grant the CAM sub-user only `GetObject` and `PutObject` access under the
+`mimic-lpw/*` prefix of the target bucket. The bucket must allow anonymous read
+for those published objects (or use an equivalent bucket policy), because the
+download page links directly to NetCDF files. In the bucket's **Security
+Management > CORS** settings, allow `GET` and `HEAD` from
+`https://wuyuhao.top` and `https://wyhgnss.github.io`. If none of the COS
 variables are present, the pipeline keeps publishing only the existing rolling
-browser dataset. A partial R2 configuration is treated as an error.
+browser dataset. A partial COS configuration is treated as an error.
 
 The uploader maintains `lpw/data/mimic-archive.json` as a small same-origin copy
 of the root archive index. The download page uses it to populate year and date
-selectors, while NetCDF files and annual manifests remain in R2.
+selectors, while NetCDF files and annual manifests remain in COS.
 
 Run archive tests with:
 
 ```text
-python -m unittest -v test_r2_archive.py
+python -m unittest -v test_cos_archive.py
 ```

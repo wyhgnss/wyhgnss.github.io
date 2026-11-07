@@ -254,12 +254,12 @@ netCDF4==1.7.5.1.post1
 
 - `lpw/download.html` 顶部新增 MIMIC LPW NetCDF 区域，用户先选择档案年份，再选择该年实际有产品的 UTC 日期。
 - 每个可下载文件对应一个分析时次，页面显示 UTC 时刻、文件大小和 SHA-256 摘要。
-- 下载清单入口为同源文件 `lpw/data/mimic-archive.json`；该文件只保存小型根索引，年度清单和 NetCDF 文件保存在 Cloudflare R2。
-- R2 对象路径为 `mimic-lpw/<year>/<month>/mimic_lpw_0p25_<timestamp>.nc`，年度清单为 `mimic-lpw/<year>/manifest.json`。
+- 下载清单入口为同源文件 `lpw/data/mimic-archive.json`；该文件只保存小型根索引，年度清单和 NetCDF 文件保存在腾讯云 COS。
+- COS 对象路径为 `mimic-lpw/<year>/<month>/mimic_lpw_0p25_<timestamp>.nc`，年度清单为 `mimic-lpw/<year>/manifest.json`。
 - 每个 NetCDF-4 文件使用原生 721 × 1440 全球网格，包含一个 UTC 时次以及 `lpw_low`、`lpw_middle`、`lpw_high` 三个变量。
 - 三层变量使用压缩 `int16`、`0.01 mm` scale factor 和 `-32768` 缺测值，并写入 CF-1.10、源文件地址、模型版本、时间范围和空间范围元数据。
 - 管线只进行一次 `stride=1` 完整模型推理，再用 `[::4, ::4]` 从相同结果生成现有 1°浏览器帧，避免重复模型计算。2026-11-06 本机完整 721 × 1440 合成网格测试约 6.9 秒/帧。
-- R2 未配置时，实时 1°产品继续正常更新，下载页明确显示0.25°档案尚未启用；R2配置不完整时管线主动报错。
+- COS 未配置时，实时 1°产品继续正常更新，下载页明确显示0.25°档案尚未启用；COS 配置不完整时管线主动报错。
 
 ## 7. GitHub Actions
 
@@ -275,9 +275,9 @@ netCDF4==1.7.5.1.post1
 - 并发组：`update-lpw`，`cancel-in-progress: false`。
 - 完整更新命令：`python update_data.py --hours 72 --max-new 8`。
 - 成功后由 `github-actions[bot]` 提交 `lpw/data`，随后请求 Pages 重建。
-- 设置完整 R2 凭据后，同一步骤还会生成0.25° NetCDF、上传 R2、更新年度清单，并把小型根清单同步到 `lpw/data/mimic-archive.json`。
-- R2所需 GitHub Actions Secrets：`R2_ACCOUNT_ID`、`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY`、`R2_BUCKET`；Actions Variable：`R2_PUBLIC_BASE_URL`。
-- R2 Token 必须使用仅限目标 Bucket 的 `Object Read & Write` 权限；Bucket 自定义域名建议为 `data.wuyuhao.top`，前端跨域读取年度清单需应用 `lpw/pipeline/r2-cors.json`。
+- 设置完整腾讯云 COS 凭据后，同一步骤还会生成0.25° NetCDF、上传 COS、更新年度清单，并把小型根清单同步到 `lpw/data/mimic-archive.json`。
+- COS 所需 GitHub Actions Secrets：`TENCENT_COS_SECRET_ID`、`TENCENT_COS_SECRET_KEY`；Actions Variables：`TENCENT_COS_BUCKET`、`TENCENT_COS_REGION`，可选 `TENCENT_COS_PUBLIC_BASE_URL`。
+- 凭据应来自仅授权目标 Bucket 下 `mimic-lpw/*` 的 CAM 子用户。Bucket 需要允许用户公开读取产品，并为 `https://wuyuhao.top`、`https://wyhgnss.github.io` 配置 `GET`/`HEAD` CORS。
 
 ### 7.2 当前定时可靠性方案
 
@@ -347,6 +347,20 @@ npx.cmd wrangler@latest deploy --config ".\wrangler.jsonc"
 4. 下一个北京时间 `xx:07` 后，Cloudflare Observability 日志中应出现 GitHub `204` 响应，GitHub Actions 中应出现 `workflow_dispatch` 运行。
 5. 若 `manifest.updated_at` 距当前不足 45 分钟，该运行会快速跳过完整计算，这是预期行为。
 
+### 7.5 腾讯云 SCF 外部每小时调度器（当前替代方案）
+
+- Cloudflare 调度器在实际使用中仍未可靠触发，因此保留为历史实现，不再作为当前部署目标。
+- 腾讯云事件函数源码：`automation/tencent-lpw-scheduler/index.py`；部署时将该文件置于 ZIP 根目录上传。
+- 函数类型为事件函数，执行方法 `index.main_handler`，建议 128 MB、60 秒超时，并保持公网访问开启以调用 GitHub API。
+- 函数环境变量 `GITHUB_TOKEN` 保存同一个最小权限 GitHub Fine-grained PAT；不得把 Token 写入源码或 ZIP。
+- 腾讯云定时触发器使用七段 Cron：`0 7 * * * * *`，即每小时第 7 分钟触发。函数向 `update-lpw.yml` 发送 `force: false`。
+- 部署和测试步骤见 `automation/tencent-lpw-scheduler/README.md`。GitHub 当前在返回运行详情时使用 HTTP 200；函数同时兼容旧的空响应 204。测试返回 `github_status: 200`、`workflow_run_id` 和 `html_url` 后，还必须在 GitHub Actions 中确认出现 `workflow_dispatch` 运行。
+- 代码已准备，但仓库代码本身不会创建腾讯云函数、COS Bucket、CAM 凭据或 GitHub Secrets/Variables；这些必须在账号控制台中完成。
+- 2026-11-07 实际 COS Bucket 为 `lpw-archive-1333094468`，地域 `ap-guangzhou`，默认公开域名 `https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com`。对应三个 GitHub Actions Variables 已在仓库设置完成。
+- GitHub Fine-grained PAT `lpw-scf-scheduler` 已创建，仅授权本仓库 `Actions: Read and write`，有效期至 2027-02-05，并已由用户用于 SCF 的 `GITHUB_TOKEN`。
+- SCF 手动测试已成功触发 GitHub Actions 运行 `42337395702`。当时函数因只接受 HTTP 204 而把 GitHub 的 HTTP 200 运行详情误报为失败；调度器代码随后已修复为兼容 200/204。
+- COS 上传尚缺 GitHub Repository Secrets：`TENCENT_COS_SECRET_ID`、`TENCENT_COS_SECRET_KEY`。应使用最小权限 CAM 子账号密钥，不使用主账号永久密钥；SecretKey 只在创建时显示一次。
+
 ## 8. 部署流程
 
 1. 在本地仓库修改并验证。
@@ -394,7 +408,7 @@ git diff --check
 ```text
 python -m pip install -r requirements.txt
 python -m unittest -v test_lpw_model.py
-python -m unittest -v test_r2_archive.py
+python -m unittest -v test_cos_archive.py
 ```
 
 必要时本地更新数据：
@@ -440,8 +454,8 @@ GNSS 浏览器人工检查：
 8. 浏览器需要支持 `DecompressionStream`；页面已对旧浏览器给出错误提示。
 9. GNSS 原始 `TIME2` 没有时区元数据；除非获得用户确认，不应改标为 UTC 或北京时间。
 10. GNSS 历史数据约 4.9 MB（清单加压缩观测），首次访问需额外下载；之后可由浏览器缓存。
-11. 0.25° NetCDF 档案依赖外部 R2 Bucket、自定义公开域名、CORS 和 GitHub Secrets；代码提交本身不会创建这些云端资源。
-12. 只有配置了完整 R2环境变量的运行才会执行完整 721 × 1440 推理和上传；首次启用只归档之后新处理的时次，不会自动回填全部历史 MIMIC 数据。
+11. 0.25° NetCDF 档案依赖腾讯云 COS Bucket、公开读取策略、CORS 和 GitHub Secrets/Variables；代码提交本身不会创建这些云端资源，COS 存储和流量可能产生费用。
+12. 只有配置了完整 COS 环境变量的运行才会执行完整 721 × 1440 推理和上传；首次启用只归档之后新处理的时次，不会自动回填全部历史 MIMIC 数据。
 
 ## 11. 修改原则
 
@@ -476,4 +490,6 @@ GNSS 浏览器人工检查：
 - 2026-11-06：记录 Cloudflare Worker 首次部署结果与 Windows 故障排查：使用 Node.js LTS、`npx.cmd`、账户级 `workers.dev` 子域名、显式 `wrangler.jsonc` 部署、`GITHUB_TOKEN` Secret 和部署后验证流程。
 - 2026-11-06：顶部新增 `Download data` 菜单和独立 GNSS 下载页；用户可搜索并选择有真实观测的站点，在浏览器端导出包含三层 LPW 的 Tab 分隔 TXT 文件。
 - 2026-11-06：加入 MIMIC 0.25° NetCDF 产品生成与 Cloudflare R2 年/月归档；下载页可按年份和日期浏览小时产品。新增 R2 年度/根清单、Actions 环境配置、CORS 模板和归档测试。
+- 2026-11-07：因 Cloudflare 外部触发器和 R2 计费前置条件不可用，改为腾讯云 SCF 每小时触发 GitHub Actions、腾讯云 COS 保存 MIMIC 0.25° NetCDF；新增 SCF 上传包源码/测试，替换 COS SDK、Actions 配置、归档测试和交接说明。
+- 2026-11-07：修复 SCF 调度器把 GitHub workflow dispatch 的 HTTP 200 运行详情响应误判为失败；现在显式请求并返回 `workflow_run_id`/运行链接，同时兼容 HTTP 204。
 
