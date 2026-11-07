@@ -1,0 +1,73 @@
+{
+  "product": "MIMIC Layered Precipitable Water",
+  "format": "NetCDF-4",
+  "resolution_degrees": 0.25,
+  "year": 2026,
+  "files": [
+    {
+      "timestamp": "2026-11-04T00:00:00Z",
+      "date": "2026-11-04",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261104T000000Z.nc",
+      "bytes": 3079435,
+      "sha256": "b803436a46dd3868ee8d3dd8e89c439001c2b80ba2070fe7040264742a90f776",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.000000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T04:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261107T040000Z.nc",
+      "bytes": 3065118,
+      "sha256": "8eac064a91e795545bcc9bbaf59a5cf526905c813ef5300693f2ec6ea2ef7380",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.040000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T05:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261107T050000Z.nc",
+      "bytes": 3057442,
+      "sha256": "9a2fa6058b3bb509804ab029528371fa5aca76b7c009e98e252d15def7e40f3a",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.050000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T06:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261107T060000Z.nc",
+      "bytes": 3006570,
+      "sha256": "da012f9aad126bb490933a866e5cfb0f06878e36a488741a2a6393909ac06721",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.060000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T07:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261107T070000Z.nc",
+      "bytes": 2928846,
+      "sha256": "c1560df20bd06fa09e23487785aaeb29fe3b6c50a393f61a80df8309e7ff579f",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.070000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T08:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/2026/11/mimic_lpw_0p25_20261107T080000Z.nc",
+      "bytes": 2892814,
+      "sha256": "54b4fcc9652691128ab2375298ab410063babd8750fd77a372778a4ac72702b6",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.080000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T11:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T110000Z.nc",
+      "bytes": 2875523,
+      "sha256": "537b2285a404b685d9c93866a49b5b7232a30a27f5838eca7a566e8db28f776d",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.110000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    }
+  ],
+  "updated_at": "2026-11-07T11:00:00Z"
+}
