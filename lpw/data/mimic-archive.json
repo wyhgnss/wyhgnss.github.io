@@ -3,8 +3,23 @@
   "product": "Global 0.25-degree MIMIC Layered Precipitable Water",
   "format": "NetCDF-4",
   "resolution_degrees": 0.25,
+<<<<<<< HEAD
   "storage": "github-releases",
   "archive_base_url": "",
   "years": [],
   "updated_at": null
+=======
+  "archive_base_url": "",
+  "years": [
+    {
+      "year": 2026,
+      "url": "mimic-releases/2026.json",
+      "file_count": 7,
+      "first_timestamp": "2026-11-04T00:00:00Z",
+      "last_timestamp": "2026-11-07T11:00:00Z"
+    }
+  ],
+  "updated_at": "2026-11-07T11:00:00Z",
+  "storage": "github-releases"
+>>>>>>> 49f2ca70bec9f8efe4da79765a3adf6762a00ec7
 }
