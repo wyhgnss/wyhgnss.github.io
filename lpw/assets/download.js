@@ -13,6 +13,7 @@
     lastRows: null,
     stationIndices: [],
     selectedStation: null,
+    stationMapReady: false,
     mimicRoot: null,
     mimicYearManifest: null,
     mimicYearManifestUrl: null
@@ -40,6 +41,7 @@
         console.warn("Theme preference could not be saved", error);
       }
       updateThemeToggle();
+      renderStationMap().catch(showError);
     });
   }
 
@@ -109,44 +111,6 @@
       ));
   }
 
-  function optionLabel(index) {
-    const station = state.manifest.stations[index];
-    return `${station.name} · Station ${station.number} · ${state.counts[index].toLocaleString()} epochs`;
-  }
-
-  function populateStations(query = "") {
-    const normalized = query.trim().toLowerCase();
-    const matches = state.stationIndices.filter((index) => {
-      const station = state.manifest.stations[index];
-      return !normalized
-        || station.name.toLowerCase().includes(normalized)
-        || String(station.number).includes(normalized);
-    });
-    const select = $("#station-select");
-    select.replaceChildren();
-
-    if (!matches.length) {
-      const option = document.createElement("option");
-      option.textContent = "No matching stations";
-      option.disabled = true;
-      select.append(option);
-      state.selectedStation = null;
-      clearStationDetails("No station matches the current search.");
-      return;
-    }
-
-    matches.forEach((index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = optionLabel(index);
-      select.append(option);
-    });
-
-    const preferred = matches.includes(state.selectedStation) ? state.selectedStation : matches[0];
-    select.value = preferred;
-    showStation(preferred);
-  }
-
   function formatCoordinate(value, positive, negative) {
     return `${Math.abs(value).toFixed(4)}° ${value >= 0 ? positive : negative}`;
   }
@@ -158,25 +122,25 @@
   function showStation(index) {
     const stationIndex = Number(index);
     if (!Number.isInteger(stationIndex) || state.counts[stationIndex] === 0) {
-      clearStationDetails("Select a station from the list.");
+      clearStationDetails("Select a location marker on the map.");
       return;
     }
     state.selectedStation = stationIndex;
     const station = state.manifest.stations[stationIndex];
     $("#station-name").textContent = station.name;
     $("#station-coordinates").textContent = `${formatCoordinate(station.latitude, "N", "S")} · ${formatCoordinate(station.longitude, "E", "W")}`;
-    $("#station-number").textContent = station.number;
     $("#station-epochs").textContent = state.counts[stationIndex].toLocaleString();
     $("#station-first-time").textContent = timeForRow(state.firstRows[stationIndex]).replace("T", " ");
     $("#station-last-time").textContent = timeForRow(state.lastRows[stationIndex]).replace("T", " ");
     $("#download-button").disabled = false;
     $("#download-status").textContent = `Ready to export ${state.counts[stationIndex].toLocaleString()} observations for ${station.name}.`;
+    renderStationMap().catch(showError);
   }
 
   function clearStationDetails(message) {
     $("#station-name").textContent = "—";
     $("#station-coordinates").textContent = message;
-    ["#station-number", "#station-epochs", "#station-first-time", "#station-last-time"].forEach((selector) => {
+    ["#station-epochs", "#station-first-time", "#station-last-time"].forEach((selector) => {
       $(selector).textContent = "—";
     });
     $("#download-button").disabled = true;
@@ -194,7 +158,6 @@
     const lines = [
       `# ${state.manifest.product}`,
       `# Station: ${station.name}`,
-      `# Station number: ${station.number}`,
       `# Latitude: ${station.latitude.toFixed(4)} degrees`,
       `# Longitude: ${station.longitude.toFixed(4)} degrees`,
       `# Time zone: ${state.manifest.time_zone} (dataset time)`,
@@ -334,6 +297,79 @@
     console.error(error);
   }
 
+  function stationMapTheme() {
+    const light = document.documentElement.dataset.theme === "light";
+    return light
+      ? { text: "#334952", coast: "#506872", land: "#e4ebed", ocean: "#f7f9fa", grid: "#cbd8dc", line: "#ffffff" }
+      : { text: "#91a4ae", coast: "#879aa3", land: "#0c1c26", ocean: "#071018", grid: "#18303d", line: "#041315" };
+  }
+
+  async function renderStationMap() {
+    if (!state.manifest || !state.stationIndices.length || !("Plotly" in window)) return;
+    const theme = stationMapTheme();
+    const stations = state.stationIndices.map((index) => state.manifest.stations[index]);
+    const traces = [{
+      type: "scattergeo",
+      mode: "markers",
+      lat: stations.map((station) => station.latitude),
+      lon: stations.map((station) => station.longitude),
+      text: stations.map((station, position) => [
+        `<b>${station.name}</b>`,
+        `${formatCoordinate(station.latitude, "N", "S")} · ${formatCoordinate(station.longitude, "E", "W")}`,
+        `${state.counts[state.stationIndices[position]].toLocaleString()} epochs`
+      ].join("<br>")),
+      customdata: state.stationIndices,
+      hovertemplate: "%{text}<extra></extra>",
+      marker: { size: 9, color: "#48d5c8", opacity: 0.78, line: { width: 1, color: theme.line } },
+      name: "Available locations"
+    }];
+
+    if (Number.isInteger(state.selectedStation)) {
+      const selected = state.manifest.stations[state.selectedStation];
+      traces.push({
+        type: "scattergeo",
+        mode: "markers",
+        lat: [selected.latitude],
+        lon: [selected.longitude],
+        customdata: [state.selectedStation],
+        hovertemplate: `<b>${selected.name}</b><extra></extra>`,
+        marker: { size: 17, color: "#f2cc60", symbol: "circle-open", line: { width: 3, color: "#f2cc60" } },
+        name: "Selected location"
+      });
+    }
+
+    const map = $("#station-map");
+    await Plotly.react(map, traces, {
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)",
+      font: { color: theme.text, family: "Inter, sans-serif", size: 11 },
+      showlegend: false,
+      geo: {
+        projection: { type: "equirectangular" },
+        bgcolor: "rgba(0,0,0,0)",
+        showland: true,
+        landcolor: theme.land,
+        showocean: true,
+        oceancolor: theme.ocean,
+        showcoastlines: true,
+        coastlinecolor: theme.coast,
+        showcountries: true,
+        countrycolor: theme.grid,
+        lonaxis: { showgrid: true, gridcolor: theme.grid, dtick: 60 },
+        lataxis: { showgrid: true, gridcolor: theme.grid, dtick: 30 }
+      }
+    }, { responsive: true, scrollZoom: true, displaylogo: false });
+
+    if (!state.stationMapReady) {
+      map.on("plotly_click", (event) => {
+        const stationIndex = Number(event.points?.[0]?.customdata);
+        if (Number.isInteger(stationIndex)) showStation(stationIndex);
+      });
+      state.stationMapReady = true;
+    }
+  }
+
   async function startMimicArchive() {
     try {
       const response = await fetchWithRetry(archiveManifestPath);
@@ -363,9 +399,6 @@
   }
 
   function bindControls() {
-    $("#station-search").addEventListener("input", (event) => populateStations(event.target.value));
-    $("#station-select").addEventListener("change", (event) => showStation(Number(event.target.value)));
-    $("#station-select").addEventListener("dblclick", downloadSelectedStation);
     $("#download-button").addEventListener("click", downloadSelectedStation);
   }
 
@@ -386,11 +419,10 @@
 
       $("#download-station-total").textContent = state.stationIndices.length.toLocaleString();
       $("#download-time-range").textContent = `${state.manifest.times[0].slice(0, 10)} – ${state.manifest.times.at(-1).slice(0, 10)}`;
-      $("#station-search").disabled = false;
-      $("#station-select").disabled = false;
+      await renderStationMap();
       $("#download-loading").hidden = true;
       bindControls();
-      populateStations();
+      clearStationDetails("Select a location marker on the map.");
     } catch (error) {
       $("#download-loading").hidden = true;
       showError(error);
@@ -404,4 +436,6 @@
   }
 
   start();
+
+  window.addEventListener("lpw-theme-change", () => renderStationMap().catch(showError));
 })();

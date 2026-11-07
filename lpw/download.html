@@ -7,7 +7,7 @@
   <meta name="description" content="Download global 0.25-degree MIMIC LPW NetCDF products and historical GNSS LPW station text files.">
   <title>Download LPW Data | Yuhao Wu</title>
   <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpw-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
-  <link rel="stylesheet" href="assets/lpw.css?v=20261106-2">
+  <link rel="stylesheet" href="assets/lpw.css?v=20261107-1">
 </head>
 <body>
   <header class="topbar">
@@ -33,7 +33,7 @@
     <section class="download-hero">
       <p class="eyebrow">LPW DATA ACCESS</p>
       <h1>Download atmospheric<br><em>moisture products.</em></h1>
-      <p class="intro">Browse global 0.25° MIMIC LPW NetCDF products by year and date, or export the complete observation history for an individual GNSS station.</p>
+      <p class="intro">Browse global 0.25° MIMIC LPW NetCDF products by year and date, or select a GNSS location directly from the map to export its complete observation history.</p>
       <div class="download-summary" aria-label="Dataset summary">
         <span><strong>0.25°</strong> global MIMIC NetCDF</span>
         <span><strong id="mimic-archive-range">—</strong> MIMIC archive</span>
@@ -72,17 +72,10 @@
 
     <section id="gnss-download" class="download-workspace" aria-labelledby="download-heading">
       <div class="download-copy">
-        <p class="eyebrow">SELECT A STATION</p>
+        <p class="eyebrow">SELECT ON THE MAP</p>
         <h2 id="download-heading">GNSS layered precipitable water</h2>
-        <p>Search by station name or number. Only stations with at least one published observation are listed.</p>
-        <label class="download-field" for="station-search">
-          <span>Search stations</span>
-          <input id="station-search" type="search" placeholder="Station name or number" autocomplete="off" disabled>
-        </label>
-        <label class="download-field" for="station-select">
-          <span>Available stations</span>
-          <select id="station-select" size="11" disabled aria-describedby="download-status"></select>
-        </label>
+        <p>Click a location marker to select its complete published record. Hover to view the location name, coordinates, and number of available epochs.</p>
+        <div id="station-map" class="station-download-map" aria-label="Interactive map for selecting a GNSS LPW location"></div>
         <div id="download-loading" class="loading download-loading"><span></span> Loading the GNSS archive…</div>
         <div id="download-error" class="error" hidden></div>
       </div>
@@ -91,10 +84,9 @@
         <header>
           <span>Selected station</span>
           <h2 id="station-name">—</h2>
-          <p id="station-coordinates">Select a station from the list.</p>
+          <p id="station-coordinates">Select a location marker on the map.</p>
         </header>
         <dl class="download-metadata">
-          <div><dt>Station number</dt><dd id="station-number">—</dd></div>
           <div><dt>Available epochs</dt><dd id="station-epochs">—</dd></div>
           <div><dt>First observation</dt><dd id="station-first-time">—</dd></div>
           <div><dt>Last observation</dt><dd id="station-last-time">—</dd></div>
@@ -129,6 +121,7 @@
     </footer>
   </main>
 
-  <script src="assets/download.js?v=20261106-2"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="assets/download.js?v=20261107-1"></script>
 </body>
 </html>

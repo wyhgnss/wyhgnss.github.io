@@ -251,6 +251,9 @@ input[type="range"] { accent-color: var(--cyan); width: 100%; }
 .download-field input { min-height: 46px; padding: 0 14px; }
 .download-field select { min-height: 46px; padding: 6px; }
 #station-select { min-height: 330px; }
+.station-download-map { width: 100%; height: clamp(360px, 45vw, 560px); overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+.station-download-map .modebar { opacity: .45; transition: opacity .2s; }
+.station-download-map:hover .modebar, .station-download-map:focus-within .modebar { opacity: 1; }
 .download-field option { padding: 9px 10px; }
 .download-field input:focus, .download-field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 14%, transparent); }
 .download-field input:disabled, .download-field select:disabled { cursor: wait; opacity: .56; }
