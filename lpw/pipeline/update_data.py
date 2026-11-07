@@ -10,7 +10,6 @@ import json
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from urllib.parse import urljoin
 
 import h5py
@@ -20,7 +19,6 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from lpw_model import LPWModel
-from cos_archive import COSArchive, COSConfig, PRODUCT_PREFIX, write_netcdf
 
 
 BASE_URL = "https://bin.ssec.wisc.edu/pub/mtpw2/data/"
@@ -119,60 +117,23 @@ def main() -> None:
     pending = [(stamp, url) for stamp, url in candidates if stamp.isoformat().replace("+00:00", "Z") not in known]
     if not model_changed:
         pending = pending[-args.max_new :]
-    archive_config = COSConfig.from_environment()
-    archive = COSArchive(archive_config) if archive_config else None
-    model_stride = 1 if archive else args.stride
-    model = LPWModel(model_directory, stride=model_stride)
-    if archive:
-        print(f"Tencent COS archive enabled: {archive_config.archive_base_url}")
-    else:
-        print("Tencent COS archive is not configured; publishing only the rolling browser dataset.")
+    model = LPWModel(model_directory, stride=args.stride)
     new_frames = []
 
-    with TemporaryDirectory(prefix="lpw-netcdf-") as temporary_directory:
-        temporary_path = Path(temporary_directory)
-        for timestamp, source_url in pending:
-            print(f"Processing {timestamp.isoformat()} from {source_url}")
-            tpw = read_tpw(source_url, model_stride)
-            result = model.predict(tpw, timestamp)
-            stamp = timestamp.strftime("%Y%m%dT%H%M%SZ")
-
-            if archive:
-                netcdf_path = temporary_path / f"{PRODUCT_PREFIX}_{stamp}.nc"
-                write_netcdf(
-                    netcdf_path,
-                    result,
-                    model.latitude,
-                    model.longitude,
-                    timestamp,
-                    source_url,
-                    active_model_version,
-                )
-                entry = archive.upload_product(
-                    netcdf_path,
-                    timestamp,
-                    source_url,
-                    active_model_version,
-                    site_directory / "data" / "mimic-archive.json",
-                )
-                print(f"Archived {entry['url']} ({entry['bytes']:,} bytes) in Tencent COS.")
-                display_layers = (
-                    result.low[::args.stride, ::args.stride],
-                    result.middle[::args.stride, ::args.stride],
-                    result.high[::args.stride, ::args.stride],
-                )
-            else:
-                display_layers = (result.low, result.middle, result.high)
-
-            filename = f"{stamp}.bin.gz"
-            (output_directory / filename).write_bytes(encode_layers(display_layers))
-            new_frames.append(
-                {
-                    "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
-                    "url": f"frames/{filename}",
-                    "source_url": source_url,
-                }
-            )
+    for timestamp, source_url in pending:
+        print(f"Processing {timestamp.isoformat()} from {source_url}")
+        tpw = read_tpw(source_url, args.stride)
+        result = model.predict(tpw, timestamp)
+        stamp = timestamp.strftime("%Y%m%dT%H%M%SZ")
+        filename = f"{stamp}.bin.gz"
+        (output_directory / filename).write_bytes(encode_layers((result.low, result.middle, result.high)))
+        new_frames.append(
+            {
+                "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
+                "url": f"frames/{filename}",
+                "source_url": source_url,
+            }
+        )
 
     frames = ([] if model_changed else manifest.get("frames", [])) + new_frames
     if candidates:
@@ -186,8 +147,7 @@ def main() -> None:
         if old_file.name not in retained:
             old_file.unlink()
 
-    rows = len(range(0, model.shape[0], args.stride)) if archive else model.shape[0]
-    columns = len(range(0, model.shape[1], args.stride)) if archive else model.shape[1]
+    rows, columns = model.shape
     payload = {
         "product": "MIMIC Layered Precipitable Water",
         "updated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),

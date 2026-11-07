@@ -69,9 +69,8 @@ Release tag: mimic-lpw-2026-11
 ```
 
 Each month uses a separate release so the asset count remains below GitHub's
-per-release limit. `github_release_archive.py` imports the existing Tencent COS
-annual manifest on its first run, preserving links to products already stored
-there, and adds new GitHub Release download URLs afterwards.
+per-release limit. `github_release_archive.py` maintains the GitHub Release
+indexes directly and has no external object-storage dependency.
 
 The small indexes remain in Git and are published by GitHub Pages:
 
@@ -82,10 +81,10 @@ lpw/data/mimic-releases/2026.json
 
 The download page reads these same-origin indexes and links directly to public
 release assets. The workflow needs only its built-in `GITHUB_TOKEN` with
-`contents: write`; Tencent COS secrets and variables are no longer used.
+`contents: write`.
 
 Run archive tests with:
 
 ```text
-python -m unittest -v test_github_release_archive.py test_cos_archive.py
+python -m unittest -v test_github_release_archive.py test_netcdf_product.py
 ```

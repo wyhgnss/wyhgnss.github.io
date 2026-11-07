@@ -3,3 +3,5 @@ push.sh
 .DS_Store
 __pycache__/
 *.py[cod]
+# Local cache left by the retired external scheduler; never commit generated state.
+automation/lpw-scheduler/.wrangler/

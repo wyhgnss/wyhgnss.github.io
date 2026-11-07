@@ -8,11 +8,7 @@ import json
 import os
 from datetime import timezone
 from pathlib import Path
-from urllib.parse import urljoin
-
-import requests
-
-from cos_archive import PRODUCT_PREFIX, write_netcdf
+from netcdf_product import PRODUCT_PREFIX, write_netcdf
 from lpw_model import LPWModel
 from update_data import available_frames, model_version, read_tpw
 
@@ -43,25 +39,11 @@ def load_json(path: Path, fallback: dict) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def import_legacy_year(root: dict, year: int, session=requests) -> dict:
-    entry = next((item for item in root.get("years", []) if int(item["year"]) == year), None)
-    base_url = root.get("archive_base_url", "")
-    if not entry or not base_url:
-        return {"year": year, "files": []}
-    manifest_url = urljoin(base_url, entry["url"])
-    response = session.get(manifest_url, timeout=30)
-    response.raise_for_status()
-    manifest = response.json()
-    for item in manifest.get("files", []):
-        item["url"] = urljoin(manifest_url, item["url"])
-    return manifest
-
-
-def load_year_manifest(data_directory: Path, root: dict, year: int, session=requests) -> dict:
+def load_year_manifest(data_directory: Path, year: int) -> dict:
     path = data_directory / "mimic-releases" / f"{year}.json"
     if path.exists():
         return load_json(path, {"year": year, "files": []})
-    return import_legacy_year(root, year, session=session)
+    return {"year": year, "files": []}
 
 
 def save_manifests(data_directory: Path, root: dict, year_manifest: dict) -> None:
@@ -107,7 +89,6 @@ def generate_latest_release_product(
     tpw_reader=read_tpw,
     model_factory=LPWModel,
     netcdf_writer=write_netcdf,
-    session=requests,
 ) -> dict | None:
     root_path = data_directory / "mimic-archive.json"
     root = load_json(root_path, {"years": []})
@@ -116,7 +97,7 @@ def generate_latest_release_product(
         raise RuntimeError("The MIMIC source did not publish any candidate frames.")
 
     manifests = {
-        year: load_year_manifest(data_directory, root, year, session=session)
+        year: load_year_manifest(data_directory, year)
         for year in {timestamp.year for timestamp, _ in candidates}
     }
     known = {
