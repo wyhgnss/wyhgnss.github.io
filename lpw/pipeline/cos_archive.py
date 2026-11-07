@@ -192,7 +192,18 @@ def _transient_cos_error(error: Exception) -> bool:
     code_getter = getattr(error, "get_error_code", None)
     status = status_getter() if callable(status_getter) else None
     code = str(code_getter() if callable(code_getter) else "")
-    return status == 429 or (isinstance(status, int) and status >= 500) or code in {
+    message = str(error).lower()
+    transient_network_error = any(
+        marker in message
+        for marker in (
+            "connection aborted",
+            "connection reset",
+            "operation timed out",
+            "read timed out",
+            "write operation timed out",
+        )
+    )
+    return transient_network_error or status == 429 or (isinstance(status, int) and status >= 500) or code in {
         "UserNetworkTooSlow",
         "RequestTimeout",
         "SlowDown",

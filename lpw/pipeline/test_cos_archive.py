@@ -34,6 +34,10 @@ class TransientObjectError(Exception):
         return "UserNetworkTooSlow"
 
 
+class TransientWriteTimeoutError(Exception):
+    pass
+
+
 class FakeCOSBody(io.BytesIO):
     def get_raw_stream(self):
         return self
@@ -59,10 +63,11 @@ class FakeCOSClient:
 
 
 class FlakyCOSClient(FakeCOSClient):
-    def __init__(self) -> None:
+    def __init__(self, error=None) -> None:
         super().__init__()
         self.failures_remaining = 1
         self.put_calls = 0
+        self.error = error or TransientObjectError("test transient upload error")
 
     def put_object(self, Bucket, Key, Body, **kwargs):
         self.put_calls += 1
@@ -70,7 +75,7 @@ class FlakyCOSClient(FakeCOSClient):
             self.failures_remaining -= 1
             if hasattr(Body, "read"):
                 Body.read(5)
-            raise TransientObjectError("test transient upload error")
+            raise self.error
         return super().put_object(Bucket, Key, Body, **kwargs)
 
 
@@ -186,6 +191,19 @@ class COSManifestTest(unittest.TestCase):
         self.assertIs(client.body_types[product_key], bytes)
         self.assertEqual(client.metadata[product_key]["ContentLength"], str(len(b"netcdf-test-data")))
         self.assertGreaterEqual(client.put_calls, 4)
+        sleep.assert_called_once_with(1)
+
+    @patch("cos_archive.time.sleep")
+    def test_retries_wrapped_connection_write_timeout(self, sleep) -> None:
+        client = FlakyCOSClient(
+            TransientWriteTimeoutError(
+                "('Connection aborted.', TimeoutError('The write operation timed out'))"
+            )
+        )
+        archive = COSArchive(self.config, client=client)
+        archive._put_object(Bucket=self.config.bucket, Key="timeout-test", Body=b"data")
+        self.assertEqual(client.objects[(self.config.bucket, "timeout-test")], b"data")
+        self.assertEqual(client.put_calls, 2)
         sleep.assert_called_once_with(1)
 
 

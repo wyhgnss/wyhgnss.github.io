@@ -49,7 +49,10 @@
     let lastError;
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       try {
-        const response = await fetch(url, { cache: attempt ? "reload" : "force-cache" });
+        // Archive manifests change independently of the page deployment. Always
+        // revalidate cached responses so an old `enabled: false` manifest cannot
+        // keep the download UI disabled after COS has been activated.
+        const response = await fetch(url, { cache: attempt ? "reload" : "no-cache" });
         if (response.ok) return response;
         lastError = new Error(`GNSS data request failed (${response.status})`);
         if (response.status < 500 && response.status !== 429) break;
