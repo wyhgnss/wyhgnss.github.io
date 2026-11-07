@@ -375,7 +375,7 @@
       const response = await fetchWithRetry(archiveManifestPath);
       state.mimicRoot = await response.json();
       if (!state.mimicRoot.enabled || !state.mimicRoot.years?.length) {
-        throw new Error("The 0.25° MIMIC NetCDF archive has not been activated in Cloudflare R2 yet.");
+        throw new Error("The 0.25° MIMIC NetCDF archive has not been activated in Tencent COS yet.");
       }
       const years = [...state.mimicRoot.years].sort((left, right) => right.year - left.year);
       const yearSelect = $("#mimic-year");
