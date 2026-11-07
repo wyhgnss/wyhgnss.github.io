@@ -144,7 +144,14 @@ def write_netcdf(
             variable.scale_factor = np.float32(NETCDF_SCALE)
             variable.add_offset = np.float32(0.0)
             variable.grid_resolution = "0.25 degree"
-            variable[0, :, :] = np.ma.masked_invalid(values.astype(np.float32, copy=False))
+            valid = np.isfinite(values)
+            packed = np.full(values.shape, NETCDF_MISSING, dtype=np.int16)
+            scaled = np.rint(values[valid] / NETCDF_SCALE)
+            if np.any(scaled < np.iinfo(np.int16).min + 1) or np.any(scaled > np.iinfo(np.int16).max):
+                raise ValueError(f"{variable_name} contains values outside the packed int16 range")
+            packed[valid] = scaled.astype(np.int16)
+            variable.set_auto_maskandscale(False)
+            variable[0, :, :] = packed
 
         dataset.Conventions = "CF-1.10"
         dataset.title = "Global 0.25-degree MIMIC layered precipitable water"
