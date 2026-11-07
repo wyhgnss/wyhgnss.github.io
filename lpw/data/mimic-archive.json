@@ -1,8 +1,17 @@
 {
-  "enabled": false,
+  "enabled": true,
   "product": "Global 0.25-degree MIMIC Layered Precipitable Water",
   "format": "NetCDF-4",
   "resolution_degrees": 0.25,
-  "archive_base_url": "",
-  "years": []
+  "archive_base_url": "https://lpw-archive-1333094468.cos.ap-guangzhou.myqcloud.com/mimic-lpw/",
+  "years": [
+    {
+      "year": 2026,
+      "url": "2026/manifest.json",
+      "file_count": 6,
+      "first_timestamp": "2026-11-04T00:00:00Z",
+      "last_timestamp": "2026-11-07T08:00:00Z"
+    }
+  ],
+  "updated_at": "2026-11-07T09:48:25.631378Z"
 }
