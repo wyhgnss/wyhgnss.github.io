@@ -6,7 +6,12 @@
   <meta name="theme-color" content="#071018">
   <meta name="description" content="Download global 0.25-degree MIMIC LPW NetCDF products and historical GNSS LPW station text files.">
   <title>Download LPW Data | Yuhao Wu</title>
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpw-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+  <script>
+    if (location.protocol === "http:" && location.hostname === "wuyuhao.top") {
+      location.replace(`https://${location.host}${location.pathname}${location.search}${location.hash}`);
+    }
+    try{document.documentElement.dataset.theme=localStorage.getItem("lpw-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}
+  </script>
   <link rel="stylesheet" href="assets/lpw.css?v=20261107-1">
 </head>
 <body>
