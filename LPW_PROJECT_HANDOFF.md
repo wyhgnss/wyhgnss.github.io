@@ -1,334 +1,265 @@
-# Real-time LPW 项目交接与上下文恢复报告
+# Real-time LPW 项目交接与上下文恢复
 
-> 用途：在新的 Codex/ChatGPT 会话中，先完整阅读本文件，再修改本项目。  
-> 最近整理：2026-11-01（Asia/Shanghai）
-> 整理时分支：`main`  
-> 整理时 HEAD：`d8751e82b9fc7b9436a5b3d19867b1994f435e17`
-> 整理时工作区：存在未提交的 LPW 前端与本报告修改，禁止覆盖或还原。
+> 新会话开始时先读本文件，再读 `lpw/pipeline/README.md`，然后执行 `git status --short`。
+> 最近整理：2026-11-07（Asia/Shanghai）。
+> 整理时分支：`main`。
+> 整理前 HEAD：`5d0284482d5ac6b0542c6fab49a6ab77b14a677e`。
+> 整理前工作区干净；整理后只有本文件等待提交。
 
-## 1. 新会话快速恢复清单
+## 1. 一分钟恢复当前状态
 
-1. 阅读本文件和 `lpw/pipeline/README.md`。
-2. 查看 `git status --short`，不得覆盖或还原用户已有修改。
-3. 根据任务只检查相关文件，不要重新设计整个页面。
-4. 修改 MIMIC 或 GNSS JavaScript 后，分别递增 `lpw/index.html` 中 `assets/lpw.js?v=...` 或 `assets/gnss.js?v=...` 的缓存版本。
-5. 修改 CSS 后递增 `assets/lpw.css?v=...` 的缓存版本。
-6. 至少执行：
-
-   ```text
-   node --check lpw/assets/lpw.js
-   node --check lpw/assets/gnss.js
-   git diff --check
-   ```
-
-   只有模型或数据管线发生变化时，才需要在 `lpw/pipeline` 目录额外运行 `python -m unittest -v test_lpw_model.py`；GNSS 导出变化时运行 `python -m unittest -v test_gnss_export.py`。
-7. 涉及交互和布局时启动本地静态服务器并进行浏览器验证。
-8. 除非用户明确要求，不要自动提交、推送、删除历史数据或运行云端工作流。
-9. 完成修改后更新本报告中的“当前实现”“已知限制”和“修改记录”。
-
-## 2. 项目身份与路径
-
-- 项目：实时分层可降水量（Layered Precipitable Water, LPW）监测平台。
-- 线上地址：`https://wuyuhao.top/lpw/`
-- GitHub Pages 原始域名：`https://wyhgnss.github.io/lpw/`
-- GitHub 仓库：`https://github.com/wyhgnss/wyhgnss.github.io`
+- 线上页面：`https://wuyuhao.top/lpw/`
+- 仓库：`https://github.com/wyhgnss/wyhgnss.github.io`
 - 本地仓库：`C:\Users\Administrator\Documents\GitHub\wyhgnss.github.io`
 - 默认分支：`main`
-- 个人主页顶部菜单配置：`_data/navigation.yml`
-- LPW 页面入口：`lpw/index.html`
-- 页面语言：英文。
-- 视觉主题：支持 Dark/Light 双主题、半透明信息卡和真实地球/卫星背景；主题选择保存在浏览器 `localStorage`。
+- 页面语言：英文；不要随意更改品牌、层定义和科学术语。
+- MIMIC 实时浏览数据：最近72小时、1°网格，保存在 Git 分支的 `lpw/data/frames/`。
+- MIMIC 下载产品：全球0.25° NetCDF，保存在按月建立的 GitHub Releases 中。
+- GNSS 历史数据：静态压缩数据，地图选点后浏览器端导出 TXT。
+- 腾讯云 COS 和 Cloudflare Worker 已从仓库移除，不再是系统依赖，不要恢复相关 SDK、Secrets、Variables 或旧上传代码。
+- 腾讯云 SCF 仅作为可选外部调度器；GitHub 自带 `schedule` 仍是主要兜底机制。
+- 修改前端文件后必须递增对应 HTML 中的缓存查询参数。
+- 当前 Codex 环境通常不能写仓库 `.git`；若提交失败，由用户通过 GitHub Desktop 提交和推送。
 
-## 3. 科学模型定义
+## 2. 必须保留的科学定义
 
-### 3.1 层结定义
+### 2.1 三层定义
 
-- Low layer：surface–900 hPa。
-- Middle layer：900–700 hPa。
-- High layer：700–300 hPa。
+- Low：surface–900 hPa。
+- Middle：900–700 hPa。
+- High：700–300 hPa。
 
-页面中所有标题、图例和三维层名必须保持以上定义。
+### 2.2 模型逻辑
 
-### 3.2 MATLAB 原始逻辑
-
-原 MATLAB 核心调用：
+MATLAB 原始逻辑：
 
 ```matlab
 [pl, pm, ph] = getP(LAT2, LON2, DOY2, PSHAX_COEFF);
 [LPW_Low, LPW_Mid, LPW_High] = getLPW(pl, pm, ph, LAT2, LON2, H2, DOY2, TPW2);
 ```
 
-- `getP`：根据周期函数系数和年积日计算三层比例。
-- `getLPW`：用 XGBoost 对三层初始 LPW 进行残差修正。
-- MIMIC 网格的经纬度和 DEM 固定。
-- 初始层值为 `p × TPW`，最终层值为 `p × TPW + residual`。
-- XGBoost 输入顺序固定为：`latitude, longitude, elevation, day_of_year, TPW`。
-- XGBoost 输出顺序固定为：`low, middle, high` 三个残差。
+Python 实现：`lpw/pipeline/lpw_model.py`。
 
-Python 实现在 `lpw/pipeline/lpw_model.py`：
-
-- 周期项为 `[1, cos(phase), sin(phase), cos(2 phase), sin(2 phase)]`。
+- 周期项：`[1, cos(phase), sin(phase), cos(2 phase), sin(2 phase)]`。
 - `phase = DOY / 365.25 × 2π`。
-- 输出中的无效 TPW 保持为 `NaN`。
+- XGBoost 输入顺序固定：`latitude, longitude, elevation, day_of_year, TPW`。
+- XGBoost 输出顺序固定：`low, middle, high` 残差。
+- 初始层值为 `p × TPW`，最终值为 `p × TPW + residual`。
+- 无效 TPW 必须保持为 `NaN`。
 
-## 4. 模型文件与更新规则
+模型资产位于 `lpw/pipeline/model/`：
 
-### 4.1 用户原始模型位置
+- `pshax_coefficients.npz`
+- `residual_model.ubj`
+- `mimic_grid.npz`
 
-- 周期系数：`H:\LPW模型\MIMIC\PSHAX_COEFF.mat`
-- XGBoost 模型：`H:\LPW模型\MIMIC\xgb-gpu.pkl`
-- 原 MATLAB 案例目录：`H:\LPW模型\MIMIC`
+当前模型指纹：`8ef88f351066a8de`。模型资产约84.6 MB，随公开仓库公开。不要把原始 `.mat` 或 GPU pickle 直接放入 Actions。
 
-### 4.2 网站使用的转换后模型
+## 3. 当前数据架构
 
-目录：`lpw/pipeline/model/`
+### 3.1 MIMIC 数据源
 
-| 文件 | 用途 | 2026-10-29 SHA-256 |
-|---|---|---|
-| `pshax_coefficients.npz` | Low/Middle/High 的 5 项周期系数 | `c1bf8774bf3eb183ef7a57fa57f24a49327fd84d332217a49d0240f6d697c4e0` |
-| `residual_model.ubj` | 可在 GitHub Actions CPU 环境运行的 XGBoost Booster | `421f1f89bee8e8790a547acd0d19713ef3bcb2e37fe4395b695c67a59175a7db` |
-| `mimic_grid.npz` | 固定纬度、经度和高程网格 | `271f9256d5a6521a334649f4cf4add10c060665e2e7a083338a867fbafcf7ee5` |
+- 根目录：`https://bin.ssec.wisc.edu/pub/mtpw2/data/`
+- 文件：`compYYYYMMDD.HH0000.nc`
+- 原始网格：0.25°，721 × 1440。
+- 数据源偶尔返回 502；管线已对 `429/500/502/503/504` 重试。
 
-当前三个文件总计约 84.6 MB。仓库是公开仓库，因此这些模型资产也是公开的。
+### 3.2 最近72小时浏览数据
 
-### 4.3 更新模型时必须遵守
-
-1. 不要把 `.mat` 或 GPU pickle 直接用于 GitHub Actions。
-2. 将 MATLAB 系数转换为 `float32` NPZ，并确认 Low/Middle/High 三组数组维度和方向正确。原始系数网格为 0.25°，单层典型形状为 `(5, 721, 1440)`。
-3. 将 pickle 中的 XGBoost Booster 导出为 UBJ，并明确配置为 CPU 可推理版本。
-4. 保持五个输入特征的顺序和三个输出残差的顺序不变。
-5. 对代表性样本比较原模型与 UBJ 模型预测；此前转换验证为逐点一致。
-6. 运行 `test_lpw_model.py`。测试包括 MATLAB 参考点的 `getP` 对比和 CPU 网格推理。
-7. `update_data.py` 会根据三个模型文件计算 `model_version` 指纹。模型指纹变化后，下一次工作流会清空旧模型帧的逻辑基础并重新计算 72 小时滚动档案；首次运行可能显著变慢。
-8. 当前转换过程没有独立脚本保存在仓库中。下次更新模型时，应优先补充可重复的转换脚本，并保留新旧模型一致性验证。
-
-当前 `manifest.json` 中的模型版本指纹为：`8ef88f351066a8de`。
-
-## 5. 数据管线
-
-### 5.1 数据源
-
-- MIMIC-TPW 根目录：`https://bin.ssec.wisc.edu/pub/mtpw2/data/`
-- 文件形式：按月份目录组织的 NetCDF，例如 `compYYYYMMDD.HH0000.nc`。
-- 源数据分辨率：0.25°。
-- 页面发布分辨率：1°，由 `stride=4` 采样得到。
-
-### 5.2 Python 文件
-
-- `lpw/pipeline/update_data.py`：查找、下载、计算、压缩并发布最近 72 小时数据。
-- `lpw/pipeline/lpw_model.py`：MATLAB `getP/getLPW` 的 Python 实现。
-- `lpw/pipeline/test_lpw_model.py`：模型一致性和 CPU 推理测试。
-- `lpw/pipeline/requirements.txt`：固定依赖版本。
-
-当前依赖：
-
-```text
-h5py==3.12.1
-numpy==2.1.3
-requests==2.32.3
-xgboost==3.4.1
-boto3==1.43.125
-netCDF4==1.7.5.1.post1
-```
-
-### 5.3 浏览器数据格式
+生成器：`lpw/pipeline/update_data.py`。
 
 - 清单：`lpw/data/manifest.json`
-- 帧目录：`lpw/data/frames/`
-- 档案长度：最近 72 个小时。
-- 单帧：gzip 压缩的 little-endian `int16`。
-- 数组顺序：layer-major，依次为 Low、Middle、High。
-- 当前显示网格：181 × 360。
-- 比例：`0.01 mm`。
-- 缺测值：`-32768`。
-- 文件名：`YYYYMMDDTHHMMSSZ.bin.gz`。
+- 帧：`lpw/data/frames/YYYYMMDDTHHMMSSZ.bin.gz`
+- 显示网格：181 × 360（1°，`stride=4`）。
+- 数据顺序：Low、Middle、High，little-endian `int16`。
+- 比例：`0.01 mm`；缺测值：`-32768`。
+- 浏览器端由 `lpw/assets/lpw.js` 解码。
 
-### 5.4 网络健壮性
+### 3.3 全球0.25° NetCDF Release 档案
 
-- MIMIC 请求使用重试机制，覆盖 `429/500/502/503/504`。
-- 根目录和月份目录超时为 30 秒，NetCDF 下载超时为 120 秒。
-- 页面数据读取也会重试。
-- 时间序列以 4 个并发 worker 加载 72 帧；单个帧失败时保留空缺，不让整张时间序列失败。
+相关文件：
 
-## 6. 前端当前实现
+- `lpw/pipeline/github_release_archive.py`：选择最新未归档时次、运行完整0.25°推理并更新索引。
+- `lpw/pipeline/netcdf_product.py`：写 CF-1.10 NetCDF-4。
+- `lpw/data/mimic-archive.json`：根索引。
+- `lpw/data/mimic-releases/<year>.json`：年度小型索引。
 
-### 6.1 主要文件
+Release 规则：
 
-- `lpw/index.html`：页面结构和英文文案。
-- `lpw/assets/lpw.css`：Dark/Light 双主题、响应式布局和组件样式。
-- `lpw/assets/lpw.js`：数据加载、地图、三维图、播放和时间序列。
-- `lpw/assets/gnss.js`：历史 GNSS 数据解码、日期选择、平铺/三维散点和单站时间序列。
-- `lpw/assets/coastlines.json`：本地海岸线。
-- `lpw/assets/hero-earth-satellite.png`：顶部真实地球和卫星背景。
-- `lpw/assets/team-logo.png`：INSIGHT Team 标志。
-- `lpw/assets/wuhan-university-logo.png`：武汉大学校徽。
+```text
+tag:   mimic-lpw-YYYY-MM
+asset: mimic_lpw_0p25_YYYYMMDDTHHMMSSZ.nc
+```
 
-### 6.2 品牌与文案
+- 每个文件包含一个 UTC 时次以及 `lpw_low`、`lpw_middle`、`lpw_high`。
+- 三层使用压缩 `int16`、`0.01 mm` scale factor、`-32768` 缺测值。
+- 每月一个 Release，避免超过单个 Release 1000 个资产的限制。
+- 二进制 NC 不进入 Git 历史；Git 中只保存小型 JSON 索引。
+- 整理时索引有2个 GitHub Release 产品：`2026-11-07T11:00:00Z` 至 `2026-11-07T14:00:00Z`。
+- 不再从 COS 导入旧清单，不应重新加入任何 COS URL。
 
-- 左上品牌：`PSHX / LPW`，为普通 `div`，点击不会跳转主页。
-- 顶部靠左有 `MIMIC LPW` 和 `GNSS LPW` 两个锚点菜单，点击后平滑滚动到相应地图模块；固定顶部栏通过 `scroll-margin-top` 避让。
-- 顶部右侧有 Dark/Light 开关；主题选择写入 `localStorage`，刷新和重新打开页面后保持。
-- 主标题：`Layered precipitable water from surface to sky`，无结尾标点。
-- 团队名：`INSIGHT Team`。
-- 学校组件：`Wuhan University` / `School of Geodesy and Geomatics`。
-- 顶部四个组件顺序：
-  - 左上：Wuhan University。
-  - 右上：Research group。
-  - 左下：Analysis time。
-  - 右下：Selected point。
-- 四个组件使用随主题变化的半透明背景。
-- Analysis time 同时显示 UTC 和 Beijing `(UTC+8)`；北京时间为蓝绿色、小号、正常字重并尽量不换行。
-- 浅色主题中的团队 Logo 和武大校徽为透明底深色图形；暗色主题中为透明底白色图形。
-- 页面顶部仍使用真实地球与卫星背景，Light 主题通过浅色渐变覆盖保证深色文字可读。
+### 3.4 GNSS 历史数据
 
-当前前端缓存版本（2026-11-06）：
+- 原始文件：`H:\LPW模型\GNSSLPW.mat`
+- 发布目录：`lpw/data/gnss/`
+- `manifest.json`：时间、偏移、站名和经纬度。
+- `observations.bin.gz`：稀疏压缩观测。
+- 导出脚本：`lpw/pipeline/export_gnss_history.m`
+- 验证：`lpw/pipeline/test_gnss_export.py`
+- 原始 `TIME2` 没有时区元数据，页面只能写 dataset time / time zone unspecified，不能擅自改成 UTC 或北京时间。
 
-- `assets/lpw.css?v=20261106-2`
-- `assets/lpw.js?v=20261101-2`
-- `assets/gnss.js?v=20261101-9`
-- `assets/download.js?v=20261106-2`
+## 4. GitHub Actions
 
-### 6.3 MIMIC 平铺视图
+工作流：`.github/workflows/update-lpw.yml`，名称 `Update real-time LPW`。
 
-- 使用原生 Canvas 直接绘制三个全球 LPW 栅格。
-- 不使用在线底图，不实现缩放和平移。
-- 叠加本地海岸线。
-- 地图内部不显示经纬网文字。
-- 色标固定为 0–40+ mm，并位于地图模块底部。
-- 点击任意层地图选择最近网格点，并在下方加载 72 小时时间序列。
-- 当前播放间隔：`80 ms`，约 12.5 帧/秒。
+权限：
 
-### 6.4 三维叠放视图
+```yaml
+permissions:
+  contents: write
+  pages: write
+```
 
-- MIMIC 使用 Plotly 三个 `surface` 图层。
-- MIMIC Low/Middle/High 的高度间隔由 `layerGap = 8` 控制，三维场景纵向比例为 `1.12`。
-- GNSS 三维叠放使用 `gap = 12`、纵向比例 `1.22`，每层绘制覆盖经度 -180–180°、纬度 -90–90° 的矩形边界框；暗色主题为白色，浅色主题为深色。
-- GNSS 三维平面保持透明，只绘制海岸线、矩形边界和站点散点，不填充陆地。
-- 三维图支持 Plotly 自带旋转、缩放。
-- MIMIC 三维表面悬停记录经纬度，点击后加载相同的 72 小时时间序列；GNSS 点击站点后加载该站完整可用历史。
-
-### 6.5 MIMIC 点位时间序列
-
-- 三条线分别代表 Low、Middle、High。
-- 悬浮标签只显示数值和 `mm`，不显示日期时间，也不在数值旁重复显示 Low/Middle/High。
-- 日期时间通过横坐标读取。
-- 图例仍保留层名，便于识别三条线。
-
-### 6.6 历史 GNSS LPW 查询模块
-
-- 模块位于页面底部、MIMIC 三日时间序列之后。
-- 原始数据：`H:\LPW模型\GNSSLPW.mat`。
-- 原数据时间范围：2015-01-01 至 2025-12-08；`TIME2` 未设置时区，因此页面明确标注为 dataset time，不擅自解释为 UTC。
-- 原始观测 803,855 条；去除 56 组数值完全一致的重复时刻—站点记录后，发布 803,799 条。
-- 包含 20,721 个时刻和 211 个站点元数据，历史观测实际覆盖 186 个站。
-- 浏览器数据位于 `lpw/data/gnss/`：
-  - `manifest.json`：时刻、时刻偏移和站点名称/编号/经纬度。
-  - `observations.bin.gz`：约 4.06 MB 的稀疏压缩观测。
-- 二进制按 `time_index (uint16)`、`station_index (uint8)`、Low/Middle/High (`int16`) 分数组保存；比例为 0.01 mm。
-- `lpw/pipeline/export_gnss_history.m` 可从原 MAT 文件重新生成数据。
-- `lpw/pipeline/test_gnss_export.py` 验证压缩文件长度、索引范围、时刻偏移和记录计数。
-- 页面脚本：`lpw/assets/gnss.js`。
-- 页面默认选择 `2023-05-20 00:00`；当天还可选择 `06:00`、`12:00`、`18:00`。如果数据中不存在默认日期，则自动回退到最新可用时刻。
-- 日期控件选择日期，时刻下拉框列出该日实际存在的全部观测时间；前后按钮逐观测时刻移动。
-- GNSS 平铺视图与 MIMIC 使用相同的三卡片模板（层编号、层名和气压范围），每张卡片保留独立站点点击查询。
-- 平铺视图使用三个 Plotly 全球散点地图和海岸线；站点 marker size 为 `9`。
-- 三维视图使用三个分层 `scatter3d` 站点层，并在各层叠加海岸线和全球矩形边界；站点 marker size 为 `6`。
-- 平铺与三维视图均关闭 Plotly 内置右侧竖向 colorbar，共用模块底部的横向 `0–40+ mm` 色标，样式与 MIMIC 一致。
-- 某时刻没有数据的站点不绘制、不补值，也不会导致页面报错。
-- 点击平铺或三维站点后，下方只使用该站真实存在的时刻绘制完整 Low/Middle/High 折线；不再把该站铺到全部全局时刻后插入大量 `null`，因此零散缺站不会把折线切碎。
-- GNSS 平铺、三维悬浮标签只显示站名和 LPW 数值；单站历史标题显示站名与经纬度，不显示内部 `Station xx` 编号。
-- MIMIC 地图与其时间序列、GNSS 地图与其时间序列之间的垂直留白均已压缩。
-
-### 6.7 GNSS LPW 按站下载页面
-
-- 顶部 `MIMIC LPW`、`GNSS LPW` 菜单之后新增 `Download data`，打开 `lpw/download.html`。
-- 下载页保持主页面的英文界面、Dark/Light 主题、品牌和响应式顶部栏。
-- 页面脚本为 `lpw/assets/download.js`，直接读取现有 `lpw/data/gnss/manifest.json` 和 `observations.bin.gz`，不生成第二份 GNSS 数据资产。
-- 页面只列出至少包含一条真实观测的站点；支持按站名或站号搜索，并显示站号、经纬度、可用历元数和首末观测时间。
-- 选择站点后可在浏览器端生成 UTF-8、Tab 分隔的 `.txt` 文件。文件名为 `gnss-lpw_<station>.txt`。
-- TXT 文件包含站点元数据注释，数据列固定为 `dataset_time`、`low_lpw_mm`、`middle_lpw_mm`、`high_lpw_mm`。
-- GNSS 原始时间仍标为 dataset time / time zone unspecified，不擅自转换为 UTC 或北京时间。
-- 下载页依赖浏览器 `DecompressionStream` 解压现有 gzip 档案，与 GNSS 可视化页的兼容性要求相同。
-
-### 6.8 MIMIC 0.25° NetCDF 下载
-
-- `lpw/download.html` 顶部新增 MIMIC LPW NetCDF 区域，用户先选择档案年份，再选择该年实际有产品的 UTC 日期。
-- 每个可下载文件对应一个分析时次，页面显示 UTC 时刻、文件大小和 SHA-256 摘要。
-- 下载清单入口为同源文件 `lpw/data/mimic-archive.json`；年度小型索引保存在 `lpw/data/mimic-releases/`，NetCDF 文件作为每月 GitHub Release 的资产保存。
-- Release 标签为 `mimic-lpw-<year>-<month>`，资产名为 `mimic_lpw_0p25_<timestamp>.nc`。
-- 每个 NetCDF-4 文件使用原生 721 × 1440 全球网格，包含一个 UTC 时次以及 `lpw_low`、`lpw_middle`、`lpw_high` 三个变量。
-- 三层变量使用压缩 `int16`、`0.01 mm` scale factor 和 `-32768` 缺测值，并写入 CF-1.10、源文件地址、模型版本、时间范围和空间范围元数据。
-- GitHub Release 归档使用 `stride=1` 完整模型推理；滚动浏览器数据继续使用独立的 1°计算步骤。
-- COS 未配置时，实时 1°产品继续正常更新，下载页明确显示0.25°档案尚未启用；COS 配置不完整时管线主动报错。
-
-## 7. GitHub Actions
-
-### 7.1 LPW 工作流
-
-文件：`.github/workflows/update-lpw.yml`
-
-- 名称：`Update real-time LPW`。
-- `actions/checkout@v5` 和 `actions/setup-python@v6`，避免旧 Node.js 20 Action 警告。
-- 运行环境：Ubuntu + Python 3.12。
-- 超时：180 分钟。
-- 权限：`contents: write`、`pages: write`。
-- 并发组：`update-lpw`，`cancel-in-progress: false`。
-- Release 生成命令：`python github_release_archive.py --hours 96 --output-directory <temp>`。
-- 滚动数据更新命令：`python update_data.py --hours 72 --max-new 1`。
-- 成功后由 `github-actions[bot]` 提交 `lpw/data`，随后请求 Pages 重建。
-- NetCDF 通过内置 `GITHUB_TOKEN` 上传到月度 GitHub Release，不依赖外部对象存储凭据。
-
-### 7.2 当前定时可靠性方案
-
-GitHub 官方说明 `schedule` 可能延迟，负载高时甚至丢弃排队任务。项目曾在一天内只于约 03:34、08:00、13:47 自动成功，分别一次补入 5、4、6 个小时的数据。
-
-当前补偿方案：
+调度：
 
 ```yaml
 schedule:
   - cron: "13,43 * * * *"
 ```
 
-- 每小时第 13 和 43 分钟各尝试一次，避开整点高负载。
-- 工作流首先拉取默认分支最新内容。
-- 若 `manifest.updated_at` 距当前不足 45 分钟，备用运行快速跳过所有安装、测试和模型计算。
-- 若第一个触发被丢弃或失败，第二个触发可补跑。
-- `workflow_dispatch` 手动触发始终执行完整更新，不受 45 分钟门限影响。
-- 这能提高可靠性，但 GitHub cron 仍不提供严格 SLA。若未来必须保证每小时执行，应增加外部调度服务通过 GitHub API 触发 `workflow_dispatch`。
+主要流程：
 
-### 7.3 另一个独立工作流
+1. 拉取默认分支最新内容。
+2. 检查 `lpw/data/manifest.json`；若成功更新距今不足45分钟，普通定时/外部运行快速跳过。
+3. 安装 `lpw/pipeline/requirements.txt`。
+4. 运行 `test_lpw_model.py`。
+5. 运行 `github_release_archive.py --hours 96`，每次最多准备一个最新 NC。
+6. 使用内置 `${{ github.token }}` 和 `gh release upload` 创建或更新月度 Release。
+7. 运行 `update_data.py --hours 72 --max-new 1` 更新1°滚动数据。
+8. `github-actions[bot]` 提交 `lpw/data` 并请求 Pages 重建。
 
-`.github/workflows/download_TPW_gif.yml` 是旧的 TPW PNG/GIF 下载任务，与 LPW 模型更新是两套独立流程。修改 LPW 时不要误删或混用。
+注意：
 
-### 7.4 腾讯云 SCF 外部每小时调度器
+- 网页手动 **Run workflow** 默认 `force=true`，忽略45分钟新鲜度门限。
+- SCF 发送 `force=false`，所以可能成功触发但被新鲜度门限快速跳过；这不是函数失效。
+- GitHub `schedule` 没有准时执行 SLA，可能延迟或丢弃。
+- 不要在 Actions 正在提交 `lpw/data` 时手动修改同一批 JSON/帧文件，容易产生 rebase 冲突。
 
-本机首次部署时遇到并解决了以下问题：
+### 4.1 2026-11-07 JSON 冲突事故
 
+`lpw/data/mimic-archive.json` 曾被提交 Git 的 current-branch、separator 和 incoming-branch 三类冲突标记，导致 `github_release_archive.py` 报 `JSONDecodeError`。已修复，同时移除了年度索引中残留的6条 COS URL。
 
-本机验证可用的 PowerShell 部署命令为：
+以后发生冲突时：
 
+- 不要选择 “Accept both changes”。
+- 根索引必须是合法 JSON，`storage` 为 `github-releases`、`archive_base_url` 为空。
+- 年度索引只保留实际 GitHub Release URL。
+- 推送前执行 `python -m json.tool` 验证两个 JSON，并搜索冲突标记。
 
-部署完成后应核验：
+## 5. 腾讯云 SCF 可选调度器
 
-### 7.5 腾讯云 SCF 外部每小时调度器（当前替代方案）
+源码：`automation/tencent-lpw-scheduler/index.py`。
 
-- 腾讯云事件函数源码：`automation/tencent-lpw-scheduler/index.py`；部署时将该文件置于 ZIP 根目录上传。
-- 函数类型为事件函数，执行方法 `index.main_handler`，建议 128 MB、60 秒超时，并保持公网访问开启以调用 GitHub API。
-- 函数环境变量 `GITHUB_TOKEN` 保存同一个最小权限 GitHub Fine-grained PAT；不得把 Token 写入源码或 ZIP。
-- 腾讯云定时触发器使用七段 Cron：`0 7 * * * * *`，即每小时第 7 分钟触发。函数向 `update-lpw.yml` 发送 `force: false`。
-- 部署和测试步骤见 `automation/tencent-lpw-scheduler/README.md`。GitHub 当前在返回运行详情时使用 HTTP 200；函数同时兼容旧的空响应 204。测试返回 `github_status: 200`、`workflow_run_id` 和 `html_url` 后，还必须在 GitHub Actions 中确认出现 `workflow_dispatch` 运行。
-- 代码已准备，但仓库代码本身不会创建腾讯云函数、COS Bucket、CAM 凭据或 GitHub Secrets/Variables；这些必须在账号控制台中完成。
-- GitHub Fine-grained PAT `lpw-scf-scheduler` 已创建，仅授权本仓库 `Actions: Read and write`，有效期至 2027-02-05，并已由用户用于 SCF 的 `GITHUB_TOKEN`。
-- SCF 手动测试已成功触发 GitHub Actions 运行 `42337395702`。当时函数因只接受 HTTP 204 而把 GitHub 的 HTTP 200 运行详情误报为失败；调度器代码随后已修复为兼容 200/204。
+- 类型：事件函数，不是 Web 函数。
+- 入口：`index.main_handler`。
+- 建议：Python 3、128 MB、60秒超时、公网访问开启。
+- 环境变量：`GITHUB_TOKEN`，Fine-grained PAT 只授权本仓库 `Actions: Read and write`。
+- 定时表达式：`0 7 * * * * *`，每小时第7分钟。
+- 成功响应兼容 GitHub HTTP 200 和 204；HTTP 200 时返回 `workflow_run_id` 和链接。
+- 手动测试曾成功触发运行 `42337395702`。
+- 定时触发器是否持续可靠运行尚未最终确认；查看 SCF 每小时 `xx:07` 的调用日志区分“未触发”和“触发后被 Actions 新鲜度门限跳过”。
 
-## 8. 部署流程
+仓库已经移除：
 
-1. 在本地仓库修改并验证。
-2. 用户通常通过 GitHub Desktop 提交并推送到 `main`。
-3. GitHub Pages 使用自定义域名，`CNAME` 文件必须保留。
-4. `_config.yml` 排除了 `lpw/pipeline`，因此计算代码和模型不是页面运行时资源；Actions 仍可在仓库检出后使用它们。
-5. `lpw/data` 必须纳入发布内容，否则静态页面无法读取 LPW 数据。
-6. 每次前端资源更新后检查浏览器缓存版本参数。
+- `automation/lpw-scheduler/` Cloudflare Worker 源码。
+- 腾讯云 COS SDK、上传模块和测试。
+- `TENCENT_COS_SECRET_ID`、`TENCENT_COS_SECRET_KEY`、`TENCENT_COS_BUCKET`、`TENCENT_COS_REGION`、`TENCENT_COS_PUBLIC_BASE_URL` 的 GitHub 配置。
+
+旧腾讯云 SecretId/SecretKey 曾在对话中明文出现，必须在腾讯云 CAM 中撤销，不能重复使用。Cloudflare 控制台中若仍有旧 Worker/PAT，应由用户另行删除；它们已不影响仓库运行。
+
+## 6. 前端和下载页
+
+主要文件：
+
+- `lpw/index.html`
+- `lpw/download.html`
+- `lpw/assets/lpw.css`
+- `lpw/assets/lpw.js`
+- `lpw/assets/gnss.js`
+- `lpw/assets/download.js`
+- `lpw/assets/coastlines.json`
+
+### 6.1 主页面
+
+- Dark/Light 主题写入 `localStorage`。
+- MIMIC 有三个 Canvas 平铺图、Plotly 三层3D视图和72小时点位序列。
+- GNSS 有三个 Plotly 全球散点图、三层3D站点图和单站完整历史。
+- 三层共用固定 `0–40+ mm` 色标，不能分别归一化。
+- GNSS 标签和历史标题不显示内部测站号。
+- GNSS 默认时刻为 `2023-05-20 00:00`，缺失时回退到最新时刻。
+
+### 6.2 下载页
+
+- 顶部菜单 `Download data` 打开 `lpw/download.html`。
+- MIMIC：按年份和 UTC 日期列出 GitHub Release NC 文件。
+- GNSS：用户直接在地图选择站点，不显示无用站号。
+- GNSS TXT 列：`dataset_time`、`low_lpw_mm`、`middle_lpw_mm`、`high_lpw_mm`。
+- TXT 为 UTF-8、Tab 分隔，由浏览器现场生成。
+- GNSS 下载地图容器使用 `aspect-ratio: 2 / 1`，避免全球地图上下出现大块空白。
+
+整理时缓存版本：
+
+- 主页面 CSS：`assets/lpw.css?v=20261106-2`
+- 主页面 MIMIC：`assets/lpw.js?v=20261101-2`
+- 主页面 GNSS：`assets/gnss.js?v=20261101-9`
+- 下载页 CSS：`assets/lpw.css?v=20261107-2`
+- 下载页脚本：`assets/download.js?v=20261107-5`
+
+修改 CSS/JS 后必须更新使用它的 HTML 查询参数，否则线上可能继续使用旧缓存。
+
+## 7. 当前 Python 依赖和测试
+
+`lpw/pipeline/requirements.txt`：
+
+```text
+h5py==3.12.1
+numpy==2.1.3
+requests==2.32.3
+xgboost==3.4.1
+netCDF4==1.7.5.1.post1
+```
+
+不再需要 `boto3`、`cos-python-sdk-v5` 或 Cloudflare/R2 SDK。
+
+常用验证：
+
+```text
+cd lpw/pipeline
+python -m unittest -v test_lpw_model.py test_github_release_archive.py test_netcdf_product.py test_gnss_export.py
+
+cd ../..
+node --check lpw/assets/lpw.js
+node --check lpw/assets/gnss.js
+node --check lpw/assets/download.js
+python -m json.tool lpw/data/mimic-archive.json NUL
+python -m json.tool lpw/data/mimic-releases/2026.json NUL
+git diff --check
+```
+
+本地没有安装 `netCDF4` 时，`test_netcdf_product.py` 会跳过真实 NC 写入测试；GitHub Actions 会按 requirements 安装它。
+
+## 8. 修改和部署规则
+
+1. 先检查 `git status --short`，保留用户已有修改。
+2. 只修改任务相关文件，不重新设计整个网站。
+3. 不运行会更新 `lpw/data` 的真实管线，除非用户明确要求。
+4. 不恢复在线底图或 MIMIC 平铺图缩放/平移。
+5. 不改变模型特征顺序、层顺序、网格方向或色标范围。
+6. 前端布局修改后在桌面和手机宽度验证。
+7. GitHub Pages 使用 `CNAME`，不要删除。
+8. `_config.yml` 排除 `lpw/pipeline`；Actions 仍能从仓库检出该目录。
+9. 用户通常通过 GitHub Desktop 提交并推送。
+10. 推送数据索引前确认没有 `<<<<<<<`、`=======`、`>>>>>>>`。
 
 本地预览：
 
@@ -336,117 +267,28 @@ schedule:
 python -m http.server 8768 --bind 127.0.0.1
 ```
 
-然后访问：`http://127.0.0.1:8768/lpw/`。
+打开 `http://127.0.0.1:8768/lpw/`。
 
-## 9. 验证命令
+## 9. 已知限制
 
-### 9.1 前端
+- GitHub 定时任务可能延迟或漏触发。
+- MIMIC 数据源可能连续返回网络错误。
+- 模型转换过程尚未脚本化。
+- 模型指纹变化后首次72小时重算会明显变慢。
+- 72帧历史首次访问需要下载大量小文件。
+- GNSS 下载依赖浏览器 `DecompressionStream`。
+- GNSS 源时间没有时区信息。
+- GitHub Releases 适合当前约3 MB/小时文件，但每个 Release 最多1000个资产，因此必须保持按月分组。
+- Actions 自动写数据与人工推送可能产生冲突。
 
-```text
-node --check lpw/assets/lpw.js
-node --check lpw/assets/gnss.js
-git diff --check
-```
+## 10. 最近修改记录
 
-浏览器人工检查：
+- 2026-11-06：新增 `Download data` 页面和 GNSS 地图选点 TXT 导出。
+- 2026-11-07：MIMIC 0.25° NetCDF 改为月度 GitHub Releases；移除 COS/R2 SDK、COS 上传代码和 Cloudflare Worker 仓库配置。
+- 2026-11-07：保留腾讯云 SCF 作为可选外部调度器，兼容 GitHub dispatch HTTP 200/204。
+- 2026-11-07：修复 `mimic-archive.json` 中被提交的 Git 冲突标记，并清除年度索引中的旧 COS URL。
+- 2026-11-07：GNSS 下载地图改为2:1容器，去除地图上下空白。
 
-- 页面无控制台错误。
-- 三张平铺图、海岸线和 0–40 mm 色标正常。
-- Play/Pause、前后帧和时间滑块正常。
-- 点击平铺图能显示所选点和三条时间序列。
-- 时间序列悬浮标签没有日期时间和层名重复框。
-- 切换 3D 后三层间隔明显，点击后也能显示时间序列。
-- Analysis time 的 UTC 与北京时间相差 8 小时。
-- 手机和桌面宽度下卡片不溢出。
-- Dark/Light 开关能同步更新网页、Canvas 海岸线和 Plotly 图表；刷新后主题保持。
-- 顶部 `MIMIC LPW`、`GNSS LPW` 菜单能滚动到正确模块。
+## 11. 推荐的新会话开场提示
 
-### 9.2 模型
-
-在 `lpw/pipeline`：
-
-```text
-python -m pip install -r requirements.txt
-python -m unittest -v test_lpw_model.py
-python -m unittest -v test_github_release_archive.py test_netcdf_product.py
-```
-
-必要时本地更新数据：
-
-```text
-python update_data.py --hours 72 --max-new 2
-```
-
-注意：此命令会修改 `lpw/data`，运行前先确认用户是否希望更新本地档案。
-
-GNSS 数据导出后验证：
-
-```text
-python -m unittest -v test_gnss_export.py
-```
-
-GNSS 浏览器人工检查：
-
-- 默认显示 `2023-05-20 00:00`；若该日期缺失则回退到最新可用时刻。
-- 修改日期后，时刻下拉框只出现该日的有效时刻。
-- 站点计数随时刻改变；缺站时仍正常绘制。
-- Flat maps 和 3D stack 均能显示放大的三层站点散点，且仅使用模块底部的横向 0–40+ mm 共享色标。
-- 3D stack 保持透明平面，无陆地填色；三层海岸线和矩形边界清晰。
-- 点击任一站点后显示站名、坐标和三层完整历史折线，不显示内部测站号。
-
-### 9.3 Workflow
-
-- 验证 YAML 可解析。
-- 检查 `schedule` 是否仍位于默认分支。
-- 检查 Actions 是否处于启用状态。
-- 区分“工作流触发时间”“开始执行时间”“完成/提交时间”；并发排队和 GitHub 延迟会使它们不同。
-- 查看失败日志时重点检查：MIMIC 502、下载超时、模型测试、超时、`git pull --rebase` 冲突和 push 权限。
-
-## 10. 已知限制与风险
-
-1. GitHub `schedule` 不能绝对保证准点或不丢任务；当前双时段方案只是提高成功率。
-2. MIMIC 服务器偶尔返回 502；前后端均有重试，但连续故障仍会失败。
-3. 72 帧点选历史需要下载大量小文件，首次加载取决于网络和 GitHub Pages CDN。
-4. 平铺图刻意不提供底图、缩放和平移，以保持稳定的栅格对齐。
-5. 模型和系数在公开仓库中可被下载。
-6. 模型转换尚未脚本化，是未来最值得补齐的可重复性环节。
-7. 模型指纹变化后的首次 72 小时重算可能接近或超过普通小时任务耗时。
-8. 浏览器需要支持 `DecompressionStream`；页面已对旧浏览器给出错误提示。
-9. GNSS 原始 `TIME2` 没有时区元数据；除非获得用户确认，不应改标为 UTC 或北京时间。
-10. GNSS 历史数据约 4.9 MB（清单加压缩观测），首次访问需额外下载；之后可由浏览器缓存。
-11. 0.25° NetCDF 档案依赖 GitHub Releases；每个 Release 最多 1000 个资产，因此按月创建 Release。
-12. 只有配置了完整 COS 环境变量的运行才会执行完整 721 × 1440 推理和上传；首次启用只归档之后新处理的时次，不会自动回填全部历史 MIMIC 数据。
-
-## 11. 修改原则
-
-- 保持平台英文界面，不随意更改品牌、层定义和科学术语。
-- 不恢复在线底图或平移缩放，除非用户明确重新提出。
-- 不改变模型输入/输出顺序。
-- 不对 0.25° 系数、1°发布网格和经纬度行列方向做未经验证的转置。
-- 不把 GPU-only 模型放入 Ubuntu CPU Actions。
-- 不把三个图层分别归一化；共用固定 0–40 mm 色标才能跨层、跨时次比较。
-- 不因为某个历史帧失败而让整条时间序列报错。
-- 不在未确认的情况下提交或推送。
-
-## 12. 建议的新会话开场提示
-
-可直接向新会话发送：
-
-> 请先完整阅读仓库根目录的 `LPW_PROJECT_HANDOFF.md` 和 `lpw/pipeline/README.md`，再检查 `git status`。本次只修改我接下来指定的内容，保留现有模型、数据格式、品牌、层定义和 Actions 补偿策略。修改后执行报告中的相应验证，并更新交接报告；不要自动提交或推送。
-
-## 13. 修改记录
-
-- 2026-10-29：建立本交接报告。
-- 2026-10-29：当前平铺播放速度为 80 ms/帧；时间序列悬浮只显示数值和单位。
-- 2026-10-29：LPW Action 改为每小时第 13/43 分钟双触发，并增加 45 分钟新鲜度门限。
-- 2026-10-31：加入历史 GNSS LPW 查询模块、MATLAB 可重复导出脚本、稀疏压缩数据和导出测试。
-- 2026-11-01：修复 GNSS 单站历史折线被全局缺测时刻大量切断的问题，改为按该站实际观测时刻连续绘制。
-- 2026-11-01：GNSS 平铺图改为与 MIMIC 一致的三卡片模板；GNSS 三维图加入每层白色全球边界框，并增大 GNSS 与 MIMIC 三维层距。
-- 2026-11-01：加入顶部 Dark/Light 主题开关并持久化用户选择；浅色主题同步重绘网页、Plotly 图表、海岸线和三维边界。GNSS 标签与历史标题不再显示内部测站号。
-- 2026-11-01：顶部加入 MIMIC LPW/GNSS LPW 平滑定位菜单并压缩地图与对应历史图之间的留白；浅色主题使用透明底深色 Logo，暗色主题使用透明底白色 Logo；GNSS 三维保持透明平面、海岸线和矩形边界，不填充陆地。
-- 2026-11-01：GNSS 默认显示 2023-05-20 00:00；平铺测站散点大小增至 9，三维测站散点大小增至 6。
-- 2026-11-01：GNSS 平铺与三维视图移除 Plotly 右侧竖向 colorbar，统一使用模块底部的 0–40+ mm 横向共享色标，与 MIMIC 样式一致。
-- 2026-11-06：顶部新增 `Download data` 菜单和独立 GNSS 下载页；用户可搜索并选择有真实观测的站点，在浏览器端导出包含三层 LPW 的 Tab 分隔 TXT 文件。
-- 2026-11-07：MIMIC 0.25° NetCDF 改为按月保存到 GitHub Releases；移除旧对象存储和旧外部 Worker 配置，保留腾讯云 SCF 作为可选外部调度器。
-- 2026-11-07：修复 SCF 调度器把 GitHub workflow dispatch 的 HTTP 200 运行详情响应误判为失败；现在显式请求并返回 `workflow_run_id`/运行链接，同时兼容 HTTP 204。
-
+> 请先完整阅读仓库根目录的 `LPW_PROJECT_HANDOFF.md` 和 `lpw/pipeline/README.md`，再检查 `git status --short`。以文档中的“当前有效状态”为准，不恢复腾讯 COS、Cloudflare Worker 或旧对象存储代码。只修改我接下来指定的内容，保留模型输入输出、三层定义、网格方向、固定色标和 GitHub Releases 架构；完成后执行相应测试并更新交接文档，不要未经允许提交或推送。
