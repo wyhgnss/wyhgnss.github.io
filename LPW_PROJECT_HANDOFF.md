@@ -17,7 +17,7 @@
 - MIMIC 下载产品：全球0.25° NetCDF，保存在按月建立的 GitHub Releases 中。
 - GNSS 历史数据：静态压缩数据，地图选点后浏览器端导出 TXT。
 - 腾讯云 COS 和 Cloudflare Worker 已从仓库移除，不再是系统依赖，不要恢复相关 SDK、Secrets、Variables 或旧上传代码。
-- 腾讯云 SCF 仅作为可选外部调度器；GitHub 自带 `schedule` 仍是主要兜底机制。
+- 腾讯云 SCF 是唯一自动调度器；每5分钟检查 MIMIC 源站，仅在发现未发布新时次且没有活动工作流时触发 Actions。
 - 修改前端文件后必须递增对应 HTML 中的缓存查询参数。
 - 当前 Codex 环境通常不能写仓库 `.git`；若提交失败，由用户通过 GitHub Desktop 提交和推送。
 
@@ -120,29 +120,29 @@ permissions:
   pages: write
 ```
 
-调度：
+触发方式：
 
 ```yaml
-schedule:
-  - cron: "13,43 * * * *"
+workflow_dispatch:
 ```
+
+GitHub Actions 自带的 `schedule` 已关闭；原45分钟新鲜度门限也已删除。自动运行完全由腾讯云 SCF 的源站感知调度器发起。
 
 主要流程：
 
 1. 拉取默认分支最新内容。
-2. 检查 `lpw/data/manifest.json`；若成功更新距今不足45分钟，普通定时/外部运行快速跳过。
-3. 安装 `lpw/pipeline/requirements.txt`。
-4. 运行 `test_lpw_model.py`。
-5. 运行 `github_release_archive.py --hours 96`，每次最多准备一个最新 NC。
-6. 使用内置 `${{ github.token }}` 和 `gh release upload` 创建或更新月度 Release。
-7. 运行 `update_data.py --hours 72 --max-new 1` 更新1°滚动数据。
-8. `github-actions[bot]` 提交 `lpw/data` 并请求 Pages 重建。
+2. 安装 `lpw/pipeline/requirements.txt`。
+3. 运行 `test_lpw_model.py`。
+4. 运行 `github_release_archive.py --hours 96`，每次最多准备一个最新 NC。
+5. 使用内置 `${{ github.token }}` 和 `gh release upload` 创建或更新月度 Release。
+6. 运行 `update_data.py --hours 72 --max-new 1` 更新1°滚动数据。
+7. `github-actions[bot]` 提交 `lpw/data` 并请求 Pages 重建。
 
 注意：
 
-- 网页手动 **Run workflow** 默认 `force=true`，忽略45分钟新鲜度门限。
-- SCF 发送 `force=false`，所以可能成功触发但被新鲜度门限快速跳过；这不是函数失效。
-- GitHub `schedule` 没有准时执行 SLA，可能延迟或丢弃。
+- 网页手动 **Run workflow** 会直接执行完整更新；`force` 输入仅为调度器兼容性保留。
+- SCF 发现未发布新时次后发送 `force=true`；Actions 不再重复判断45分钟新鲜度。
+- 工作流使用 `concurrency: update-lpw`，并由 SCF 在触发前检查是否已有排队或运行中的同一工作流。
 - 不要在 Actions 正在提交 `lpw/data` 时手动修改同一批 JSON/帧文件，容易产生 rebase 冲突。
 
 ### 4.1 2026-11-07 JSON 冲突事故
@@ -156,7 +156,7 @@ schedule:
 - 年度索引只保留实际 GitHub Release URL。
 - 推送前执行 `python -m json.tool` 验证两个 JSON，并搜索冲突标记。
 
-## 5. 腾讯云 SCF 可选调度器
+## 5. 腾讯云 SCF 自动调度器
 
 源码：`automation/tencent-lpw-scheduler/index.py`。
 
@@ -164,10 +164,14 @@ schedule:
 - 入口：`index.main_handler`。
 - 建议：Python 3、128 MB、60秒超时、公网访问开启。
 - 环境变量：`GITHUB_TOKEN`，Fine-grained PAT 只授权本仓库 `Actions: Read and write`。
-- 定时表达式：`0 7 * * * * *`，每小时第7分钟。
+- 定时表达式：`0 */5 * * * * *`，每5分钟一次（腾讯七段式 Cron）。
+- 每次先读取 MIMIC 最新月目录中的 `compYYYYMMDD.HH0000.nc` 最新时次。
+- 再读取公开仓库的 `lpw/data/mimic-archive.json`，若源站时次未更新则返回 `action: up_to_date`，不调用 Actions。
+- 若源站有新时次，先查询 `update-lpw.yml` 是否为 `requested/waiting/pending/queued/in_progress`；有活动运行则返回 `action: workflow_active`。
+- 只有“源站有新时次且无活动运行”才以 `force=true` 触发工作流，返回 `action: dispatched`。
 - 成功响应兼容 GitHub HTTP 200 和 204；HTTP 200 时返回 `workflow_run_id` 和链接。
 - 手动测试曾成功触发运行 `42337395702`。
-- 定时触发器是否持续可靠运行尚未最终确认；查看 SCF 每小时 `xx:07` 的调用日志区分“未触发”和“触发后被 Actions 新鲜度门限跳过”。
+- SCF 已由用户确认定时触发稳定；部署新版 `index.py` 后需在控制台把旧触发器改为上述每5分钟表达式。
 
 仓库已经移除：
 
@@ -293,6 +297,7 @@ python -m http.server 8768 --bind 127.0.0.1
 - 2026-11-07：GNSS 下载地图改为2:1容器，去除地图上下空白。
 - 2026-11-09：主页品牌更新为 `SHAPER / LPW` 和 `SHAPER model`；MIMIC 下载卡片移除 SHA-256 文案并改为三列响应式布局。
 - 2026-11-09：下载页品牌同步为 `SHAPER / LPW`；MIMIC 产品卡片改为时间、大小和紧凑下载按钮单行排列。
+- 2026-11-09：关闭 Actions 自带定时和45分钟门限；腾讯云 SCF 改为每5分钟检查源站、已发布时次及活动工作流，仅对未发布新产品触发一次更新。
 
 ## 11. 推荐的新会话开场提示
 
