@@ -274,7 +274,7 @@
       link.href = new URL(file.url, state.mimicYearManifestUrl).href;
       link.download = "";
       link.rel = "noopener";
-      link.textContent = "Download .nc";
+      link.textContent = "Download";
       row.append(time, metadata, link);
       container.append(row);
     });

@@ -198,12 +198,13 @@ schedule:
 - GNSS 标签和历史标题不显示内部测站号。
 - GNSS 默认时刻为 `2023-05-20 00:00`，缺失时回退到最新时刻。
 - 主页左上品牌为 `SHAPER / LPW`；页脚说明使用 `the SHAPER model`。
+- 下载页左上品牌同样为 `SHAPER / LPW`。
 
 ### 6.2 下载页
 
 - 顶部菜单 `Download data` 打开 `lpw/download.html`。
 - MIMIC：按年份和 UTC 日期列出 GitHub Release NC 文件。
-- MIMIC 产品只显示 UTC 时刻和文件大小，不显示 SHA-256 摘要；桌面三列、中等宽度两列、手机一列。
+- MIMIC 产品不显示 SHA-256；UTC 时刻、文件大小和紧凑的 `Download` 按钮在同一行，产品卡片为桌面三列、平板两列、手机一列。
 - GNSS：用户直接在地图选择站点，不显示无用站号。
 - GNSS TXT 列：`dataset_time`、`low_lpw_mm`、`middle_lpw_mm`、`high_lpw_mm`。
 - TXT 为 UTF-8、Tab 分隔，由浏览器现场生成。
@@ -211,11 +212,11 @@ schedule:
 
 整理时缓存版本：
 
-- 主页面 CSS：`assets/lpw.css?v=20261109-1`
+- 主页面 CSS：`assets/lpw.css?v=20261109-2`
 - 主页面 MIMIC：`assets/lpw.js?v=20261101-2`
 - 主页面 GNSS：`assets/gnss.js?v=20261101-9`
-- 下载页 CSS：`assets/lpw.css?v=20261109-1`
-- 下载页脚本：`assets/download.js?v=20261109-1`
+- 下载页 CSS：`assets/lpw.css?v=20261109-2`
+- 下载页脚本：`assets/download.js?v=20261109-2`
 
 修改 CSS/JS 后必须更新使用它的 HTML 查询参数，否则线上可能继续使用旧缓存。
 
@@ -291,6 +292,7 @@ python -m http.server 8768 --bind 127.0.0.1
 - 2026-11-07：修复 `mimic-archive.json` 中被提交的 Git 冲突标记，并清除年度索引中的旧 COS URL。
 - 2026-11-07：GNSS 下载地图改为2:1容器，去除地图上下空白。
 - 2026-11-09：主页品牌更新为 `SHAPER / LPW` 和 `SHAPER model`；MIMIC 下载卡片移除 SHA-256 文案并改为三列响应式布局。
+- 2026-11-09：下载页品牌同步为 `SHAPER / LPW`；MIMIC 产品卡片改为时间、大小和紧凑下载按钮单行排列。
 
 ## 11. 推荐的新会话开场提示
 
