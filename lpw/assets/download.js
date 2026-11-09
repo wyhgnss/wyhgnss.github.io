@@ -268,7 +268,7 @@
       time.textContent = `${file.timestamp.slice(11, 16)} UTC`;
       const metadata = document.createElement("span");
       metadata.className = "mimic-product-meta";
-      metadata.textContent = `${formatBytes(file.bytes)} · SHA-256 ${file.sha256.slice(0, 12)}…`;
+      metadata.textContent = formatBytes(file.bytes);
       const link = document.createElement("a");
       link.className = "mimic-product-link";
       link.href = new URL(file.url, state.mimicYearManifestUrl).href;

@@ -1,9 +1,9 @@
 # Real-time LPW 项目交接与上下文恢复
 
 > 新会话开始时先读本文件，再读 `lpw/pipeline/README.md`，然后执行 `git status --short`。
-> 最近整理：2026-11-07（Asia/Shanghai）。
+> 最近整理：2026-11-09（Asia/Shanghai）。
 > 整理时分支：`main`。
-> 整理前 HEAD：`5d0284482d5ac6b0542c6fab49a6ab77b14a677e`。
+> 整理前 HEAD：`5d39040ae1ce0b69e1a9522a55bd331abb8bb982`。
 > 整理前工作区干净；整理后只有本文件等待提交。
 
 ## 1. 一分钟恢复当前状态
@@ -197,11 +197,13 @@ schedule:
 - 三层共用固定 `0–40+ mm` 色标，不能分别归一化。
 - GNSS 标签和历史标题不显示内部测站号。
 - GNSS 默认时刻为 `2023-05-20 00:00`，缺失时回退到最新时刻。
+- 主页左上品牌为 `SHAPER / LPW`；页脚说明使用 `the SHAPER model`。
 
 ### 6.2 下载页
 
 - 顶部菜单 `Download data` 打开 `lpw/download.html`。
 - MIMIC：按年份和 UTC 日期列出 GitHub Release NC 文件。
+- MIMIC 产品只显示 UTC 时刻和文件大小，不显示 SHA-256 摘要；桌面三列、中等宽度两列、手机一列。
 - GNSS：用户直接在地图选择站点，不显示无用站号。
 - GNSS TXT 列：`dataset_time`、`low_lpw_mm`、`middle_lpw_mm`、`high_lpw_mm`。
 - TXT 为 UTF-8、Tab 分隔，由浏览器现场生成。
@@ -209,11 +211,11 @@ schedule:
 
 整理时缓存版本：
 
-- 主页面 CSS：`assets/lpw.css?v=20261106-2`
+- 主页面 CSS：`assets/lpw.css?v=20261109-1`
 - 主页面 MIMIC：`assets/lpw.js?v=20261101-2`
 - 主页面 GNSS：`assets/gnss.js?v=20261101-9`
-- 下载页 CSS：`assets/lpw.css?v=20261107-2`
-- 下载页脚本：`assets/download.js?v=20261107-5`
+- 下载页 CSS：`assets/lpw.css?v=20261109-1`
+- 下载页脚本：`assets/download.js?v=20261109-1`
 
 修改 CSS/JS 后必须更新使用它的 HTML 查询参数，否则线上可能继续使用旧缓存。
 
@@ -288,6 +290,7 @@ python -m http.server 8768 --bind 127.0.0.1
 - 2026-11-07：保留腾讯云 SCF 作为可选外部调度器，兼容 GitHub dispatch HTTP 200/204。
 - 2026-11-07：修复 `mimic-archive.json` 中被提交的 Git 冲突标记，并清除年度索引中的旧 COS URL。
 - 2026-11-07：GNSS 下载地图改为2:1容器，去除地图上下空白。
+- 2026-11-09：主页品牌更新为 `SHAPER / LPW` 和 `SHAPER model`；MIMIC 下载卡片移除 SHA-256 文案并改为三列响应式布局。
 
 ## 11. 推荐的新会话开场提示
 
