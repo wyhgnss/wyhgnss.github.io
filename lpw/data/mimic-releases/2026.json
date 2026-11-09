@@ -15,6 +15,16 @@
       "release_tag": "mimic-lpw-2026-11"
     },
     {
+      "timestamp": "2026-11-07T13:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T130000Z.nc",
+      "bytes": 3068695,
+      "sha256": "5a37e5b32a655ed0ade8456530eaf259a98e2e0cf7d4182e929e41e5767e07f7",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.130000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
       "timestamp": "2026-11-07T14:00:00Z",
       "date": "2026-11-07",
       "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T140000Z.nc",
@@ -23,7 +33,327 @@
       "model_version": "8ef88f351066a8de",
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.140000.nc",
       "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T15:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T150000Z.nc",
+      "bytes": 3062956,
+      "sha256": "c938f29f2e3a0cc737d16e7f542609298732fca12d22b06dbe09b17ba09f78f2",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.150000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T16:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T160000Z.nc",
+      "bytes": 3035347,
+      "sha256": "32d5317efe47d7ed33bc27e425d74d498ea3492933eac3a5c448745aa5012b9d",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.160000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T17:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T170000Z.nc",
+      "bytes": 3018492,
+      "sha256": "17a316b610772b4c3e748a85fc6f373827f49f9040973c17890db9bee5577765",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.170000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T18:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T180000Z.nc",
+      "bytes": 3022256,
+      "sha256": "38e6673a403edd191f8610477f2ae0b23ec083b25d7444c774c9711136a71ac0",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.180000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T19:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T190000Z.nc",
+      "bytes": 3024837,
+      "sha256": "683f12fdab3d7c6ef46e1c1dc7fc6a4b5df493d0dcdfd83b641a3a16693b9b8a",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.190000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T20:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T200000Z.nc",
+      "bytes": 3025369,
+      "sha256": "b86fb72ed94db2765d2f37afa0b5da9bcc460438d8830c95d98cf31fc036431c",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.200000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T21:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T210000Z.nc",
+      "bytes": 3036636,
+      "sha256": "9402fbea7f0f520c19690e551e2d40a8a91353399efcd0006b91902a19b7d0f1",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.210000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T22:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T220000Z.nc",
+      "bytes": 3044342,
+      "sha256": "8d7518de9f1dd6e7f55a2fd52a359cef4c728db90473c3e0633f27963870c967",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.220000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-07T23:00:00Z",
+      "date": "2026-11-07",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261107T230000Z.nc",
+      "bytes": 3052372,
+      "sha256": "184ecdc09a9b21cff215210ae94b994c4545cf2e8061252b79b7a54d44e902c2",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.230000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T00:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T000000Z.nc",
+      "bytes": 3048132,
+      "sha256": "5d190bc42a61b58068da7d423c21f4bad8563549ac8c7d28d50ab67a4b79ef8c",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.000000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T03:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T030000Z.nc",
+      "bytes": 3042342,
+      "sha256": "2bf1f1b6b85525487cc30b07bbab3c772842b7a023a59949411d44506058fc99",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.030000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T04:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T040000Z.nc",
+      "bytes": 3043099,
+      "sha256": "8ff795f60eda0a007202466414cd3048a762d54df4a1a6f376cb023bc56e536b",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.040000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T05:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T050000Z.nc",
+      "bytes": 3041292,
+      "sha256": "064f9f57a6856c9a27e9fcaf3bfbf39ad1f717075eddb5f9cc59432ac6b68e53",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.050000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T06:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T060000Z.nc",
+      "bytes": 3017113,
+      "sha256": "32ac2ac17b0d580f6a45234ca2b5fc8d12d8bfe0e13415bac0ab4faee8e9301d",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.060000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T07:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T070000Z.nc",
+      "bytes": 2940375,
+      "sha256": "72a970a45f63918b731cd82583abbcc75c92d3d9e967047ea1838fb454e51641",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.070000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T08:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T080000Z.nc",
+      "bytes": 2811718,
+      "sha256": "7ae156893f017443914bd30fd055fe321c81141153f32c9b6126fb8497352364",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.080000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T09:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T090000Z.nc",
+      "bytes": 2764089,
+      "sha256": "6fe324e4827e2d9aefeca052273234e801dee30ce08f6c0c73ce5ddf5cbdc307",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.090000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T10:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T100000Z.nc",
+      "bytes": 2760585,
+      "sha256": "48008c52441ab0fa76a7c20b20a65de77b9954735a346c3ef126d957abd56691",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.100000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T11:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T110000Z.nc",
+      "bytes": 2777631,
+      "sha256": "2c8068dcda9b4e35fe166e32189b7e0ad6ffc31e613d1de957e7ffcf7058fe43",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.110000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T12:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T120000Z.nc",
+      "bytes": 2844737,
+      "sha256": "58284d669ba6dc5c39df0b624bf377abae062e9ce8d94a45c15d97f718ea152b",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.120000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T13:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T130000Z.nc",
+      "bytes": 2881536,
+      "sha256": "c6abc22e6baf99d88f4e8a367b023556af3a51a596258a570bc0b752ab4ffcd2",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.130000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T14:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T140000Z.nc",
+      "bytes": 3035078,
+      "sha256": "071aea329ade2301e5bfb801112b6141eaf9b3a2761ae76388a54962b4d46d76",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.140000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T15:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T150000Z.nc",
+      "bytes": 3039135,
+      "sha256": "851953c651a9089083f0fa7f8897786dfb47d903ec99ad79c9ac9d57044b45d8",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.150000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T16:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T160000Z.nc",
+      "bytes": 3026361,
+      "sha256": "d80522cf72cc1a9653485e2e9b2b42fa252ceeb4ae50d2cb6d5d51aa6f4412c8",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.160000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T17:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T170000Z.nc",
+      "bytes": 3020520,
+      "sha256": "5028e60c7efc2046ce2b7855178cbfc7e77ab69dc34842e0639c3be650b0b7c8",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.170000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T18:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T180000Z.nc",
+      "bytes": 3018298,
+      "sha256": "8f59441bfb987c7dc34fe798ebb59df8e01fc50ccc5dab8e3466bd40e9b3402e",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.180000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T19:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T190000Z.nc",
+      "bytes": 3020670,
+      "sha256": "b36a72e7296aec6d9fb3176b1d9aaeee1c7a0cb2b7db3790823bcfa407c25707",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.190000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T20:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T200000Z.nc",
+      "bytes": 3021429,
+      "sha256": "a214b442644ae96d4dad9a4d5b96c42e231f89f15c39b680abee1037860ef307",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.200000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T21:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T210000Z.nc",
+      "bytes": 3030413,
+      "sha256": "6ab25c7e4c3ead653f7e5d03cd33b9fcbe72ee001ac671b25f971c909a21b9ac",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.210000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T22:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T220000Z.nc",
+      "bytes": 3047281,
+      "sha256": "c4418c5af23683db41d174429ab4b7a7f01e321cac921e31cdb496d104e23745",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.220000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-08T23:00:00Z",
+      "date": "2026-11-08",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261108T230000Z.nc",
+      "bytes": 3045971,
+      "sha256": "a30f73c759b1cf42d8da0f56ddd9730f3fb1efae8c2adbb8007610f1660908aa",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.230000.nc",
+      "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-09T01:00:00Z",
+      "date": "2026-11-09",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261109T010000Z.nc",
+      "bytes": 3021262,
+      "sha256": "74174eac5cfa7cd863b06421fea8fa54f8533c51cbe5cef2e53d116c0196d299",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261109.010000.nc",
+      "release_tag": "mimic-lpw-2026-11"
     }
   ],
-  "updated_at": "2026-11-07T14:00:00Z"
+  "updated_at": "2026-11-09T01:00:00Z"
 }

@@ -1,6 +1,6 @@
 {
   "product": "MIMIC Layered Precipitable Water",
-  "updated_at": "2026-11-07T15:24:24.801034Z",
+  "updated_at": "2026-11-09T02:00:37.122903Z",
   "source": "https://bin.ssec.wisc.edu/pub/mtpw2/data/",
   "model_version": "8ef88f351066a8de",
   "grid": {
@@ -16,181 +16,6 @@
     "display_resolution_degrees": 1.0
   },
   "frames": [
-    {
-      "timestamp": "2026-11-04T15:00:00Z",
-      "url": "frames/20261104T150000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.150000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T16:00:00Z",
-      "url": "frames/20261104T160000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.160000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T17:00:00Z",
-      "url": "frames/20261104T170000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.170000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T18:00:00Z",
-      "url": "frames/20261104T180000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.180000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T19:00:00Z",
-      "url": "frames/20261104T190000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.190000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T20:00:00Z",
-      "url": "frames/20261104T200000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.200000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T21:00:00Z",
-      "url": "frames/20261104T210000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.210000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T22:00:00Z",
-      "url": "frames/20261104T220000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.220000.nc"
-    },
-    {
-      "timestamp": "2026-11-04T23:00:00Z",
-      "url": "frames/20261104T230000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261104.230000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T00:00:00Z",
-      "url": "frames/20261105T000000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.000000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T01:00:00Z",
-      "url": "frames/20261105T010000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.010000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T02:00:00Z",
-      "url": "frames/20261105T020000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.020000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T03:00:00Z",
-      "url": "frames/20261105T030000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.030000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T04:00:00Z",
-      "url": "frames/20261105T040000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.040000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T05:00:00Z",
-      "url": "frames/20261105T050000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.050000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T06:00:00Z",
-      "url": "frames/20261105T060000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.060000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T07:00:00Z",
-      "url": "frames/20261105T070000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.070000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T08:00:00Z",
-      "url": "frames/20261105T080000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.080000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T09:00:00Z",
-      "url": "frames/20261105T090000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.090000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T10:00:00Z",
-      "url": "frames/20261105T100000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.100000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T11:00:00Z",
-      "url": "frames/20261105T110000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.110000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T12:00:00Z",
-      "url": "frames/20261105T120000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.120000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T13:00:00Z",
-      "url": "frames/20261105T130000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.130000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T14:00:00Z",
-      "url": "frames/20261105T140000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.140000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T15:00:00Z",
-      "url": "frames/20261105T150000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.150000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T16:00:00Z",
-      "url": "frames/20261105T160000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.160000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T17:00:00Z",
-      "url": "frames/20261105T170000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.170000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T18:00:00Z",
-      "url": "frames/20261105T180000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.180000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T19:00:00Z",
-      "url": "frames/20261105T190000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.190000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T20:00:00Z",
-      "url": "frames/20261105T200000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.200000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T21:00:00Z",
-      "url": "frames/20261105T210000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.210000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T22:00:00Z",
-      "url": "frames/20261105T220000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.220000.nc"
-    },
-    {
-      "timestamp": "2026-11-05T23:00:00Z",
-      "url": "frames/20261105T230000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261105.230000.nc"
-    },
-    {
-      "timestamp": "2026-11-06T00:00:00Z",
-      "url": "frames/20261106T000000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261106.000000.nc"
-    },
-    {
-      "timestamp": "2026-11-06T01:00:00Z",
-      "url": "frames/20261106T010000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261106.010000.nc"
-    },
     {
       "timestamp": "2026-11-06T02:00:00Z",
       "url": "frames/20261106T020000Z.bin.gz",
@@ -352,9 +177,174 @@
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.110000.nc"
     },
     {
+      "timestamp": "2026-11-07T13:00:00Z",
+      "url": "frames/20261107T130000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.130000.nc"
+    },
+    {
       "timestamp": "2026-11-07T14:00:00Z",
       "url": "frames/20261107T140000Z.bin.gz",
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.140000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T15:00:00Z",
+      "url": "frames/20261107T150000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.150000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T16:00:00Z",
+      "url": "frames/20261107T160000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.160000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T17:00:00Z",
+      "url": "frames/20261107T170000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.170000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T18:00:00Z",
+      "url": "frames/20261107T180000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.180000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T19:00:00Z",
+      "url": "frames/20261107T190000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.190000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T20:00:00Z",
+      "url": "frames/20261107T200000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.200000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T21:00:00Z",
+      "url": "frames/20261107T210000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.210000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T22:00:00Z",
+      "url": "frames/20261107T220000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.220000.nc"
+    },
+    {
+      "timestamp": "2026-11-07T23:00:00Z",
+      "url": "frames/20261107T230000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261107.230000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T00:00:00Z",
+      "url": "frames/20261108T000000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.000000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T03:00:00Z",
+      "url": "frames/20261108T030000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.030000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T04:00:00Z",
+      "url": "frames/20261108T040000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.040000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T05:00:00Z",
+      "url": "frames/20261108T050000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.050000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T06:00:00Z",
+      "url": "frames/20261108T060000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.060000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T07:00:00Z",
+      "url": "frames/20261108T070000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.070000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T08:00:00Z",
+      "url": "frames/20261108T080000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.080000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T09:00:00Z",
+      "url": "frames/20261108T090000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.090000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T10:00:00Z",
+      "url": "frames/20261108T100000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.100000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T11:00:00Z",
+      "url": "frames/20261108T110000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.110000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T12:00:00Z",
+      "url": "frames/20261108T120000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.120000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T13:00:00Z",
+      "url": "frames/20261108T130000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.130000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T14:00:00Z",
+      "url": "frames/20261108T140000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.140000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T15:00:00Z",
+      "url": "frames/20261108T150000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.150000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T16:00:00Z",
+      "url": "frames/20261108T160000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.160000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T17:00:00Z",
+      "url": "frames/20261108T170000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.170000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T18:00:00Z",
+      "url": "frames/20261108T180000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.180000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T19:00:00Z",
+      "url": "frames/20261108T190000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.190000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T20:00:00Z",
+      "url": "frames/20261108T200000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.200000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T21:00:00Z",
+      "url": "frames/20261108T210000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.210000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T22:00:00Z",
+      "url": "frames/20261108T220000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.220000.nc"
+    },
+    {
+      "timestamp": "2026-11-08T23:00:00Z",
+      "url": "frames/20261108T230000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261108.230000.nc"
+    },
+    {
+      "timestamp": "2026-11-09T01:00:00Z",
+      "url": "frames/20261109T010000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261109.010000.nc"
     }
   ]
 }
