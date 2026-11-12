@@ -1083,7 +1083,17 @@
       "model_version": "8ef88f351066a8de",
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261112.080000.nc",
       "release_tag": "mimic-lpw-2026-11"
+    },
+    {
+      "timestamp": "2026-11-12T09:00:00Z",
+      "date": "2026-11-12",
+      "url": "https://github.com/wyhgnss/wyhgnss.github.io/releases/download/mimic-lpw-2026-11/mimic_lpw_0p25_20261112T090000Z.nc",
+      "bytes": 2862971,
+      "sha256": "8576cf95ee231b2741bdf97f34be0e7016308b9efc08560d2cb7a16352d79de0",
+      "model_version": "8ef88f351066a8de",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261112.090000.nc",
+      "release_tag": "mimic-lpw-2026-11"
     }
   ],
-  "updated_at": "2026-11-12T08:00:00Z"
+  "updated_at": "2026-11-12T09:00:00Z"
 }
