@@ -1,6 +1,6 @@
 {
   "product": "MIMIC Layered Precipitable Water",
-  "updated_at": "2026-11-23T03:41:30.067821Z",
+  "updated_at": "2026-11-23T04:31:35.260524Z",
   "source": "https://bin.ssec.wisc.edu/pub/mtpw2/data/",
   "model_version": "8ef88f351066a8de",
   "grid": {
@@ -16,11 +16,6 @@
     "display_resolution_degrees": 1.0
   },
   "frames": [
-    {
-      "timestamp": "2026-11-20T04:00:00Z",
-      "url": "frames/20261120T040000Z.bin.gz",
-      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261120.040000.nc"
-    },
     {
       "timestamp": "2026-11-20T05:00:00Z",
       "url": "frames/20261120T050000Z.bin.gz",
@@ -350,6 +345,11 @@
       "timestamp": "2026-11-23T03:00:00Z",
       "url": "frames/20261123T030000Z.bin.gz",
       "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261123.030000.nc"
+    },
+    {
+      "timestamp": "2026-11-23T04:00:00Z",
+      "url": "frames/20261123T040000Z.bin.gz",
+      "source_url": "https://bin.ssec.wisc.edu/pub/mtpw2/data/202611/comp20261123.040000.nc"
     }
   ]
 }
